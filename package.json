@@ -5,10 +5,11 @@
   "type": "module",
   "author": "w-xuefeng",
   "scripts": {
+    "clean": "rimraf dist dist-electron release",
     "dev": "vite",
-    "build": "vite build && electron-builder -wm",
-    "build:w": "vite build && electron-builder -w",
-    "build:m": "vite build && electron-builder -m",
+    "build": "yarn clean && vite build && electron-builder -wm",
+    "build:w": "yarn clean && vite build && electron-builder -w",
+    "build:m": "yarn clean && vite build && electron-builder -m",
     "preview": "vite preview",
     "lint": "eslint src --report-unused-disable-directives --max-warnings 0 --fix",
     "format": "prettier --write ./"
