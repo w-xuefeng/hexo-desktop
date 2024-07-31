@@ -3,10 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author": "w-xuefeng",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && electron-builder",
-    "preview": "vite preview"
+    "build": "vite build && electron-builder -wm",
+    "build:w": "vite build && electron-builder -w",
+    "build:m": "vite build && electron-builder -m",
+    "preview": "vite preview",
+    "lint": "eslint src --report-unused-disable-directives --max-warnings 0 --fix",
+    "format": "prettier --write ./"
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.56.0",
@@ -14,12 +19,19 @@
     "vue-router": "4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@types/eslint": "^9",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue-jsx": "^4.0.0",
     "electron": "^30.0.1",
     "electron-builder": "^24.13.3",
+    "eslint": "^9.8.0",
+    "eslint-plugin-vue": "^9.27.0",
     "less": "^4.2.0",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
     "typescript": "^5.2.2",
+    "typescript-eslint": "^7.18.0",
     "unplugin-auto-import": "^0.18.2",
     "vite": "^5.1.6",
     "vite-plugin-electron": "^0.28.6",

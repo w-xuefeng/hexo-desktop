@@ -1,0 +1,8 @@
+node_modules
+dist
+public
+**/*/lib
+dist-electron
+res
+auto-imports.d.ts
+.yarn

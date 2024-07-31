@@ -1,11 +1,11 @@
-import { RouteRecordRaw } from 'vue-router'
+import { RouteRecordRaw } from 'vue-router';
 
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'root',
     meta: {
-      authorized: [],
+      authorized: []
     },
     component: () => import('@/layout/layout-page.vue'),
     children: [
@@ -14,9 +14,9 @@ export const routes: RouteRecordRaw[] = [
         name: 'ContentNotFound',
         component: () => import('@/pages/404/index.vue'),
         meta: {
-          invisible: true,
-        },
-      },
-    ],
-  },
-]
+          invisible: true
+        }
+      }
+    ]
+  }
+];
