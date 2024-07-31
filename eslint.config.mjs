@@ -15,7 +15,8 @@ export default ts.config(
     },
     rules: {
       semi: 'error',
-      'vue/multi-word-component-names': 'off'
+      'vue/multi-word-component-names': 'off',
+      'vue/singleline-html-element-content-newline': 'off'
     },
     ignores: [
       'dist-electron',
