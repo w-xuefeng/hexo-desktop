@@ -7,7 +7,7 @@ export default ts.config(
   ...ts.configs.recommended,
   ...eslintPluginVue.configs['flat/recommended'],
   {
-    files: ['*.vue', '**/*.vue'],
+    files: ['*.vue', '**/*.vue', '*.ts', '**/*.ts'],
     languageOptions: {
       parserOptions: {
         parser: '@typescript-eslint/parser'
@@ -16,8 +16,11 @@ export default ts.config(
     rules: {
       semi: 'error',
       'vue/multi-word-component-names': 'off',
-      'vue/singleline-html-element-content-newline': 'off'
-    },
+      'vue/singleline-html-element-content-newline': 'off',
+      '@typescript-eslint/no-explicit-any': 'off'
+    }
+  },
+  {
     ignores: [
       'dist-electron',
       'res',
