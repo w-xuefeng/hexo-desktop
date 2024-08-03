@@ -5,7 +5,7 @@ import path from 'path';
 
 export function createMainWindow() {
   GLWins.mainWin = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env.VITE_PUBLIC, 'logo.svg'),
     webPreferences: {
       preload: path.join(import.meta.url, '..', 'preload.mjs')
     }
