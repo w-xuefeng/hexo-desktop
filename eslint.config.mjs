@@ -17,7 +17,8 @@ export default ts.config(
       semi: 'error',
       'vue/multi-word-component-names': 'off',
       'vue/singleline-html-element-content-newline': 'off',
-      '@typescript-eslint/no-explicit-any': 'off'
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off'
     }
   },
   {

@@ -25,7 +25,7 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "never"
     },
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "prettier.printWidth": 200,
   "[svg]": {
@@ -59,11 +59,16 @@
     "release"
   ],
   "cSpell.words": [
+    "doption",
     "Ployfill",
     "unplugin",
     "xuefeng"
   ],
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
-  }
+  },
+  "i18n-ally.localesPaths": [
+    "src/locales",
+    "src/locales/langs"
+  ]
 }

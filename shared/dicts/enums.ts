@@ -6,3 +6,7 @@ export enum IPC_CHANNEL {
 }
 
 export enum STORE_KEY {}
+
+export enum STORAGE_KEY {
+  LANG = 'lang'
+}
