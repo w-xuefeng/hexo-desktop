@@ -78,20 +78,15 @@ export class SharedStorage {
 }
 
 export class SharedStore {
-  public static get<T = Record<string, any>>(key: string) {
-    return new Promise<T>((resolve) => {
-      window.ipcRenderer.once(`${IPC_CHANNEL.STORE_GET_REPLY}-${key}`, (_event, data) => {
-        resolve(data as T);
-      });
-      window.ipcRenderer.send(IPC_CHANNEL.STORE_GET, key);
-    });
+  public static get(key: string) {
+    return window.ipcRenderer.invoke(IPC_CHANNEL.STORE_GET, key);
   }
 
   public static set<T>(key: string, value: T) {
-    window.ipcRenderer.send(IPC_CHANNEL.STORE_SAVE, { key, value });
+    window.ipcRenderer.invoke(IPC_CHANNEL.STORE_SAVE, { key, value });
   }
 
   public static remove(key: string) {
-    window.ipcRenderer.send(IPC_CHANNEL.STORE_REMOVE, key);
+    window.ipcRenderer.invoke(IPC_CHANNEL.STORE_REMOVE, key);
   }
 }
