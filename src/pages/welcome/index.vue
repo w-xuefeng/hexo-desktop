@@ -34,16 +34,46 @@
         </a-space>
       </a-typography-title>
     </a-typography>
+    <div class="env-info-bar">
+      <a-space
+        v-for="item in envInfo"
+        :key="item.type"
+      >
+        <a-tag class="key">{{ item.type }}</a-tag>
+        <span class="value">
+          {{ item.output }}
+        </span>
+      </a-space>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue';
+import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
 import {
   IconPlus,
   IconImport
 } from '@arco-design/web-vue/es/icon';
+import type { ExecuteResult } from '@root/shared/utils/type';
+
+const env = ref<ExecuteResult[]>([]);
+
+const envInfo = computed(() => {
+  return env.value.filter((e) => !e.error);
+});
+
+// const envErrorInfo = computed(() => {
+//   return env.value.filter((e) => e.error);
+// });
+
+const checkEnv = async () => {
+  env.value = await window.ipcRenderer.invoke(
+    IPC_CHANNEL.CHECK_ENV
+  );
+};
 
 const createProject = () => {
   console.log('createProject');
@@ -51,6 +81,8 @@ const createProject = () => {
 const importProject = () => {
   console.log('importProject');
 };
+
+checkEnv();
 </script>
 
 <style scoped lang="less">
@@ -78,6 +110,24 @@ const importProject = () => {
     cursor: pointer;
     &:hover {
       color: rgb(var(--arcoblue-6));
+    }
+  }
+
+  .env-info-bar {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2px 10px;
+    gap: 20px;
+    background: var(--env-info-bar-background);
+    font-size: 12px;
+
+    .key,
+    .value {
+      white-space: nowrap;
     }
   }
 }

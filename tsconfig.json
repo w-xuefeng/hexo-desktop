@@ -34,6 +34,7 @@
   },
   "include": [
     "shared/dicts",
+    "shared/utils",
     "shared/render-utils",
     "src/**/*.ts",
     "src/**/*.tsx",
