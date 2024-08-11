@@ -27,6 +27,13 @@ export function execute(
         result.error = data.toString();
       }
     });
+    child.on('error', (err) => {
+      if (result.error) {
+        result.error += err.toString();
+      } else {
+        result.error = err.toString();
+      }
+    });
     child.on('close', (code) => {
       result.code = code;
       resolve(result);
