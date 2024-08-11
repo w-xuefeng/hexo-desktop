@@ -25,7 +25,7 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "never"
     },
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "prettier.printWidth": 200,
   "[svg]": {
@@ -59,7 +59,10 @@
     "release"
   ],
   "cSpell.words": [
+    "arcoblue",
+    "Avenir",
     "doption",
+    "Hexo",
     "Ployfill",
     "unplugin",
     "xuefeng"

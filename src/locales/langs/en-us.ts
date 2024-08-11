@@ -20,17 +20,22 @@ export default {
       'The current page has unsaved information, make sure you want to leave the current page?',
     notice: 'Notice',
     deleteTip: 'Are you sure to delete?',
-    deleteMsg: 'The {item} information will be deleted.',
+    deleteMsg:
+      'The {item} information will be deleted.',
     service: 'service',
     attachmentTips: {
       drag: 'Drop file here or click to upload',
-      batches: '1.Attachments can be uploaded in batches',
-      format: '2.Supporting PDF、DOCX、XLSX、PNG、JPG、JPEG format',
-      imageFormat: '2.Supporting PNG、JPG、JPEG format',
-      size: '3.Please upload single attachment within 10MB',
+      batches:
+        '1.Attachments can be uploaded in batches',
+      format:
+        '2.Supporting PDF、DOCX、XLSX、PNG、JPG、JPEG format',
+      imageFormat:
+        '2.Supporting PNG、JPG、JPEG format',
+      size: '3.Please upload single attachment within 10MB'
     },
     attachmentFormatError: 'Format not allowed',
-    attachmentSizeError: 'The file size is too large',
+    attachmentSizeError:
+      'The file size is too large',
     fromDate: 'From date',
     toDate: 'To date',
     serviceNotFound: 'Service not found',
@@ -39,23 +44,28 @@ export default {
       'Sorry, your current browser is not recommended on this website',
     browserCompatible:
       'For a better user experience, \nplease click the corresponding icon below\n to download the latest version of Chrome or Edge browser\n to visit this website',
-    chromeUrl: 'https://www.google.se/intl/en_uk/chrome/',
-    edgeUrl: 'https://www.microsoft.com/en-us/edge',
+    chromeUrl:
+      'https://www.google.se/intl/en_uk/chrome/',
+    edgeUrl:
+      'https://www.microsoft.com/en-us/edge',
     stillInsist: 'Continue (not recommended)',
-    areYouSure: 'Are you sure you want to do this?',
+    areYouSure:
+      'Are you sure you want to do this?',
     submitSuccess: 'Submitted successfully！',
     uploadError: 'Upload Error',
     versionUpdate:
       'There is a new version update, please click to refresh the page',
-    exportTips: 'The export date interval cannot be greater than 31 days',
+    exportTips:
+      'The export date interval cannot be greater than 31 days',
     importData: 'Data import',
-    importDataTips: 'Please select a zip format file within {size} to upload',
+    importDataTips:
+      'Please select a zip format file within {size} to upload',
     uploadResults: 'Upload results',
     continueUpload: 'Continue to upload',
     successFeed: 'The action is successful!',
     dateText: {
       today: 'Today',
-      yesterday: 'Yesterday',
+      yesterday: 'Yesterday'
     },
     sessionImageMsg: '[Image]',
     sessionFileMsg: '[File]',
@@ -67,8 +77,10 @@ export default {
     sendVoice: 'Voice',
     startTalking: 'Start talking',
     stopTalkingAndSend: 'Stop to send',
-    authMicrophoneFirst: 'Please authorize microphone permission first',
-    notSupportFeature: 'Your browser does not support this feature',
+    authMicrophoneFirst:
+      'Please authorize microphone permission first',
+    notSupportFeature:
+      'Your browser does not support this feature',
     refreshWhenError:
       'The system encountered an error. Would you like to refresh the page and try again?',
     formInitializing: 'The form is initializing',
@@ -76,15 +88,21 @@ export default {
     formRendering: 'The form is rendering',
     localCurrencyAmount: 'Local Currency Amount',
     increaseSuccess: 'Successfully added',
-    updateSuccess: 'Update successful',
+    updateSuccess: 'Update successful'
   },
   exception: {
     notFound: 'Not Found',
     permissionDenied: 'Permission Denied',
     systemError: 'System Error',
     invalidDownloadURL: 'Invalid download URL',
-    lackOfNecessaryInformation: 'Lack of necessary information',
+    lackOfNecessaryInformation:
+      'Lack of necessary information',
     formNotReady:
-      'The form has not completed initialization yet. Please refresh the page and try again',
+      'The form has not completed initialization yet. Please refresh the page and try again'
   },
+  welcome: {
+    title: 'Welcome to Hexo Desktop',
+    create: 'Create a new project',
+    import: 'Import existing projects'
+  }
 };

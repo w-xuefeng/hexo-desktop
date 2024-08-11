@@ -1,51 +1,84 @@
 <template>
-  <section class="lang-select">
-    <a-dropdown
-      trigger="click"
-      @select="i18nCommand"
-    >
-      <span class="lang-select-dropdown">
-        <img
-          :src="i18nIconSrc"
-          alt="i18n-icon"
-          style="width: 20px; height: 20px"
-        >
-        {{ currentSupportLanguages[currentLocale] }}
-        <IconDown class="arrow-down" />
-      </span>
-
-      <template #content>
-        <a-doption
-          v-for="lang in SUPPORT_LOCALES"
-          :key="lang.value"
-          :value="lang.value"
-        >
-          {{ lang.name }}
-        </a-doption>
-      </template>
-    </a-dropdown>
-  </section>
+  <div class="welcome">
+    <div class="header">
+      <switch-lang />
+      <switch-theme />
+    </div>
+    <img
+      src="@/assets/imgs/logo.svg"
+      alt="logo"
+      width="100"
+    />
+    <a-typography>
+      <a-typography-title>
+        {{ $t('welcome.title') }}
+      </a-typography-title>
+    </a-typography>
+    <a-typography>
+      <a-typography-title
+        :heading="6"
+        @click="createProject"
+      >
+        <a-space class="target">
+          <icon-plus />
+          <span>{{ $t('welcome.create') }}</span>
+        </a-space>
+      </a-typography-title>
+      <a-typography-title
+        :heading="6"
+        @click="importProject"
+      >
+        <a-space class="target">
+          <icon-import />
+          <span>{{ $t('welcome.import') }}</span>
+        </a-space>
+      </a-typography-title>
+    </a-typography>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { setI18nLanguage, currentSupportLanguages, SUPPORT_LOCALES, TLanguage, currentLocale } from '@/locales';
-import { IconDown } from '@arco-design/web-vue/es/icon';
-import i18nIconSrc from '@/assets/icons/i18n.svg';
+import SwitchLang from '@/components/switch-lang.vue';
+import SwitchTheme from '@/components/switch-theme.vue';
+import {
+  IconPlus,
+  IconImport
+} from '@arco-design/web-vue/es/icon';
 
-type TCommandType = string | number | Record<string, any> | undefined;
-
-const i18nCommand = async (lang: TCommandType) => {
-  await setI18nLanguage(lang as TLanguage);
+const createProject = () => {
+  console.log('createProject');
+};
+const importProject = () => {
+  console.log('importProject');
 };
 </script>
 
 <style scoped lang="less">
-.lang-select {
-  .lang-select-dropdown {
+.welcome {
+  --header-height: 60px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  .header {
+    position: fixed;
+    top: 0;
+    right: 20px;
+    height: var(--header-height);
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: flex-end;
+    gap: 20px;
+  }
+
+  .target {
+    color: gray;
     cursor: pointer;
+    &:hover {
+      color: rgb(var(--arcoblue-6));
+    }
   }
 }
 </style>
