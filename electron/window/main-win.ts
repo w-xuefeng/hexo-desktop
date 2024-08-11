@@ -1,16 +1,24 @@
 import { BrowserWindow } from 'electron';
 import { GLWins } from '../../shared/global-manager/wins';
-import { VITE_DEV_SERVER_URL, RENDERER_DIST } from '../../shared/global-manager/vars';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
-const devToolsVisible = !!VITE_DEV_SERVER_URL;
+// const devToolsVisible = true;
+const devToolsVisible =
+  !!process.env['VITE_DEV_SERVER_URL'];
 
 export function createMainWindow() {
   GLWins.mainWin = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'logo.svg'),
+    icon: path.join(
+      process.env.VITE_PUBLIC,
+      'logo.svg'
+    ),
     webPreferences: {
-      preload: path.join(fileURLToPath(import.meta.url), '..', 'preload.mjs'),
+      preload: path.join(
+        fileURLToPath(import.meta.url),
+        '..',
+        'preload.mjs'
+      ),
       nodeIntegration: true,
       contextIsolation: true,
       devTools: devToolsVisible
@@ -18,15 +26,28 @@ export function createMainWindow() {
   });
 
   // Test active push message to Renderer-process.
-  GLWins.mainWin.webContents.on('did-finish-load', () => {
-    GLWins.mainWin?.webContents.send('main-process-message', new Date().toLocaleString());
-  });
+  GLWins.mainWin.webContents.on(
+    'did-finish-load',
+    () => {
+      GLWins.mainWin?.webContents.send(
+        'main-process-message',
+        new Date().toLocaleString()
+      );
+    }
+  );
 
-  if (VITE_DEV_SERVER_URL) {
-    GLWins.mainWin.loadURL(VITE_DEV_SERVER_URL);
-    devToolsVisible && GLWins.mainWin.webContents.openDevTools();
-  } else {
-    // win.loadFile('dist/index.html')
-    GLWins.mainWin.loadFile(path.join(RENDERER_DIST, 'index.html'));
+  if (process.env['VITE_DEV_SERVER_URL']) {
+    GLWins.mainWin.loadURL(
+      process.env['VITE_DEV_SERVER_URL']
+    );
+    devToolsVisible &&
+      GLWins.mainWin.webContents.openDevTools();
+  } else if (process.env.RENDERER_DIST) {
+    GLWins.mainWin.loadFile(
+      path.join(
+        process.env.RENDERER_DIST,
+        'index.html'
+      )
+    );
   }
 }

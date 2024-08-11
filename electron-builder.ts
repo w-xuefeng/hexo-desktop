@@ -15,7 +15,8 @@ export default {
         arch: ['x64', 'arm64']
       }
     ],
-    artifactName: '${productName}-Mac-${version}-${arch}-Installer.${ext}',
+    artifactName:
+      '${productName}-Mac-${version}-${arch}-Installer.${ext}',
     icon: 'res/icons/ios/AppIcon.appiconset'
   },
   win: {
@@ -25,7 +26,8 @@ export default {
         arch: ['x64']
       }
     ],
-    artifactName: '${productName}-Windows-${version}-${arch}-Setup.${ext}',
+    artifactName:
+      '${productName}-Windows-${version}-${arch}-Setup.${ext}',
     icon: 'res/icons/win/Icon-App-512x512@1x.png'
   },
   nsis: {
@@ -41,7 +43,8 @@ export default {
         arch: ['arm64']
       }
     ],
-    artifactName: '${productName}-Linux-${version}-${arch}.${ext}',
+    artifactName:
+      '${productName}-Linux-${version}-${arch}.${ext}',
     maintainer: 'w-xuefeng',
     icon: 'res/icons/win/Icon-App-512x512@1x.png'
   }
