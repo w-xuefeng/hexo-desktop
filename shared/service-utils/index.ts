@@ -1,14 +1,22 @@
-import { spawn } from 'child_process';
-import type { ExecuteResult } from '../utils/type';
+import path from 'node:path';
 import { app } from 'electron';
+import { spawn } from 'child_process';
+import { fileURLToPath } from 'node:url';
 
-export function execute(
-  ...args: [string, string[]]
-) {
+import type {
+  ExecuteResult,
+  ExecuteParams
+} from '../utils/type';
+
+const __dirname = path.dirname(
+  fileURLToPath(import.meta.url)
+);
+
+export function execute(options: ExecuteParams) {
   return new Promise<ExecuteResult>((resolve) => {
-    const child = spawn(...args);
+    const child = spawn(...options.command);
     const result: ExecuteResult = {
-      type: args[0],
+      type: options.type,
       output: null,
       error: null,
       code: null
@@ -43,14 +51,44 @@ export function execute(
 
 export async function checkEnv() {
   const appVersion = app.getVersion();
-  const commands: [string, string[]][] = [
-    ['git', ['-v']],
-    ['node', ['-v']],
-    ['npm', ['-v']],
-    ['hexo', ['-v']]
+  const nodePath = process.execPath;
+  const yarnPath = path.join(
+    __dirname,
+    '..',
+    'node_modules',
+    '.bin',
+    'yarn'
+  );
+  const hexoPath = path.join(
+    __dirname,
+    '..',
+    'node_modules',
+    '.bin',
+    'hexo'
+  );
+
+  const candidateCommands: ExecuteParams[] = [
+    {
+      type: 'git',
+      command: ['git', ['-v']]
+    },
+    {
+      type: 'node',
+      command: [nodePath, ['-v']]
+    },
+    {
+      type: 'yarn',
+      command: [yarnPath, ['-v']]
+    },
+    {
+      type: 'hexo',
+      command: [hexoPath, ['-v']]
+    }
   ];
   const rs = await Promise.all(
-    commands.map((command) => execute(...command))
+    candidateCommands.map((command) =>
+      execute(command)
+    )
   );
   return [
     {
