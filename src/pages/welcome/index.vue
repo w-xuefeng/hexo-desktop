@@ -54,8 +54,12 @@ const envInfo = computed(() => {
 // });
 
 const checkEnv = async () => {
-  env.value = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_ENV);
-  console.log('env', toRaw(env.value));
+  try {
+    env.value = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_ENV);
+    console.log('env', toRaw(env.value));
+  } catch (error) {
+    console.log('[checkEnv error]', error);
+  }
 };
 
 const createProject = () => {

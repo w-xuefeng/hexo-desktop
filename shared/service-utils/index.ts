@@ -1,4 +1,5 @@
 import path from 'node:path';
+import logger from './logger';
 import { app } from 'electron';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'node:url';
@@ -47,8 +48,15 @@ export function execute(options: ExecuteParams) {
 export async function checkEnv() {
   const appVersion = app.getVersion();
   const nodePath = process.execPath;
-  const yarnPath = path.join(__dirname, '..', 'node_modules', '.bin', 'yarn');
-  const hexoPath = path.join(__dirname, '..', 'node_modules', '.bin', 'hexo');
+  const yarnPath = path.join(__dirname, '..', 'node_modules', 'yarn', 'bin', 'yarn');
+  const hexoPath = path.join(__dirname, '..', 'node_modules', 'hexo-cli', 'bin', 'hexo');
+  logger(
+    `[checkEnv path]: ${JSON.stringify({
+      nodePath,
+      yarnPath,
+      hexoPath
+    })}`
+  );
   const candidateCommands: ExecuteParams[] = [
     {
       type: 'git',
@@ -68,7 +76,7 @@ export async function checkEnv() {
     }
   ];
   const rs = await Promise.all(candidateCommands.map((command) => execute(command)));
-  return [
+  const withAppResult = [
     {
       type: 'hexo desktop',
       output: appVersion,
@@ -82,4 +90,6 @@ export async function checkEnv() {
       return e;
     })
   ];
+  logger(`[checkEnv result]: ${JSON.stringify(withAppResult)}`);
+  return withAppResult;
 }
