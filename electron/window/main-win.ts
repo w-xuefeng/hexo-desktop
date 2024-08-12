@@ -3,9 +3,9 @@ import { GLWins } from '../../shared/global-manager/wins';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
-// const devToolsVisible = true;
-const devToolsVisible =
-  !!process.env['VITE_DEV_SERVER_URL'];
+const devToolsVisible = true;
+// const devToolsVisible =
+//   !!process.env['VITE_DEV_SERVER_URL'];
 
 export function createMainWindow() {
   GLWins.mainWin = new BrowserWindow({

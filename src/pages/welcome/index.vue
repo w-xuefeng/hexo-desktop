@@ -73,6 +73,7 @@ const checkEnv = async () => {
   env.value = await window.ipcRenderer.invoke(
     IPC_CHANNEL.CHECK_ENV
   );
+  console.log('env', env.value);
 };
 
 const createProject = () => {

@@ -1,4 +1,5 @@
 import { initApp } from './app';
-import '../shared/global-manager/vars';
+import { initProcessEnv } from '../shared/global-manager/vars';
 
+initProcessEnv();
 initApp();
