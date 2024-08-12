@@ -12,31 +12,17 @@ import { fileURLToPath } from 'node:url';
 // │ │ └── preload.mjs
 // │
 
-const __dirname = path.dirname(
-  fileURLToPath(import.meta.url)
-);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export const APP_ROOT = path.join(
-  __dirname,
-  '..'
-);
+export const APP_ROOT = path.join(__dirname, '..');
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
-export const VITE_DEV_SERVER_URL =
-  process.env['VITE_DEV_SERVER_URL'];
+export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
 
-export const MAIN_DIST = path.join(
-  APP_ROOT,
-  'dist-electron'
-);
-export const RENDERER_DIST = path.join(
-  APP_ROOT,
-  'dist'
-);
+export const MAIN_DIST = path.join(APP_ROOT, 'dist-electron');
+export const RENDERER_DIST = path.join(APP_ROOT, 'dist');
 
-export const VITE_PUBLIC = VITE_DEV_SERVER_URL
-  ? path.join(APP_ROOT, 'public')
-  : RENDERER_DIST;
+export const VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(APP_ROOT, 'public') : RENDERER_DIST;
 
 export function initProcessEnv() {
   process.env.APP_ROOT = APP_ROOT;

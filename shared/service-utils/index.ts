@@ -3,14 +3,9 @@ import { app } from 'electron';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'node:url';
 
-import type {
-  ExecuteResult,
-  ExecuteParams
-} from '../utils/type';
+import type { ExecuteResult, ExecuteParams } from '../utils/type';
 
-const __dirname = path.dirname(
-  fileURLToPath(import.meta.url)
-);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export function execute(options: ExecuteParams) {
   return new Promise<ExecuteResult>((resolve) => {
@@ -52,21 +47,8 @@ export function execute(options: ExecuteParams) {
 export async function checkEnv() {
   const appVersion = app.getVersion();
   const nodePath = process.execPath;
-  const yarnPath = path.join(
-    __dirname,
-    '..',
-    'node_modules',
-    '.bin',
-    'yarn'
-  );
-  const hexoPath = path.join(
-    __dirname,
-    '..',
-    'node_modules',
-    '.bin',
-    'hexo'
-  );
-
+  const yarnPath = path.join(__dirname, '..', 'node_modules', '.bin', 'yarn');
+  const hexoPath = path.join(__dirname, '..', 'node_modules', '.bin', 'hexo');
   const candidateCommands: ExecuteParams[] = [
     {
       type: 'git',
@@ -85,11 +67,7 @@ export async function checkEnv() {
       command: [hexoPath, ['-v']]
     }
   ];
-  const rs = await Promise.all(
-    candidateCommands.map((command) =>
-      execute(command)
-    )
-  );
+  const rs = await Promise.all(candidateCommands.map((command) => execute(command)));
   return [
     {
       type: 'hexo desktop',
@@ -99,8 +77,7 @@ export async function checkEnv() {
     },
     ...rs.map((e) => {
       if (e.type === 'hexo' && !e.error) {
-        e.output =
-          e.output?.split('\n').at(0) || null;
+        e.output = e.output?.split('\n').at(0) || null;
       }
       return e;
     })

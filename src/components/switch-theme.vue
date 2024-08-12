@@ -1,8 +1,5 @@
 <template>
-  <a-switch
-    v-model="darkModel"
-    @change="switchTheme"
-  >
+  <a-switch v-model="darkModel" @change="switchTheme">
     <template #checked> Dark </template>
     <template #unchecked> Light </template>
   </a-switch>
@@ -14,45 +11,30 @@ import { onMounted, onUnmounted, ref } from 'vue';
 const darkModel = ref(false);
 
 const dark = () => {
-  document.body.setAttribute(
-    'arco-theme',
-    'dark'
-  );
+  document.body.setAttribute('arco-theme', 'dark');
 };
 
 const light = () => {
   document.body.removeAttribute('arco-theme');
 };
 
-const switchTheme = (
-  e: string | number | boolean
-) => {
+const switchTheme = (e: string | number | boolean) => {
   e ? dark() : light();
 };
 
-const matchMedia = window.matchMedia(
-  '(prefers-color-scheme: light)'
-);
-const checkTheme = (
-  e: MediaQueryListEvent | { matches: boolean }
-) => {
+const matchMedia = window.matchMedia('(prefers-color-scheme: light)');
+const checkTheme = (e: MediaQueryListEvent | { matches: boolean }) => {
   darkModel.value = !e.matches;
   e.matches ? light() : dark();
 };
 
 onMounted(() => {
   checkTheme(matchMedia);
-  matchMedia.addEventListener(
-    'change',
-    checkTheme
-  );
+  matchMedia.addEventListener('change', checkTheme);
 });
 
 onUnmounted(() => {
-  matchMedia.removeEventListener(
-    'change',
-    checkTheme
-  );
+  matchMedia.removeEventListener('change', checkTheme);
 });
 </script>
 

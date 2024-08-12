@@ -4,30 +4,20 @@
       <switch-lang />
       <switch-theme />
     </div>
-    <img
-      src="@/assets/imgs/logo.svg"
-      alt="logo"
-      width="100"
-    />
+    <img src="@/assets/imgs/logo.svg" alt="logo" width="100" />
     <a-typography>
       <a-typography-title>
         {{ $t('welcome.title') }}
       </a-typography-title>
     </a-typography>
     <a-typography>
-      <a-typography-title
-        :heading="6"
-        @click="createProject"
-      >
+      <a-typography-title :heading="6" @click="createProject">
         <a-space class="target">
           <icon-plus />
           <span>{{ $t('welcome.create') }}</span>
         </a-space>
       </a-typography-title>
-      <a-typography-title
-        :heading="6"
-        @click="importProject"
-      >
+      <a-typography-title :heading="6" @click="importProject">
         <a-space class="target">
           <icon-import />
           <span>{{ $t('welcome.import') }}</span>
@@ -35,10 +25,7 @@
       </a-typography-title>
     </a-typography>
     <div class="env-info-bar">
-      <a-space
-        v-for="item in envInfo"
-        :key="item.type"
-      >
+      <a-space v-for="item in envInfo" :key="item.type">
         <a-tag class="key">{{ item.type }}</a-tag>
         <span class="value">
           {{ item.output }}
@@ -49,14 +36,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, toRaw } from 'vue';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
-import {
-  IconPlus,
-  IconImport
-} from '@arco-design/web-vue/es/icon';
+import { IconPlus, IconImport } from '@arco-design/web-vue/es/icon';
 import type { ExecuteResult } from '@root/shared/utils/type';
 
 const env = ref<ExecuteResult[]>([]);
@@ -70,10 +54,8 @@ const envInfo = computed(() => {
 // });
 
 const checkEnv = async () => {
-  env.value = await window.ipcRenderer.invoke(
-    IPC_CHANNEL.CHECK_ENV
-  );
-  console.log('env', env.value);
+  env.value = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_ENV);
+  console.log('env', toRaw(env.value));
 };
 
 const createProject = () => {

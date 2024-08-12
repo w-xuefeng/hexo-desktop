@@ -6,6 +6,7 @@ export function omit<T extends Record<string | symbol, any>, K extends keyof T>(
   return [...Object.getOwnPropertyNames(object), ...Object.getOwnPropertySymbols(object)].reduce(
     (t, k) => {
       if (!omitKey.includes(k as K)) {
+        // @ts-ignore
         t[k] = object[k as K];
       }
       return t;

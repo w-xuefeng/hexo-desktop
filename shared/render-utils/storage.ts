@@ -83,7 +83,10 @@ export class SharedStore {
   }
 
   public static set<T>(key: string, value: T) {
-    window.ipcRenderer.invoke(IPC_CHANNEL.STORE_SAVE, { key, value });
+    window.ipcRenderer.invoke(IPC_CHANNEL.STORE_SAVE, {
+      key,
+      value
+    });
   }
 
   public static remove(key: string) {
