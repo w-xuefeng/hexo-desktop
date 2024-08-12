@@ -1,6 +1,7 @@
+import path from 'node:path';
 import logger from './logger';
 import { app } from 'electron';
-import { spawn } from 'child_process';
+import { spawn, execSync } from 'child_process';
 
 import type { ExecuteResult, ExecuteParams } from '../utils/type';
 
@@ -41,8 +42,25 @@ export function execute(options: ExecuteParams) {
   });
 }
 
+function getExecutablePath(command: string): string | null {
+  try {
+    const platform = process.platform;
+    const cmd = platform === 'win32' ? `where ${command}` : `which ${command}`;
+    const output = execSync(cmd).toString().trim();
+    const paths = output.split(/\r?\n/);
+    const rs = paths.length > 0 ? path.resolve(paths[0]) : null;
+    logger(`[GetExecutablePath find ${command} path]: ${rs}`);
+    return rs;
+  } catch (error) {
+    logger(`[GetExecutablePath Failed to find ${command}]: ${error}`);
+    return null;
+  }
+}
+
 export async function checkEnv() {
   const appVersion = app.getVersion();
+  const nodePath = getExecutablePath('node') || 'node';
+  const npmPath = getExecutablePath('npm') || 'npm';
   const candidateCommands: ExecuteParams[] = [
     {
       type: 'git',
@@ -50,11 +68,11 @@ export async function checkEnv() {
     },
     {
       type: 'node',
-      command: ['node', ['-v']]
+      command: [nodePath, ['-v']]
     },
     {
       type: 'npm',
-      command: ['npm', ['-v']]
+      command: [npmPath, ['-v']]
     }
   ];
   const rs = await Promise.all(candidateCommands.map((command) => execute(command)));
