@@ -31,6 +31,7 @@
           {{ item.output }}
         </span>
       </a-space>
+      <icon-settings @click="settings" class="settings" :size="16" />
     </div>
   </div>
 </template>
@@ -40,7 +41,7 @@ import { computed, ref, toRaw } from 'vue';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
-import { IconPlus, IconImport } from '@arco-design/web-vue/es/icon';
+import { IconPlus, IconImport, IconSettings } from '@arco-design/web-vue/es/icon';
 import type { ExecuteResult } from '@root/shared/utils/types';
 
 const env = ref<ExecuteResult[]>([]);
@@ -68,6 +69,8 @@ const createProject = () => {
 const importProject = () => {
   console.log('importProject');
 };
+
+const settings = () => {};
 
 checkEnv();
 </script>
@@ -115,6 +118,11 @@ checkEnv();
     .key,
     .value {
       white-space: nowrap;
+    }
+
+    .settings {
+      margin-left: auto;
+      cursor: pointer;
     }
   }
 }
