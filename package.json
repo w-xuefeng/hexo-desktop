@@ -8,7 +8,6 @@
   "scripts": {
     "dev": "sh ./scripts/dev-prepare.sh && vite",
     "clean": "rimraf dist dist-electron release",
-    "build-preloads": "sh ./scripts/build-preloads.sh",
     "build": "sh ./scripts/build-prepare.sh && electron-builder -wm",
     "build:w": "sh ./scripts/build-prepare.sh && electron-builder -w",
     "build:m": "sh ./scripts/build-prepare.sh && electron-builder -m",
@@ -28,6 +27,11 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@types/eslint": "^9",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^22.1.0",
@@ -40,6 +44,8 @@
     "less": "^4.2.0",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
+    "rollup": "^4.20.0",
+    "rollup-plugin-cleanup": "^3.2.1",
     "typescript": "^5.2.2",
     "typescript-eslint": "^7.18.0",
     "unplugin-auto-import": "^0.18.2",

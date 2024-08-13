@@ -11,7 +11,8 @@ export default ts.config(
     languageOptions: {
       parserOptions: {
         parser: '@typescript-eslint/parser'
-      }
+      },
+      globals: {}
     },
     rules: {
       semi: 'error',

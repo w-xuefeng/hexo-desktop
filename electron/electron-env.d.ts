@@ -18,6 +18,14 @@ declare namespace NodeJS {
     APP_ROOT: string;
     /** /dist/ or /public/ */
     VITE_PUBLIC: string;
+    /**
+     * /dist-electron/
+     */
+    MAIN_DIST: string;
+    /**
+     * /dist/
+     */
+    RENDERER_DIST: string;
   }
 }
 

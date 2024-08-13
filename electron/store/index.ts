@@ -1,7 +1,6 @@
 import Store from 'electron-store';
 import { ipcMain } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
-import { checkEnv } from '../../shared/service-utils';
 
 export default function initIPCStoreEvent(store: Store) {
   ipcMain.handle(IPC_CHANNEL.STORE_SAVE, (_event, { key, value }) => {
@@ -15,9 +14,5 @@ export default function initIPCStoreEvent(store: Store) {
 
   ipcMain.handle(IPC_CHANNEL.STORE_REMOVE, (_event, key) => {
     store.delete(key);
-  });
-
-  ipcMain.handle(IPC_CHANNEL.CHECK_ENV, () => {
-    return checkEnv();
   });
 }

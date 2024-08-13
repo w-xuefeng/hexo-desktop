@@ -24,14 +24,7 @@ export default defineConfig({
     electron({
       main: {
         // Shortcut of `build.lib.entry`.
-        entry: 'electron/main.ts',
-        vite: {
-          build: {
-            rollupOptions: {
-              external: ['yarn', 'hexo-cli']
-            }
-          }
-        }
+        entry: 'electron/main.ts'
       },
       preload: {
         // Shortcut of `build.rollupOptions.input`.

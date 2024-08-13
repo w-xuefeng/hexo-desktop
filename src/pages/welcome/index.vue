@@ -41,7 +41,7 @@ import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
 import { IconPlus, IconImport } from '@arco-design/web-vue/es/icon';
-import type { ExecuteResult } from '@root/shared/utils/type';
+import type { ExecuteResult } from '@root/shared/utils/types';
 
 const env = ref<ExecuteResult[]>([]);
 

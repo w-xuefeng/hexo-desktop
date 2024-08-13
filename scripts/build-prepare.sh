@@ -1,1 +1,1 @@
-yarn clean && tsc --project tsconfig.preload.json && vite build
+yarn clean && tsc --project tsconfig.preload.json && rollup -c && vite build

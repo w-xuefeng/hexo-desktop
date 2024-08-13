@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
-    "outDir": "dist-electron/preloads/",
+    "outDir": "dist-electron/scripts/",
     "declaration": false,
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "strict": true,
     "allowSyntheticDefaultImports": true,
-    "rootDir": "electron/preloads"
+    "rootDir": "electron/scripts"
   },
   "types": [
-    "node"
+    "node",
   ],
   "include": [
-    "electron/preloads/*"
+    "electron/scripts/*"
   ]
 }
