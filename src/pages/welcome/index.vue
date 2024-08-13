@@ -31,7 +31,7 @@
           {{ item.output }}
         </span>
       </a-space>
-      <icon-settings @click="settings" class="settings" :size="16" />
+      <icon-settings class="settings" :size="16" @click="settings" />
     </div>
   </div>
 </template>
