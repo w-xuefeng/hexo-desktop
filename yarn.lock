@@ -3641,6 +3641,7 @@ __metadata:
     electron-store: "npm:^10.0.0"
     eslint: "npm:^9.8.0"
     eslint-plugin-vue: "npm:^9.27.0"
+    glob: "npm:^11.0.0"
     hexo-cli: "npm:^4.3.2"
     less: "npm:^4.2.0"
     prettier: "npm:^3.3.3"

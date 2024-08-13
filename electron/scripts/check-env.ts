@@ -1,7 +1,18 @@
 import path from 'node:path';
-import { spawn, execSync } from 'child_process';
+import { spawn, execSync } from 'node:child_process';
 import { logScript } from './script-logger';
-import type { ExecuteParams, ExecuteResult } from '../../shared/utils/types';
+
+type ExecuteParams = {
+  type: string;
+  command: [string, string[]];
+};
+
+type ExecuteResult = {
+  type: string;
+  output: string | null;
+  error: string | null;
+  code: number | null;
+};
 
 const scriptName = 'check-env';
 

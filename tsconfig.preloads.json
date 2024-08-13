@@ -6,8 +6,9 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
+    "target": "ESNext",
     "allowSyntheticDefaultImports": true,
-    "rootDir": "electron/preloads"
+    "rootDir": "electron/preloads",
   },
   "types": [
     "node"

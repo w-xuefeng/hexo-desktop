@@ -33,7 +33,8 @@ export default ts.config(
       'public',
       '**/*/lib',
       'auto-imports.d.ts',
-      '.yarn'
+      '.yarn',
+      'rollup.config.js'
     ]
   }
 );

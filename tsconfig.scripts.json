@@ -5,11 +5,12 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "target": "ESNext",
     "allowSyntheticDefaultImports": true,
-    "rootDir": "electron/scripts"
+    "rootDir": "electron/scripts",
   },
   "types": [
-    "node",
+    "node"
   ],
   "include": [
     "electron/scripts/*"
