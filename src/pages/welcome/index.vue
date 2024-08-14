@@ -71,20 +71,16 @@ const createProject = () => {
 };
 const importProject = async () => {
   try {
-    const target = await window.ipcRenderer.invoke(IPC_CHANNEL.CHOOSE_DIRECTORY, {
+    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.IMPORT_PROJECT, {
       title: t('welcome.import'),
       message: t('welcome.chooseProjectDirectory')
     });
-    if (target.canceled) {
+    if (!rs?.success) {
       return;
     }
-    const [projectPath] = target.filePaths;
-    if (!projectPath) {
-      return;
-    }
-    console.log('projectPath', projectPath);
+    console.log('importProject', rs);
   } catch (error) {
-    console.log('[CHOOSE_DIRECTORY error]', error);
+    console.log('[IMPORT_PROJECT error]', error);
   }
 };
 

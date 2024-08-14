@@ -3,6 +3,8 @@ import initIPCStoreEvent from '../store';
 import { dialog, ipcMain, type OpenDialogOptions } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
 import { checkEnv } from '../../shared/service-utils';
+import importProject from '../services/project/import-project';
+import createProject from '../services/project/create-project';
 import { type ICreateProjectOptions } from '../../shared/utils/types';
 
 export default function initIPCEvent(store: Store) {
@@ -19,11 +21,11 @@ export default function initIPCEvent(store: Store) {
     });
   });
 
-  ipcMain.handle(IPC_CHANNEL.IMPORT_PROJECT, (_, projectPath: string) => {
-    console.log('IMPORT_PROJECT', projectPath);
+  ipcMain.handle(IPC_CHANNEL.IMPORT_PROJECT, (_, options: Partial<OpenDialogOptions>) => {
+    return importProject(options);
   });
 
   ipcMain.handle(IPC_CHANNEL.CREATE_PROJECT, (_, options: ICreateProjectOptions) => {
-    console.log('CREATE_PROJECT', options);
+    return createProject(options);
   });
 }

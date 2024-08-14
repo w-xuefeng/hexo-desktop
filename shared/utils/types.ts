@@ -1,3 +1,9 @@
+export interface ICommonResponse<T = any> extends Record<string, any> {
+  success: boolean;
+  message?: string;
+  data?: T;
+}
+
 export type ExecuteParams = {
   type: string;
   command: [string, string[]];
