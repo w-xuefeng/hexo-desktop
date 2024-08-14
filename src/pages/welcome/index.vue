@@ -41,8 +41,11 @@ import { computed, ref, toRaw } from 'vue';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
+import { useSharedLocales } from '@/locales';
 import { IconPlus, IconImport, IconSettings } from '@arco-design/web-vue/es/icon';
 import type { ExecuteResult } from '@root/shared/utils/types';
+
+const { t } = useSharedLocales();
 
 const env = ref<ExecuteResult[]>([]);
 
@@ -66,8 +69,24 @@ const checkEnv = async () => {
 const createProject = () => {
   console.log('createProject');
 };
-const importProject = () => {
+const importProject = async () => {
   console.log('importProject');
+  try {
+    const target = await window.ipcRenderer.invoke(IPC_CHANNEL.CHOOSE_DIRECTORY, {
+      title: t('welcome.import'),
+      message: t('welcome.chooseProjectDirectory')
+    });
+    if (target.canceled) {
+      return;
+    }
+    const [projectPath] = target.filePaths;
+    if (!projectPath) {
+      return;
+    }
+    console.log('projectPath', projectPath);
+  } catch (error) {
+    console.log('[CHOOSE_DIRECTORY error]', error);
+  }
 };
 
 const settings = () => {};

@@ -85,6 +85,7 @@ export default {
   welcome: {
     title: '欢迎使用 Hexo 桌面版客户端',
     create: '创建新项目',
-    import: '导入已有项目'
+    import: '导入已有项目',
+    chooseProjectDirectory: '请选择项目所在目录'
   }
 };

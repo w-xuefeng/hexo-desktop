@@ -3,10 +3,13 @@ export enum IPC_CHANNEL {
   STORE_GET = 'store-get',
   STORE_GET_REPLY = 'store-get-reply',
   STORE_REMOVE = 'store-remove',
-  CHECK_ENV = 'check-env'
+  CHECK_ENV = 'check-env',
+  CHOOSE_DIRECTORY = 'choose-directory'
 }
 
-export enum STORE_KEY {}
+export enum STORE_KEY {
+  PATH = 'path'
+}
 
 export enum STORAGE_KEY {
   LANG = 'lang'

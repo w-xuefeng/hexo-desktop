@@ -88,6 +88,7 @@ export default {
   welcome: {
     title: 'Welcome to Hexo Desktop',
     create: 'Create a new project',
-    import: 'Import existing projects'
+    import: 'Import existing projects',
+    chooseProjectDirectory: 'Please select the directory where the project is located'
   }
 };
