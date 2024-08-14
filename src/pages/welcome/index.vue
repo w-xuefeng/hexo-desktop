@@ -70,7 +70,6 @@ const createProject = () => {
   console.log('createProject');
 };
 const importProject = async () => {
-  console.log('importProject');
   try {
     const target = await window.ipcRenderer.invoke(IPC_CHANNEL.CHOOSE_DIRECTORY, {
       title: t('welcome.import'),

@@ -9,3 +9,9 @@ export type ExecuteResult = {
   error: string | null;
   code: number | null;
 };
+
+export interface ICreateProjectOptions {
+  name: string;
+  path: string;
+  themeNpmPkg?: string;
+}
