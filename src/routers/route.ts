@@ -17,7 +17,19 @@ export const routes: RouteRecordRaw[] = [
       authorized: []
     },
     component: () => import('@/layout/layout-page.vue'),
-    children: []
+    redirect: '/main/editor',
+    children: [
+      {
+        path: '/main/editor',
+        name: 'main-editor',
+        component: () => import('@/pages/editor/index.vue')
+      }
+    ]
+  },
+  {
+    path: '/create-project-panel',
+    name: 'create-project-panel',
+    component: () => import('@/pages/create-project/index.vue')
   },
   {
     path: '/404/:pathMatch(.*)*',

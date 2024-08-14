@@ -37,16 +37,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRaw } from 'vue';
+import { computed, ref } from 'vue';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
 import { useSharedLocales } from '@/locales';
 import { IconPlus, IconImport, IconSettings } from '@arco-design/web-vue/es/icon';
+import { useRouter } from 'vue-router';
 import type { ExecuteResult } from '@root/shared/utils/types';
 
 const { t } = useSharedLocales();
-
+const router = useRouter();
 const env = ref<ExecuteResult[]>([]);
 
 const envInfo = computed(() => {
@@ -60,14 +61,31 @@ const envInfo = computed(() => {
 const checkEnv = async () => {
   try {
     env.value = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_ENV);
-    console.log('env', toRaw(env.value));
   } catch (error) {
     console.log('[checkEnv error]', error);
   }
 };
 
-const createProject = () => {
-  console.log('createProject');
+const createProject = async () => {
+  // window.open('/#/create-project-panel');
+  // try {
+  //   const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_PROJECT, {
+  //     name: '',
+  //     path: '/Users/mac/Documents/projects/tangyuan-space',
+  //     themeNpmPkg: ''
+  //   });
+  //   if (!rs?.success || !rs?.data) {
+  //     return;
+  //   }
+  //   router.replace({
+  //     name: 'main-editor',
+  //     query: {
+  //       path: rs.data
+  //     }
+  //   });
+  // } catch (error) {
+  //   console.log('[IMPORT_PROJECT error]', error);
+  // }
 };
 const importProject = async () => {
   try {
@@ -75,10 +93,15 @@ const importProject = async () => {
       title: t('welcome.import'),
       message: t('welcome.chooseProjectDirectory')
     });
-    if (!rs?.success) {
+    if (!rs?.success || !rs?.data) {
       return;
     }
-    console.log('importProject', rs);
+    router.replace({
+      name: 'main-editor',
+      query: {
+        path: rs.data
+      }
+    });
   } catch (error) {
     console.log('[IMPORT_PROJECT error]', error);
   }
