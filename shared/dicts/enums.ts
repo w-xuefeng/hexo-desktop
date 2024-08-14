@@ -6,7 +6,8 @@ export enum IPC_CHANNEL {
   CHECK_ENV = 'check-env',
   CHOOSE_DIRECTORY = 'choose-directory',
   IMPORT_PROJECT = 'import-project',
-  CREATE_PROJECT = 'create-project'
+  CREATE_PROJECT = 'create-project',
+  OPEN_CREATE_PROJECT = 'open-create-project-panel'
 }
 
 export enum STORE_KEY {
@@ -14,5 +15,6 @@ export enum STORE_KEY {
 }
 
 export enum STORAGE_KEY {
-  LANG = 'lang'
+  LANG = 'lang',
+  THEME = 'theme'
 }

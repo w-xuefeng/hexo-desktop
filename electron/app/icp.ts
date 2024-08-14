@@ -4,7 +4,7 @@ import { dialog, ipcMain, type OpenDialogOptions } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
 import { checkEnv } from '../../shared/service-utils';
 import importProject from '../services/project/import-project';
-import createProject from '../services/project/create-project';
+import { createProject, openCreateProjectPanel } from '../services/project/create-project';
 import { type ICreateProjectOptions } from '../../shared/utils/types';
 
 export default function initIPCEvent(store: Store) {
@@ -24,6 +24,13 @@ export default function initIPCEvent(store: Store) {
   ipcMain.handle(IPC_CHANNEL.IMPORT_PROJECT, (_, options: Partial<OpenDialogOptions>) => {
     return importProject(options);
   });
+
+  ipcMain.handle(
+    IPC_CHANNEL.OPEN_CREATE_PROJECT,
+    (_, routePath: string, options?: Partial<Electron.BrowserWindowConstructorOptions>) => {
+      return openCreateProjectPanel(routePath, options);
+    }
+  );
 
   ipcMain.handle(IPC_CHANNEL.CREATE_PROJECT, (_, options: ICreateProjectOptions) => {
     return createProject(options);

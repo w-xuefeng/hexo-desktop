@@ -66,7 +66,14 @@ const checkEnv = async () => {
   }
 };
 
-const createProject = async () => {
+const createProject = () => {
+  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_CREATE_PROJECT, '/create-project-panel', {
+    title: t('welcome.create'),
+    width: 500,
+    height: 400,
+    darkTheme: document.body.getAttribute('arco-theme') === 'dark'
+  });
+
   // window.open('/#/create-project-panel');
   // try {
   //   const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_PROJECT, {

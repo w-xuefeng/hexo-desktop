@@ -20,4 +20,5 @@ export interface ICreateProjectOptions {
   name: string;
   path: string;
   themeNpmPkg?: string;
+  gitRemoteOrigin?: string;
 }

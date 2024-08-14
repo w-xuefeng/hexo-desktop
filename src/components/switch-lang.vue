@@ -49,5 +49,7 @@ const i18nCommand = async (lang: TCommandType) => {
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  width: fit-content;
+  white-space: nowrap;
 }
 </style>

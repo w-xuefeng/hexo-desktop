@@ -85,6 +85,14 @@ export default {
     formNotReady:
       'The form has not completed initialization yet. Please refresh the page and try again'
   },
+  router: {
+    create: 'Create a new project'
+  },
+  theme: {
+    dark: 'Dark',
+    light: 'Light',
+    auto: 'Auto'
+  },
   welcome: {
     title: 'Welcome to Hexo Desktop',
     create: 'Create a new project',

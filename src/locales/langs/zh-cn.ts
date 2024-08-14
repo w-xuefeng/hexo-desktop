@@ -82,6 +82,14 @@ export default {
     lackOfNecessaryInformation: '缺少必要信息',
     formNotReady: '表单尚未完成初始化，请刷新页面重试'
   },
+  router: {
+    create: '创建新项目'
+  },
+  theme: {
+    dark: '深色模式',
+    light: '浅色模式',
+    auto: '跟随系统'
+  },
   welcome: {
     title: '欢迎使用 Hexo 桌面版客户端',
     create: '创建新项目',

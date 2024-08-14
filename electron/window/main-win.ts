@@ -1,11 +1,8 @@
 import { BrowserWindow } from 'electron';
 import { GLWins } from '../../shared/global-manager/wins';
 import { fileURLToPath } from 'url';
+import { devToolsVisible } from '../../shared/configs';
 import path from 'path';
-
-const devToolsVisible = true;
-// const devToolsVisible =
-//   !!process.env['VITE_DEV_SERVER_URL'];
 
 export function createMainWindow() {
   GLWins.mainWin = new BrowserWindow({
@@ -21,6 +18,10 @@ export function createMainWindow() {
   // Test active push message to Renderer-process.
   GLWins.mainWin.webContents.on('did-finish-load', () => {
     GLWins.mainWin?.webContents.send('main-process-message', new Date().toLocaleString());
+  });
+
+  GLWins.mainWin.on('close', () => {
+    GLWins.mainWin = null;
   });
 
   if (process.env['VITE_DEV_SERVER_URL']) {

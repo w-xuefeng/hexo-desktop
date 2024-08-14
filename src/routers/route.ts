@@ -1,4 +1,7 @@
+import { useSharedLocales } from '@/locales';
 import { RouteRecordRaw } from 'vue-router';
+
+const { t } = useSharedLocales();
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -29,6 +32,9 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/create-project-panel',
     name: 'create-project-panel',
+    meta: {
+      title: () => t('router.create')
+    },
     component: () => import('@/pages/create-project/index.vue')
   },
   {
