@@ -69,12 +69,11 @@ const checkEnv = async () => {
 const createProject = () => {
   window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_CREATE_PROJECT, '/create-project-panel', {
     title: t('welcome.create'),
-    width: 500,
-    height: 400,
-    darkTheme: document.body.getAttribute('arco-theme') === 'dark'
+    width: 800,
+    height: 600,
+    darkTheme: document.body.getAttribute('arco-theme') === 'dark',
+    resizable: false
   });
-
-  // window.open('/#/create-project-panel');
   // try {
   //   const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_PROJECT, {
   //     name: '',

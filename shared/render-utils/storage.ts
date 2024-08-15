@@ -82,6 +82,10 @@ export class SharedStore {
     return window.ipcRenderer.invoke(IPC_CHANNEL.STORE_GET, key);
   }
 
+  public static getSync(key: string) {
+    return window.ipcRenderer.sendSync(IPC_CHANNEL.STORE_GET_SYNC, key);
+  }
+
   public static set<T>(key: string, value: T) {
     window.ipcRenderer.invoke(IPC_CHANNEL.STORE_SAVE, {
       key,

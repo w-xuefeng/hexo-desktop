@@ -2,25 +2,36 @@
   <switch-theme hidden />
   <div class="create-project-panel">
     <a-row :gutter="10" align="center">
-      <a-col class="label" :span="4">项目名称</a-col>
-      <a-col class="item" :span="20">
+      <a-col class="label">{{ $t('welcome.projectName') }}</a-col>
+      <a-col class="item">
         <a-input v-model="form.name"></a-input>
       </a-col>
     </a-row>
     <a-row :gutter="10" align="center">
-      <a-col class="label" :span="4">项目路径</a-col>
-      <a-col class="item pointer" :span="20" @click="chooseDirectoryPath">
-        <a-input v-model="form.path" readonly :placeholder="$t('welcome.chooseProjectDirectory')">
+      <a-col class="label">{{ $t('welcome.projectLocation') }}</a-col>
+      <a-col class="item pointer">
+        <a-input
+          v-model="form.path"
+          class="path"
+          readonly
+          :placeholder="$t('welcome.chooseProjectDirectory')"
+        >
           <template #append>
-            <a-tag>···</a-tag>
+            <div class="choose-directory" @click="chooseDirectoryPath">···</div>
           </template>
         </a-input>
       </a-col>
     </a-row>
 
-    <a-row :gutter="10" align="center">
-      <a-col class="label" :span="8">项目主题（可选）</a-col>
-      <a-col class="item" :span="16">
+    <a-row v-if="form.path && form.name" class="tip">
+      项目路径 {{ form.path }}{{ sep }}{{ form.name }}
+    </a-row>
+
+    <a-row align="center">
+      <a-col class="label">
+        {{ $t('welcome.projectTheme') }}（{{ $t('welcome.optional') }}）
+      </a-col>
+      <a-col class="item">
         <a-select
           v-model="form.themeNpmPkg"
           placeholder="Please select ..."
@@ -32,12 +43,19 @@
       </a-col>
     </a-row>
 
-    <a-row :gutter="10" align="center">
-      <a-col class="label" :span="8">远程仓库地址（可选）</a-col>
-      <a-col class="item" :span="16">
+    <a-row align="center">
+      <a-col class="label">
+        {{ $t('welcome.gitRemoteOrigin') }}（{{ $t('welcome.optional') }}）
+      </a-col>
+      <a-col class="item">
         <a-input v-model="form.gitRemoteOrigin"></a-input>
       </a-col>
     </a-row>
+
+    <footer class="footer">
+      <a-button @click="cancel">{{ $t('operate.cancel') }}</a-button>
+      <a-button type="primary" @click="confirm">{{ $t('operate.confirm') }}</a-button>
+    </footer>
   </div>
 </template>
 
@@ -47,6 +65,9 @@ import { ICreateProjectOptions } from '@root/shared/utils/types';
 import { reactive } from 'vue';
 import { npmKeyword } from 'npm-keyword';
 import SwitchTheme from '@/components/switch-theme.vue';
+import { IPC_CHANNEL } from '@root/shared/dicts/enums';
+
+const sep = ref('/');
 
 const form = reactive<ICreateProjectOptions>({
   name: '',
@@ -91,9 +112,21 @@ const onSelectTheme = (visible: boolean) => {
   searchTheme();
 };
 
-const chooseDirectoryPath = () => {
-  console.log('chooseDirectoryPath');
+const chooseDirectoryPath = async () => {
+  const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CHOOSE_DIRECTORY);
+  if (rs.canceled) {
+    return;
+  }
+  const [projectPath] = rs.filePaths;
+  if (!projectPath) {
+    return;
+  }
+  sep.value = rs.sep;
+  form.path = projectPath;
 };
+
+const cancel = () => {};
+const confirm = () => {};
 </script>
 
 <style scoped lang="less">
@@ -104,9 +137,42 @@ const chooseDirectoryPath = () => {
   padding: 20px;
   box-sizing: border-box;
   gap: 20px;
+  height: 100%;
+
+  .label {
+    margin-bottom: 10px;
+  }
+
+  .choose-directory {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 12px;
+  }
+
+  .path {
+    :deep(.arco-input-append) {
+      padding: 0;
+    }
+  }
 
   .pointer {
     cursor: pointer;
+  }
+
+  .tip {
+    font-size: 12px;
+    color: gray;
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: auto;
   }
 }
 </style>

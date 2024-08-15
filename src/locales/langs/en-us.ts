@@ -85,6 +85,50 @@ export default {
     formNotReady:
       'The form has not completed initialization yet. Please refresh the page and try again'
   },
+  operate: {
+    submit: 'Submit',
+    search: 'Search',
+    reset: 'Reset',
+    edit: 'Edit',
+    cancel: 'Cancel',
+    save: 'Save',
+    details: 'Details',
+    import: 'Import',
+    export: 'Export',
+    add: 'Add',
+    confirm: 'Confirm',
+    ok: 'OK',
+    delete: 'Delete',
+    back: 'Back',
+    close: 'Close',
+    create: 'Create',
+    send: 'Send',
+    upload: 'Upload',
+    uploadAvatar: 'Upload avatar',
+    reupload: 'Reupload',
+    preview: 'Preview',
+    download: 'Download',
+    refresh: 'Refresh page',
+    resetPassword: 'Reset Password',
+    enable: 'Enable',
+    disable: 'Disable',
+    enabled: 'Enable',
+    disabled: 'Disabled',
+    completed: 'Complete',
+    runAs: 'Run as',
+    downloadFile: 'Download',
+    reject: 'Reject',
+    nextStep: 'Next step',
+    prevStep: 'Previous step',
+    approve: 'Agree',
+    resubmit: 'Resubmit',
+    select: 'Select',
+    reselect: 'Reselect',
+    iGotIt: 'I got it',
+    payNow: 'Pay now',
+    goToPay: 'Go to pay',
+    copy: 'Copy'
+  },
   router: {
     create: 'Create a new project'
   },
@@ -97,6 +141,11 @@ export default {
     title: 'Welcome to Hexo Desktop',
     create: 'Create a new project',
     import: 'Import existing projects',
-    chooseProjectDirectory: 'Please select the directory where the project is located'
+    chooseProjectDirectory: 'Please select the directory where the project is located',
+    projectName: 'Project Name',
+    projectLocation: 'Project Location',
+    projectTheme: 'Project Theme',
+    optional: 'Optional',
+    gitRemoteOrigin: 'Git Remote Origin'
   }
 };

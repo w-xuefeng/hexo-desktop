@@ -14,6 +14,10 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     const [channel, ...omit] = args;
     return ipcRenderer.send(channel, ...omit);
   },
+  sendSync(...args: Parameters<typeof ipcRenderer.sendSync>) {
+    const [channel, ...omit] = args;
+    return ipcRenderer.sendSync(channel, ...omit);
+  },
   invoke(...args: Parameters<typeof ipcRenderer.invoke>) {
     const [channel, ...omit] = args;
     return ipcRenderer.invoke(channel, ...omit);

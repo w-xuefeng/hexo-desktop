@@ -1,16 +1,66 @@
-import { STORAGE_KEY } from '@root/shared/dicts/enums';
-import { SharedStorage } from '@root/shared/render-utils/storage';
+import { IPC_CHANNEL, STORE_KEY } from '@root/shared/dicts/enums';
+import { SharedStore } from '@root/shared/render-utils/storage';
 
 export type ThemeType = 'light' | 'dark' | 'auto';
 
 export function useTheme() {
-  const theme = ref<ThemeType>(
-    (SharedStorage.getStorage(STORAGE_KEY.THEME) || 'auto') as ThemeType
-  );
+  const matchMedia = window.matchMedia('(prefers-color-scheme: light)');
+  const theme = ref<ThemeType>(SharedStore.getSync(STORE_KEY.THEME) || 'auto');
+
+  const dark = () => {
+    document.body.setAttribute('arco-theme', 'dark');
+  };
+
+  const light = () => {
+    document.body.removeAttribute('arco-theme');
+  };
+
+  const checkTheme = (e: MediaQueryListEvent | { matches: boolean }) => {
+    e.matches ? light() : dark();
+  };
+
+  const removeAutoChangeThemeEvent = () => {
+    matchMedia.removeEventListener('change', checkTheme);
+  };
+
+  const addAutoChangeThemeEvent = () => {
+    removeAutoChangeThemeEvent();
+    matchMedia.addEventListener('change', checkTheme);
+  };
+
+  const switchTheme = (e: any) => {
+    switch (e as ThemeType) {
+      case 'light':
+        removeAutoChangeThemeEvent();
+        light();
+        break;
+      case 'dark':
+        removeAutoChangeThemeEvent();
+        dark();
+        break;
+      case 'auto':
+        checkTheme(matchMedia);
+        addAutoChangeThemeEvent();
+        break;
+    }
+  };
+
   watch(theme, (e) => {
-    SharedStorage.setStorage(STORAGE_KEY.THEME, e);
+    switchTheme(e);
+    SharedStore.set(STORE_KEY.THEME, e);
   });
+
+  window.ipcRenderer.on(IPC_CHANNEL.STORE_CHANGED, (_, store) => {
+    if (store.theme !== theme.value) {
+      theme.value = store.theme;
+      console.log('theme notified');
+    }
+  });
+
+  switchTheme(theme.value);
+
   return {
-    theme
+    theme,
+    switchTheme
   };
 }

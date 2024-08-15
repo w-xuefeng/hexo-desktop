@@ -1,4 +1,5 @@
 import Store from 'electron-store';
+import path from 'node:path';
 import initIPCStoreEvent from '../store';
 import { dialog, ipcMain, type OpenDialogOptions } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
@@ -14,11 +15,13 @@ export default function initIPCEvent(store: Store) {
     return checkEnv();
   });
 
-  ipcMain.handle(IPC_CHANNEL.CHOOSE_DIRECTORY, (_, options: Partial<OpenDialogOptions>) => {
-    return dialog.showOpenDialog({
+  ipcMain.handle(IPC_CHANNEL.CHOOSE_DIRECTORY, async (_, options: Partial<OpenDialogOptions>) => {
+    const rs = await dialog.showOpenDialog({
       ...options,
       properties: ['openDirectory']
     });
+    Reflect.set(rs, 'sep', path.sep);
+    return rs;
   });
 
   ipcMain.handle(IPC_CHANNEL.IMPORT_PROJECT, (_, options: Partial<OpenDialogOptions>) => {

@@ -12,8 +12,8 @@ import type { ArcoLang } from '@arco-design/web-vue/es/locale/interface';
 import enUs from './langs/en-us';
 import zhCn from './langs/zh-cn';
 import { loadExternalJsFile } from '@root/shared/render-utils';
-import { SharedStorage } from '@root/shared/render-utils/storage';
-import { STORAGE_KEY } from '@root/shared/dicts/enums';
+import { SharedStore } from '@root/shared/render-utils/storage';
+import { STORE_KEY } from '@root/shared/dicts/enums';
 
 if (!('dayjs' in globalThis)) {
   // @ts-ignore
@@ -76,7 +76,7 @@ export async function loadDayJsLocals(locale: TLanguage) {
   }
 }
 
-const initialLanguage = (SharedStorage.getStorage(STORAGE_KEY.LANG) || 'zh-cn') as TLanguage;
+const initialLanguage = (SharedStore.getSync(STORE_KEY.LANG) || 'zh-cn') as TLanguage;
 
 loadDayJsLocals(initialLanguage);
 export const sharedI18n = createI18n({
@@ -92,7 +92,7 @@ export async function setI18nLanguage(locale: TLanguage) {
   loadDayJsLocals(locale);
   sharedI18n.global.locale.value = locale;
   document.querySelector('html')!.setAttribute('lang', locale.substring(0, 2));
-  SharedStorage.setStorage(STORAGE_KEY.LANG, locale);
+  SharedStore.set(STORE_KEY.LANG, locale);
 }
 
 export const currentLocale = computed(() => sharedI18n.global.locale.value);
