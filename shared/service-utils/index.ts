@@ -31,7 +31,7 @@ export function checkPath(checkPath: string) {
     isFile: false,
     isDirectory: false
   };
-  if (existsSync(checkPath)) {
+  if (!existsSync(checkPath)) {
     result.exist = false;
     return result;
   }

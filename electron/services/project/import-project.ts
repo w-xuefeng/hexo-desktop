@@ -11,11 +11,11 @@ export default async function importProject(options: Partial<OpenDialogOptions>)
       properties: ['openDirectory']
     });
     if (target.canceled) {
-      return R.fail('canceled');
+      return R.fail('exception.canceled');
     }
     const [projectPath] = target.filePaths;
     if (!projectPath) {
-      return R.fail('without projectPath');
+      return R.fail('exception.withoutProjectPath');
     }
     // TODO
     GLWins.mainWin?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {

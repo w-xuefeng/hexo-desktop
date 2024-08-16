@@ -3,7 +3,7 @@
     <a-row :gutter="10" align="center">
       <a-col class="label">{{ $t('welcome.projectName') }} <i class="red">*</i></a-col>
       <a-col class="item">
-        <a-input v-model="form.name"></a-input>
+        <a-input v-model="form.name" :placeholder="$t('welcome.inputName')"></a-input>
       </a-col>
     </a-row>
     <a-row :gutter="10" align="center">
@@ -33,8 +33,10 @@
       <a-col class="item">
         <a-select
           v-model="form.themeNpmPkg"
-          placeholder="Please select ..."
+          :placeholder="$t('welcome.selectProjectTheme')"
           :loading="searchingTheme"
+          allow-create
+          allow-clear
           @popup-visible-change="onSelectTheme"
         >
           <a-option v-for="theme in themeList" :key="theme.name">{{ theme.name }}</a-option>
@@ -47,7 +49,10 @@
         {{ $t('welcome.gitRemoteOrigin') }}（{{ $t('welcome.optional') }}）
       </a-col>
       <a-col class="item">
-        <a-input v-model="form.gitRemoteOrigin"></a-input>
+        <a-input
+          v-model="form.gitRemoteOrigin"
+          :placeholder="$t('welcome.inputGitRemoteOrigin')"
+        ></a-input>
       </a-col>
     </a-row>
 
@@ -68,8 +73,10 @@ import { npmKeyword } from 'npm-keyword';
 import { useTheme } from '@/store';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import { Message } from '@arco-design/web-vue';
+import { useSharedLocales } from '@/locales';
 
 useTheme();
+const { t } = useSharedLocales();
 const sep = ref('/');
 
 const form = reactive<ICreateProjectOptions>({
@@ -148,7 +155,7 @@ const confirm = async () => {
   try {
     const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_PROJECT, toRaw(form));
     if (!rs?.success || !rs?.data) {
-      Message.error(rs.message);
+      Message.error(t(rs.message));
       return;
     }
   } catch (error) {

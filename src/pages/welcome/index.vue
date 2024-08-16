@@ -81,7 +81,7 @@ const importProject = async () => {
       message: t('welcome.chooseProjectDirectory')
     });
     if (!rs?.success || !rs?.data) {
-      Message.error(rs.message);
+      Message.error(t(rs.message));
       return;
     }
   } catch (error) {

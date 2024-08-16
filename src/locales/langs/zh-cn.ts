@@ -80,7 +80,10 @@ export default {
     systemError: '系统异常',
     invalidDownloadURL: '下载链接无效',
     lackOfNecessaryInformation: '缺少必要信息',
-    formNotReady: '表单尚未完成初始化，请刷新页面重试'
+    formNotReady: '表单尚未完成初始化，请刷新页面重试',
+    canceled: '已取消',
+    withoutProjectPath: '未获取到项目路径',
+    projectPathIsNotEmpty: '项目路径下存在其他文件'
   },
   operate: {
     submit: '提交',
@@ -138,7 +141,10 @@ export default {
     title: '欢迎使用 Hexo 桌面版客户端',
     create: '创建新项目',
     import: '导入已有项目',
+    inputName: '请输入项目名称',
     chooseProjectDirectory: '请选择项目所在目录',
+    selectProjectTheme: '请选择项目主题',
+    inputGitRemoteOrigin: '请输入项目远程仓库地址',
     projectName: '项目名称',
     projectLocation: '项目位置',
     projectTheme: '项目主题',

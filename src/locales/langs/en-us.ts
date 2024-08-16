@@ -83,7 +83,10 @@ export default {
     invalidDownloadURL: 'Invalid download URL',
     lackOfNecessaryInformation: 'Lack of necessary information',
     formNotReady:
-      'The form has not completed initialization yet. Please refresh the page and try again'
+      'The form has not completed initialization yet. Please refresh the page and try again',
+    canceled: 'Canceled',
+    withoutProjectPath: 'The project path is not got',
+    projectPathIsNotEmpty: 'The project path is not empty'
   },
   operate: {
     submit: 'Submit',
@@ -141,7 +144,10 @@ export default {
     title: 'Welcome to Hexo Desktop',
     create: 'Create a new project',
     import: 'Import existing projects',
+    inputName: 'Please input project name',
     chooseProjectDirectory: 'Please select the directory where the project is located',
+    selectProjectTheme: 'Please select the project theme',
+    inputGitRemoteOrigin: 'Please input project git remote origin',
     projectName: 'Project Name',
     projectLocation: 'Project Location',
     projectTheme: 'Project Theme',
