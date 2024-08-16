@@ -17,6 +17,7 @@ export default async function importProject(options: Partial<OpenDialogOptions>)
     if (!projectPath) {
       return R.fail('without projectPath');
     }
+    // TODO
     GLWins.mainWin?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
       name: 'main-editor',
       query: {
