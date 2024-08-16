@@ -13,7 +13,7 @@ import enUs from './langs/en-us';
 import zhCn from './langs/zh-cn';
 import { loadExternalJsFile } from '@root/shared/render-utils';
 import { SharedStore } from '@root/shared/render-utils/storage';
-import { STORE_KEY } from '@root/shared/dicts/enums';
+import { IPC_CHANNEL, STORE_KEY } from '@root/shared/dicts/enums';
 
 if (!('dayjs' in globalThis)) {
   // @ts-ignore
@@ -66,6 +66,8 @@ export const dayjsLangs: Record<TLanguage, { url: string; lang: string }> = {
   }
 };
 
+let langChangeFromStore = false;
+
 export async function loadDayJsLocals(locale: TLanguage) {
   const name = `dayjs_locale_${locale.replace(/-/, '_')}`;
   try {
@@ -92,7 +94,11 @@ export async function setI18nLanguage(locale: TLanguage) {
   loadDayJsLocals(locale);
   sharedI18n.global.locale.value = locale;
   document.querySelector('html')!.setAttribute('lang', locale.substring(0, 2));
-  SharedStore.set(STORE_KEY.LANG, locale);
+  if (langChangeFromStore) {
+    langChangeFromStore = false;
+  } else {
+    SharedStore.set(STORE_KEY.LANG, locale);
+  }
 }
 
 export const currentLocale = computed(() => sharedI18n.global.locale.value);
@@ -100,5 +106,12 @@ export const currentLocale = computed(() => sharedI18n.global.locale.value);
 export function useSharedLocales() {
   return sharedI18n.global;
 }
+
+window.ipcRenderer.on(IPC_CHANNEL.STORE_CHANGED, (_, store) => {
+  if (store[STORE_KEY.LANG] !== sharedI18n.global.locale.value) {
+    langChangeFromStore = true;
+    setI18nLanguage(store[STORE_KEY.LANG]);
+  }
+});
 
 export default sharedI18n;

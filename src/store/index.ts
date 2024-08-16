@@ -56,9 +56,9 @@ export function useTheme() {
   });
 
   window.ipcRenderer.on(IPC_CHANNEL.STORE_CHANGED, (_, store) => {
-    if (store.theme !== theme.value) {
+    if (store[STORE_KEY.THEME] !== theme.value) {
       themeChangeFromStore = true;
-      theme.value = store.theme;
+      theme.value = store[STORE_KEY.THEME];
     }
   });
 
