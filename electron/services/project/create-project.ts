@@ -1,16 +1,45 @@
+import path from 'node:path';
 import { createIndependentWindow } from '../../window/independent-win';
 import { GLWins } from '../../../shared/global-manager/wins';
 import { IPC_CHANNEL } from '../../../shared/dicts/enums';
 import { checkPath, createDirectory, directoryIsEmpty } from '../../../shared/service-utils';
+import { runScriptBySubProcess } from '../../../shared/service-utils/utility-process';
 import R from '../common/r';
-import { type ICreateProjectOptions } from '../../../shared/utils/types';
-import path from 'node:path';
+import type { ExecuteResult, ICreateProjectOptions } from '../../../shared/utils/types';
 
 export function openCreateProjectPanel(
   routePath: string,
   options?: Partial<Electron.BrowserWindowConstructorOptions>
 ) {
   return createIndependentWindow(routePath, options);
+}
+
+function initHexoProject(cwd: string, name: string, onData?: (data: string) => void) {
+  return new Promise<ExecuteResult>((resolve) => {
+    const scriptName = 'create-project';
+    const { child, kill } = runScriptBySubProcess(scriptName, {
+      options: {
+        cwd,
+        env: {
+          ...process.env,
+          PROJECT_NAME: name,
+          // TODO
+          HEXO_PATH: 'hexo'
+        }
+      }
+    });
+    child.on('message', ({ type, data }) => {
+      if (type === 'data') {
+        onData?.(data);
+        return;
+      }
+      if (type === 'result') {
+        kill();
+        resolve(data);
+      }
+    });
+    child.postMessage(scriptName);
+  });
 }
 
 export async function createProject(
@@ -26,8 +55,14 @@ export async function createProject(
   if (projectPathInfo?.exist && !directoryIsEmpty(projectPath)) {
     return R.fail('exception.projectPathIsNotEmpty');
   }
+  const rs = await initHexoProject(options.path, options.name, (data) => {
+    fromEvent?.sender.send(IPC_CHANNEL.CREATE_PROJECT_PROGRESS, data);
+  });
 
-  // TOD
+  if (rs.error) {
+    return R.fail(rs.error);
+  }
+
   fromEvent?.sender.close();
   GLWins.mainWin?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
     name: 'main-editor',

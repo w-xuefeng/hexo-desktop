@@ -10,7 +10,8 @@ export enum IPC_CHANNEL {
   CREATE_PROJECT = 'create-project',
   OPEN_CREATE_PROJECT = 'open-create-project-panel',
   CLOSE_WINDOW = 'close-window',
-  CHANGE_ROUTER = 'change-router'
+  CHANGE_ROUTER = 'change-router',
+  CREATE_PROJECT_PROGRESS = 'create-project-progress'
 }
 
 export enum STORE_KEY {

@@ -7,12 +7,8 @@
     "moduleResolution": "bundler",
     "target": "ESNext",
     "allowSyntheticDefaultImports": true,
-    "rootDir": "electron/scripts",
+    "rootDir": "electron/scripts"
   },
-  "types": [
-    "node"
-  ],
-  "include": [
-    "electron/scripts/*"
-  ]
+  "types": ["node"],
+  "include": ["electron/scripts/*"]
 }

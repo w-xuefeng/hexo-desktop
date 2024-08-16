@@ -56,9 +56,16 @@
       </a-col>
     </a-row>
 
+    <!-- TODO -->
+    <div>
+      <ul>
+        <li v-for="(log, index) in progressLog" :key="index">{{ log }}</li>
+      </ul>
+    </div>
+
     <footer class="footer">
       <a-button @click="cancel">{{ $t('operate.cancel') }}</a-button>
-      <a-button type="primary" :disabled="disable" @click="confirm">
+      <a-button type="primary" :disabled="disable" :loading="projectCreating" @click="confirm">
         {{ $t('operate.confirm') }}
       </a-button>
     </footer>
@@ -78,6 +85,7 @@ import { useSharedLocales } from '@/locales';
 useTheme();
 const { t } = useSharedLocales();
 const sep = ref('/');
+const projectCreating = ref(false);
 
 const form = reactive<ICreateProjectOptions>({
   name: '',
@@ -97,6 +105,8 @@ const themeList = ref<
 const disable = computed(() => {
   return !form.name || !form.path;
 });
+
+const progressLog = ref<string[]>([]);
 
 const searchTheme = async () => {
   searchingTheme.value = true;
@@ -153,6 +163,7 @@ const confirm = async () => {
     return;
   }
   try {
+    projectCreating.value = true;
     const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_PROJECT, toRaw(form));
     if (!rs?.success || !rs?.data) {
       Message.error(t(rs.message));
@@ -160,8 +171,14 @@ const confirm = async () => {
     }
   } catch (error) {
     console.log('[CREATE_PROJECT error]', error);
+  } finally {
+    projectCreating.value = false;
   }
 };
+
+window.ipcRenderer.on(IPC_CHANNEL.CREATE_PROJECT_PROGRESS, (_, data: string) => {
+  progressLog.value.push(data);
+});
 </script>
 
 <style scoped lang="less">
