@@ -1,5 +1,4 @@
 <template>
-  <switch-theme hidden />
   <div class="create-project-panel">
     <a-row :gutter="10" align="center">
       <a-col class="label">{{ $t('welcome.projectName') }}</a-col>
@@ -64,9 +63,10 @@ import { ref } from 'vue';
 import { ICreateProjectOptions } from '@root/shared/utils/types';
 import { reactive } from 'vue';
 import { npmKeyword } from 'npm-keyword';
-import SwitchTheme from '@/components/switch-theme.vue';
+import { useTheme } from '@/store';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 
+useTheme();
 const sep = ref('/');
 
 const form = reactive<ICreateProjectOptions>({

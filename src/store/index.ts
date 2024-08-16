@@ -6,6 +6,7 @@ export type ThemeType = 'light' | 'dark' | 'auto';
 export function useTheme() {
   const matchMedia = window.matchMedia('(prefers-color-scheme: light)');
   const theme = ref<ThemeType>(SharedStore.getSync(STORE_KEY.THEME) || 'auto');
+  let themeChangeFromStore = false;
 
   const dark = () => {
     document.body.setAttribute('arco-theme', 'dark');
@@ -47,13 +48,17 @@ export function useTheme() {
 
   watch(theme, (e) => {
     switchTheme(e);
-    SharedStore.set(STORE_KEY.THEME, e);
+    if (themeChangeFromStore) {
+      themeChangeFromStore = false;
+    } else {
+      SharedStore.set(STORE_KEY.THEME, e);
+    }
   });
 
   window.ipcRenderer.on(IPC_CHANNEL.STORE_CHANGED, (_, store) => {
     if (store.theme !== theme.value) {
+      themeChangeFromStore = true;
       theme.value = store.theme;
-      console.log('theme notified');
     }
   });
 
