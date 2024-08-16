@@ -1,5 +1,6 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, type RouteLocationRaw } from 'vue-router';
 import { routes } from './route';
+import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 export const defaultTitle = 'Hexo Desktop';
 
 const router = createRouter({
@@ -15,5 +16,12 @@ router.afterEach((to) => {
         ? to.meta?.title
         : defaultTitle;
 });
+
+window.ipcRenderer.on(
+  IPC_CHANNEL.CHANGE_ROUTER,
+  (_, type: 'push' | 'replace' = 'push', to: RouteLocationRaw) => {
+    router[type](to);
+  }
+);
 
 export default router;

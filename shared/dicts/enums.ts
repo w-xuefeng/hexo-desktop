@@ -8,7 +8,9 @@ export enum IPC_CHANNEL {
   CHOOSE_DIRECTORY = 'choose-directory',
   IMPORT_PROJECT = 'import-project',
   CREATE_PROJECT = 'create-project',
-  OPEN_CREATE_PROJECT = 'open-create-project-panel'
+  OPEN_CREATE_PROJECT = 'open-create-project-panel',
+  CLOSE_WINDOW = 'close-window',
+  CHANGE_ROUTER = 'change-router'
 }
 
 export enum STORE_KEY {

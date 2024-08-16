@@ -1,13 +1,13 @@
 <template>
   <div class="create-project-panel">
     <a-row :gutter="10" align="center">
-      <a-col class="label">{{ $t('welcome.projectName') }}</a-col>
+      <a-col class="label">{{ $t('welcome.projectName') }} <i class="red">*</i></a-col>
       <a-col class="item">
         <a-input v-model="form.name"></a-input>
       </a-col>
     </a-row>
     <a-row :gutter="10" align="center">
-      <a-col class="label">{{ $t('welcome.projectLocation') }}</a-col>
+      <a-col class="label">{{ $t('welcome.projectLocation') }} <i class="red">*</i></a-col>
       <a-col class="item pointer">
         <a-input
           v-model="form.path"
@@ -53,18 +53,21 @@
 
     <footer class="footer">
       <a-button @click="cancel">{{ $t('operate.cancel') }}</a-button>
-      <a-button type="primary" @click="confirm">{{ $t('operate.confirm') }}</a-button>
+      <a-button type="primary" :disabled="disable" @click="confirm">
+        {{ $t('operate.confirm') }}
+      </a-button>
     </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, toRaw, computed } from 'vue';
 import { ICreateProjectOptions } from '@root/shared/utils/types';
 import { reactive } from 'vue';
 import { npmKeyword } from 'npm-keyword';
 import { useTheme } from '@/store';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
+import { Message } from '@arco-design/web-vue';
 
 useTheme();
 const sep = ref('/');
@@ -83,6 +86,10 @@ const themeList = ref<
     description: string;
   }[]
 >([]);
+
+const disable = computed(() => {
+  return !form.name || !form.path;
+});
 
 const searchTheme = async () => {
   searchingTheme.value = true;
@@ -125,8 +132,29 @@ const chooseDirectoryPath = async () => {
   form.path = projectPath;
 };
 
-const cancel = () => {};
-const confirm = () => {};
+const cancel = () => {
+  window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);
+};
+
+const confirm = async () => {
+  if (!form.name) {
+    Message.warning('请填写项目名称');
+    return;
+  }
+  if (!form.path) {
+    Message.warning('请填写项目路径');
+    return;
+  }
+  try {
+    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_PROJECT, toRaw(form));
+    if (!rs?.success || !rs?.data) {
+      Message.error(rs.message);
+      return;
+    }
+  } catch (error) {
+    console.log('[CREATE_PROJECT error]', error);
+  }
+};
 </script>
 
 <style scoped lang="less">
@@ -138,6 +166,10 @@ const confirm = () => {};
   box-sizing: border-box;
   gap: 20px;
   height: 100%;
+
+  .red {
+    color: #f40;
+  }
 
   .label {
     margin-bottom: 10px;

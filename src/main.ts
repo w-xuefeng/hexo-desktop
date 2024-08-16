@@ -3,7 +3,7 @@ import App from './App.vue';
 import router from './routers';
 import ArcoVue from '@arco-design/web-vue';
 import sharedI18n from './locales';
-import '@arco-design/web-vue/dist/arco.css';
+import '@arco-design/web-vue/dist/arco.min.css';
 import './style.less';
 
 createApp(App)

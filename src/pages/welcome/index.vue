@@ -43,11 +43,10 @@ import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
 import { useSharedLocales } from '@/locales';
 import { IconPlus, IconImport, IconSettings } from '@arco-design/web-vue/es/icon';
-import { useRouter } from 'vue-router';
+import { Message } from '@arco-design/web-vue';
 import type { ExecuteResult } from '@root/shared/utils/types';
 
 const { t } = useSharedLocales();
-const router = useRouter();
 const env = ref<ExecuteResult[]>([]);
 
 const envInfo = computed(() => {
@@ -74,24 +73,6 @@ const createProject = () => {
     darkTheme: document.body.getAttribute('arco-theme') === 'dark',
     resizable: false
   });
-  // try {
-  //   const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_PROJECT, {
-  //     name: '',
-  //     path: '/Users/mac/Documents/projects/tangyuan-space',
-  //     themeNpmPkg: ''
-  //   });
-  //   if (!rs?.success || !rs?.data) {
-  //     return;
-  //   }
-  //   router.replace({
-  //     name: 'main-editor',
-  //     query: {
-  //       path: rs.data
-  //     }
-  //   });
-  // } catch (error) {
-  //   console.log('[IMPORT_PROJECT error]', error);
-  // }
 };
 const importProject = async () => {
   try {
@@ -100,14 +81,9 @@ const importProject = async () => {
       message: t('welcome.chooseProjectDirectory')
     });
     if (!rs?.success || !rs?.data) {
+      Message.error(rs.message);
       return;
     }
-    router.replace({
-      name: 'main-editor',
-      query: {
-        path: rs.data
-      }
-    });
   } catch (error) {
     console.log('[IMPORT_PROJECT error]', error);
   }

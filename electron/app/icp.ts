@@ -35,7 +35,11 @@ export default function initIPCEvent(store: Store) {
     }
   );
 
-  ipcMain.handle(IPC_CHANNEL.CREATE_PROJECT, (_, options: ICreateProjectOptions) => {
-    return createProject(options);
+  ipcMain.handle(IPC_CHANNEL.CLOSE_WINDOW, (event) => {
+    event.sender.close();
+  });
+
+  ipcMain.handle(IPC_CHANNEL.CREATE_PROJECT, (event, options: ICreateProjectOptions) => {
+    return createProject(options, event);
   });
 }

@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { GLWins } from '../../shared/global-manager/wins';
+import { devToolsEnable } from '../../shared/configs';
 import { BrowserWindow } from 'electron';
 import { fileURLToPath } from 'node:url';
 
@@ -27,13 +28,17 @@ export function createIndependentWindow(
       ...options?.webPreferences,
       nodeIntegration: true,
       contextIsolation: true,
-      devTools: !!process.env['VITE_DEV_SERVER_URL'],
+      devTools: devToolsEnable,
       preload: path.join(fileURLToPath(import.meta.url), '..', 'preload.mjs')
     }
   });
 
   GLWins.independentWin.on('close', () => {
     GLWins.independentWin = null;
+  });
+
+  GLWins.independentWin.webContents.on('destroyed', () => {
+    GLWins.independentWin?.close();
   });
 
   if (process.env['VITE_DEV_SERVER_URL']) {
