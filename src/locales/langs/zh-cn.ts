@@ -16,7 +16,9 @@ export default {
     lackOfNecessaryInformation: '缺少必要信息',
     canceled: '已取消',
     withoutProjectPath: '未获取到项目路径',
-    projectPathIsNotEmpty: '项目路径下存在其他文件'
+    projectPathIsNotEmpty: '项目路径下存在其他文件',
+    fileNotExist: '文件不存在',
+    pathIsNotFile: '路径不是有效文件'
   },
   operate: {
     submit: '提交',
@@ -89,6 +91,7 @@ export default {
     nodePath: 'Node 路径',
     chooseOrInputNodePath: '请选择或者输入 Node 路径',
     nodeVersion: 'Node 版本',
-    checkPath: '校验路径'
+    checkPath: '校验路径',
+    errorTip: '错误信息'
   }
 };

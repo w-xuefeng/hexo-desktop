@@ -3,6 +3,7 @@ import { runScriptBySubProcess } from './utility-process';
 import { existsSync, mkdirSync, statSync } from 'node:fs';
 import { globSync } from 'glob';
 import logger from './logger';
+import path from 'node:path';
 import type { ExecuteResult } from '../utils/types';
 
 export function checkEnv() {
@@ -86,6 +87,10 @@ export async function checkNodePath(nodePath: string) {
     error: null as Error | null
   };
   if (!nodePathInfo.exist || !nodePathInfo.isFile) {
+    return result;
+  }
+  if (!nodePath.split(path.sep).at(-1)?.toLocaleLowerCase()?.includes('node')) {
+    result.error = new Error(`The path does not contain 'node'`);
     return result;
   }
   try {

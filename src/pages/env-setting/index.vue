@@ -21,6 +21,11 @@
       <a-tag color="green">{{ version }}</a-tag>
     </a-space>
 
+    <a-space v-if="errorInfo" class="version-tips">
+      <span>{{ $t('envSetting.errorTip') }}:</span>
+      <span class="red">{{ errorInfo }}</span>
+    </a-space>
+
     <footer class="footer">
       <a-button @click="cancel">{{ $t('operate.cancel') }}</a-button>
       <a-button type="outline" :disabled="disable" :loading="loading" @click="check">
@@ -39,10 +44,22 @@ import { useTheme } from '@/store';
 import { IPC_CHANNEL, STORE_KEY } from '@root/shared/dicts/enums';
 import { Message } from '@arco-design/web-vue';
 import { SharedStore } from '@root/shared/render-utils/storage';
+import { useSharedLocales } from '@/locales';
+
+interface ICheckResult {
+  status: boolean;
+  version: string | null;
+  error: Error | null;
+  exist: boolean;
+  isFile: boolean;
+  isDirectory: boolean;
+}
 
 useTheme();
 const loading = ref(false);
-const version = ref('');
+const version = ref<string | null>(null);
+const errorInfo = ref<string | Error | null>(null);
+const { t } = useSharedLocales();
 
 const form = reactive({
   nodePath: SharedStore.getSync(STORE_KEY.NODE_PATH) || ''
@@ -68,15 +85,28 @@ const cancel = () => {
   window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);
 };
 
+const handleCheckResult = (rs: ICheckResult, onSuccess?: (rs: ICheckResult) => void) => {
+  if (rs.status) {
+    errorInfo.value = null;
+    version.value = rs.version;
+    onSuccess?.(rs);
+  } else if (rs.error) {
+    version.value = null;
+    errorInfo.value = rs.error;
+  } else if (!rs.exist) {
+    version.value = null;
+    errorInfo.value = t('exception.fileNotExist');
+  } else if (!rs.isFile) {
+    version.value = null;
+    errorInfo.value = t('exception.pathIsNotFile');
+  }
+};
+
 const check = async () => {
   loading.value = true;
   try {
     const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_NODE_PATH, form.nodePath);
-    if (rs.status) {
-      version.value = rs.version;
-    } else if (rs.error) {
-      Message.error(rs.error);
-    }
+    handleCheckResult(rs);
   } finally {
     loading.value = false;
   }
@@ -90,13 +120,10 @@ const confirm = async () => {
   loading.value = true;
   try {
     const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_NODE_PATH, form.nodePath);
-    if (rs.status) {
-      version.value = rs.version;
+    handleCheckResult(rs, () => {
       SharedStore.set(STORE_KEY.NODE_PATH, form.nodePath);
       window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);
-    } else if (rs.error) {
-      Message.error(rs.error);
-    }
+    });
   } finally {
     loading.value = false;
   }

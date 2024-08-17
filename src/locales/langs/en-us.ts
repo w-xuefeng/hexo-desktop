@@ -17,7 +17,9 @@ export default {
     lackOfNecessaryInformation: 'Lack of necessary information',
     canceled: 'Canceled',
     withoutProjectPath: 'The project path is not got',
-    projectPathIsNotEmpty: 'The project path is not empty'
+    projectPathIsNotEmpty: 'The project path is not empty',
+    fileNotExist: 'The File does not exist',
+    pathIsNotFile: 'The path is not a valid file'
   },
   operate: {
     submit: 'Submit',
@@ -90,6 +92,7 @@ export default {
     nodePath: 'Node Path',
     chooseOrInputNodePath: 'Please select or input the path where the Node is located',
     nodeVersion: 'Node version',
-    checkPath: '校验路径'
+    checkPath: 'Check Path',
+    errorTip: 'Error Tips'
   }
 };
