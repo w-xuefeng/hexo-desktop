@@ -1,6 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import { filePath } from './shared';
+import { filePath } from './common';
 
 function logPath(script: string) {
   return filePath('logs', `script-${script}.log`);

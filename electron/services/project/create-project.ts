@@ -15,8 +15,7 @@ function initHexoProject(cwd: string, name: string, onData?: (data: string) => v
         env: {
           ...process.env,
           PROJECT_NAME: name,
-          // TODO
-          HEXO_PATH: 'hexo'
+          HEXO_PATH: path.join(process.env.APP_ROOT, 'node_module', 'hexo-cli', 'bin', 'hexo')
         }
       }
     });

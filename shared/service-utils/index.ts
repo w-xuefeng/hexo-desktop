@@ -17,8 +17,8 @@ export function checkEnv() {
       options: {
         env: {
           ...process.env,
-          NODE_PATH,
-          NPM_PATH
+          ...(NODE_PATH ? { NODE_PATH } : {}),
+          ...(NPM_PATH ? { NPM_PATH } : {})
         },
         cwd: app.getPath('home')
       }
