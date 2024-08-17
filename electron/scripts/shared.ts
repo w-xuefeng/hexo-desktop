@@ -1,6 +1,9 @@
 import path from 'node:path';
+import os from 'node:os';
 import { spawn, execSync, type SpawnOptionsWithoutStdio } from 'node:child_process';
 import { logScript } from './script-logger';
+
+export const pkgName = 'hexo-desktop';
 
 export type ExecuteParams = {
   type: string;
@@ -16,6 +19,10 @@ export type ExecuteResult = {
   code: number | null;
   stderr: string | null;
 };
+
+export function filePath(type: string, ...filePath: string[]) {
+  return path.join(os.homedir(), pkgName, type, ...filePath);
+}
 
 export function execute(options: ExecuteParams) {
   return new Promise<ExecuteResult>((resolve) => {

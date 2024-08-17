@@ -1,15 +1,31 @@
 import { app } from 'electron';
-import { runScriptBySubProcess } from './utility-process';
+import { getExecutablePath, runScriptBySubProcess } from './utility-process';
 import { existsSync, mkdirSync, statSync } from 'node:fs';
 import { globSync } from 'glob';
+import { GLStore } from '../global-manager/stores';
+import { STORE_KEY } from '../dicts/enums';
 import logger from './logger';
 import path from 'node:path';
 import type { ExecuteResult } from '../utils/types';
 
 export function checkEnv() {
+  const NODE_PATH = GLStore.get(STORE_KEY.NODE_PATH) as string;
+  const NPM_PATH = GLStore.get(STORE_KEY.NPM_PATH) || getExecutablePath('npm', NODE_PATH);
+  if (NPM_PATH) {
+    GLStore.set(STORE_KEY.NPM_PATH, NPM_PATH);
+  }
   return new Promise<ExecuteResult[]>((resolve) => {
     const scriptName = 'check-env';
-    const { child, kill } = runScriptBySubProcess(scriptName);
+    const { child, kill } = runScriptBySubProcess(scriptName, {
+      options: {
+        env: {
+          ...process.env,
+          NODE_PATH,
+          NPM_PATH
+        },
+        cwd: app.getPath('home')
+      }
+    });
     child.once('message', (result) => {
       const appVersion = app.getVersion();
       const withAppResult = [

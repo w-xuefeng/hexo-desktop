@@ -1,11 +1,9 @@
 import path from 'node:path';
-import os from 'node:os';
 import fs from 'node:fs';
-
-const pkgName = 'hexo-desktop';
+import { filePath } from './shared';
 
 function logPath(script: string) {
-  return path.join(os.homedir(), pkgName, 'logs', `script-${script}.log`);
+  return filePath('logs', `script-${script}.log`);
 }
 
 export function logScript(script: string, info: string, level = 'info') {

@@ -19,7 +19,8 @@ export enum IPC_CHANNEL {
 export enum STORE_KEY {
   LANG = 'lang',
   THEME = 'theme',
-  NODE_PATH = 'node-path'
+  NODE_PATH = 'node-path',
+  NPM_PATH = 'npm-path'
 }
 
 export enum STORAGE_KEY {}

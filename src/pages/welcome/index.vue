@@ -60,6 +60,8 @@ const envInfo = computed(() => {
 const checkEnv = async () => {
   try {
     env.value = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_ENV);
+    // CLG
+    console.log('checkEnv', env.value);
   } catch (error) {
     console.log('[checkEnv error]', error);
   }
