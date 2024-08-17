@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "sh ./scripts/dev-prepare.sh && vite",
     "clean": "rimraf dist dist-electron release",
+    "clean-dev": "rimraf dist dist-electron",
     "build": "sh ./scripts/build-prepare.sh && electron-builder -wm",
     "build:w": "sh ./scripts/build-prepare.sh && electron-builder -w",
     "build:m": "sh ./scripts/build-prepare.sh && electron-builder -m",
