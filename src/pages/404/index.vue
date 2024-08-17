@@ -34,7 +34,7 @@
       h1 {
         font-size: 50px;
         display: inline-block;
-        padding-right: 12px;
+        padding-inline-end: 12px;
         animation: type 0.5s alternate infinite;
       }
     }

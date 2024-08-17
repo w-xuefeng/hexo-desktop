@@ -30,3 +30,7 @@ export function initProcessEnv() {
   process.env.RENDERER_DIST = RENDERER_DIST;
   process.env.VITE_PUBLIC = VITE_PUBLIC;
 }
+
+export const GLIPCEventHandled = {
+  current: false
+};

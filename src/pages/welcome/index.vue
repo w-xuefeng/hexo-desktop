@@ -66,7 +66,7 @@ const checkEnv = async () => {
 };
 
 const createProject = () => {
-  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_CREATE_PROJECT, '/create-project-panel', {
+  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW, '/create-project-panel', {
     title: t('welcome.create'),
     width: 800,
     height: 600,
@@ -89,7 +89,15 @@ const importProject = async () => {
   }
 };
 
-const settings = () => {};
+const settings = () => {
+  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW, '/env-setting', {
+    title: t('router.envSetting'),
+    width: 500,
+    height: 300,
+    darkTheme: document.body.getAttribute('arco-theme') === 'dark',
+    resizable: false
+  });
+};
 
 checkEnv();
 </script>
@@ -140,7 +148,7 @@ checkEnv();
     }
 
     .settings {
-      margin-left: auto;
+      margin-inline-start: auto;
       cursor: pointer;
     }
   }

@@ -196,7 +196,7 @@ window.ipcRenderer.on(IPC_CHANNEL.CREATE_PROJECT_PROGRESS, (_, data: string) => 
   }
 
   .label {
-    margin-bottom: 10px;
+    margin-block-end: 10px;
   }
 
   .choose-directory {
@@ -228,7 +228,7 @@ window.ipcRenderer.on(IPC_CHANNEL.CREATE_PROJECT_PROGRESS, (_, data: string) => 
     align-items: center;
     justify-content: flex-end;
     gap: 20px;
-    margin-top: auto;
+    margin-block-start: auto;
   }
 }
 </style>

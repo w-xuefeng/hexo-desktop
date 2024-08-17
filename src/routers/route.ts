@@ -38,6 +38,14 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/pages/create-project/index.vue')
   },
   {
+    path: '/env-setting',
+    name: 'env-setting',
+    meta: {
+      title: () => t('router.envSetting')
+    },
+    component: () => import('@/pages/env-setting/index.vue')
+  },
+  {
     path: '/404/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/pages/404/index.vue'),

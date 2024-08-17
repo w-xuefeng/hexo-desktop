@@ -1,18 +1,10 @@
 import path from 'node:path';
-import { createIndependentWindow } from '../../window/independent-win';
 import { GLWins } from '../../../shared/global-manager/wins';
 import { IPC_CHANNEL } from '../../../shared/dicts/enums';
 import { checkPath, createDirectory, directoryIsEmpty } from '../../../shared/service-utils';
 import { runScriptBySubProcess } from '../../../shared/service-utils/utility-process';
 import R from '../common/r';
 import type { ExecuteResult, ICreateProjectOptions } from '../../../shared/utils/types';
-
-export function openCreateProjectPanel(
-  routePath: string,
-  options?: Partial<Electron.BrowserWindowConstructorOptions>
-) {
-  return createIndependentWindow(routePath, options);
-}
 
 function initHexoProject(cwd: string, name: string, onData?: (data: string) => void) {
   return new Promise<ExecuteResult>((resolve) => {
