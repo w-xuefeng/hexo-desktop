@@ -58,9 +58,9 @@ export async function createProject(
   GLWins.mainWin?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
     name: 'main-editor',
     query: {
-      path: options.path
+      path: projectPath
     }
   });
   GLWins.mainWin?.maximize();
-  return R.success(options.path);
+  return R.success(projectPath);
 }
