@@ -80,6 +80,7 @@ export function getDirectoryTree(checkPath: string) {
 }
 
 export function getCommandVersion(commandPath: string) {
+  const NODE_PATH = GLStore.get(STORE_KEY.NODE_PATH) as string;
   return new Promise<ExecuteResult>((resolve) => {
     const scriptName = 'exe';
     const { child, kill } = runScriptBySubProcess(scriptName, {
@@ -87,6 +88,7 @@ export function getCommandVersion(commandPath: string) {
         cwd: app.getPath('home'),
         env: {
           ...process.env,
+          ...(NODE_PATH ? { NODE_PATH } : {}),
           COMMAND: `${commandPath} -v`
         }
       }

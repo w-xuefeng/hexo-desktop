@@ -160,16 +160,19 @@ const cancel = () => {
 const handleCheckResult = (
   type: 'node' | 'npm' | 'hexo',
   rs: ICheckResult,
-  onSuccess?: (type: 'node' | 'npm' | 'hexo', rs: ICheckResult) => void
+  onSuccess?: (type: 'node' | 'npm' | 'hexo', rs: ICheckResult) => void,
+  onError?: (type: 'node' | 'npm' | 'hexo', rs: ICheckResult) => void
 ) => {
   if (rs.status) {
     errorInfo[type] = null;
     versions[type] = type === 'hexo' ? rs.version?.split('\n')?.at(0) || null : rs.version;
     onSuccess?.(type, rs);
-  } else if (!rs.version && rs.stderr) {
+    return;
+  }
+
+  if (!rs.version && rs.stderr) {
     versions[type] = null;
     errorInfo[type] = rs.stderr;
-    return;
   } else if (rs.error) {
     versions[type] = null;
     errorInfo[type] = rs.error;
@@ -180,24 +183,36 @@ const handleCheckResult = (
     versions[type] = null;
     errorInfo[type] = t('exception.pathIsNotFile');
   }
+  onError?.(type, rs);
 };
 
-const check = async (commandPath: string, type: 'node' | 'npm' | 'hexo') => {
-  loading.value = true;
-  try {
-    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_COMMAND_PATH, commandPath, type);
-    handleCheckResult(type, rs);
-  } finally {
-    loading.value = false;
-  }
+const check = (commandPath: string, type: 'node' | 'npm' | 'hexo') => {
+  return new Promise<string>((resolve, reject) => {
+    const checkFileName = type;
+    window.ipcRenderer
+      .invoke(IPC_CHANNEL.CHECK_COMMAND_PATH, commandPath, checkFileName)
+      .then((rs) => {
+        handleCheckResult(
+          type,
+          rs,
+          () => {
+            type === 'node' && SharedStore.set(STORE_KEY[keyMap[type]], commandPath);
+            resolve(commandPath);
+          },
+          reject
+        );
+      });
+  });
 };
 
 const checkAllPath = async () => {
-  return Promise.all([
-    check(form.nodePath, 'node'),
-    check(form.npmPath, 'npm'),
-    check(form.hexoPath, 'hexo')
-  ]);
+  loading.value = true;
+  try {
+    await check(form.nodePath, 'node');
+    await Promise.all([check(form.npmPath, 'npm'), check(form.hexoPath, 'hexo')]);
+  } finally {
+    loading.value = false;
+  }
 };
 
 const checkAndHandleResult = async (commandPath: string, type: 'node' | 'npm' | 'hexo') => {
