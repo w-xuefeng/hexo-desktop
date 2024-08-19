@@ -7,6 +7,10 @@ import path from 'path';
 export function createMainWindow() {
   GLWins.mainWin = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'logo.svg'),
+    width: 850,
+    height: 600,
+    minWidth: 850,
+    minHeight: 600,
     webPreferences: {
       preload: path.join(fileURLToPath(import.meta.url), '..', 'preload.mjs'),
       nodeIntegration: true,
