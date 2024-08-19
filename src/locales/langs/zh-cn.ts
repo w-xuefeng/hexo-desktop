@@ -89,8 +89,14 @@ export default {
   },
   envSetting: {
     nodePath: 'Node 路径',
+    npmPath: 'NPM 路径',
+    hexoPath: 'Hexo 路径',
     chooseOrInputNodePath: '请选择或者输入 Node 路径',
+    chooseOrInputNpmPath: '请选择或者输入 NPM 路径',
+    chooseOrInputHexoPath: '请选择或者输入 Hexo 路径',
     nodeVersion: 'Node 版本',
+    npmVersion: 'NPM 版本',
+    hexoVersion: 'Hexo 版本',
     checkPath: '校验路径',
     errorTip: '错误信息'
   }

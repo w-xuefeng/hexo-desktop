@@ -1,34 +1,86 @@
 <template>
   <div class="env-setting-panel">
-    <a-row :gutter="10" align="center">
-      <a-col class="label">{{ $t('envSetting.nodePath') }} <i class="red">*</i></a-col>
-      <a-col class="item pointer">
-        <a-input
-          v-model="form.nodePath"
-          class="path"
-          :disabled="loading"
-          :placeholder="$t('envSetting.chooseOrInputNodePath')"
-        >
-          <template #append>
-            <div class="choose-directory" @click="chooseDirectoryPath">···</div>
-          </template>
-        </a-input>
-      </a-col>
-    </a-row>
-
-    <a-space v-if="version" class="version-tips">
-      <span>{{ $t('envSetting.nodeVersion') }}:</span>
-      <a-tag color="green">{{ version }}</a-tag>
+    <a-space direction="vertical">
+      <a-row :gutter="10" align="center">
+        <a-col class="label">{{ $t('envSetting.nodePath') }} <i class="red">*</i></a-col>
+        <a-col class="item pointer">
+          <a-input
+            v-model="form.nodePath"
+            class="path"
+            :disabled="loading"
+            :placeholder="$t('envSetting.chooseOrInputNodePath')"
+          >
+            <template #append>
+              <div class="choose-directory" @click="chooseDirectoryPath('nodePath')">···</div>
+            </template>
+          </a-input>
+        </a-col>
+      </a-row>
+      <a-space v-if="versions.node" class="version-tips">
+        <span>{{ $t('envSetting.nodeVersion') }}:</span>
+        <a-tag color="green">{{ versions.node }}</a-tag>
+      </a-space>
+      <a-space v-if="errorInfo.node" class="version-tips">
+        <span>{{ $t('envSetting.errorTip') }}:</span>
+        <span class="red">{{ errorInfo.node }}</span>
+      </a-space>
     </a-space>
 
-    <a-space v-if="errorInfo" class="version-tips">
-      <span>{{ $t('envSetting.errorTip') }}:</span>
-      <span class="red">{{ errorInfo }}</span>
+    <a-space direction="vertical">
+      <a-row :gutter="10" align="center">
+        <a-col class="label">{{ $t('envSetting.npmPath') }} <i class="red">*</i></a-col>
+        <a-col class="item pointer">
+          <a-input
+            v-model="form.npmPath"
+            class="path"
+            :disabled="loading"
+            :placeholder="$t('envSetting.chooseOrInputNpmPath')"
+          >
+            <template #append>
+              <div class="choose-directory" @click="chooseDirectoryPath('npmPath')">···</div>
+            </template>
+          </a-input>
+        </a-col>
+      </a-row>
+      <a-space v-if="versions.npm" class="version-tips">
+        <span>{{ $t('envSetting.npmVersion') }}:</span>
+        <a-tag color="green">{{ versions.npm }}</a-tag>
+      </a-space>
+      <a-space v-if="errorInfo.npm" class="version-tips">
+        <span>{{ $t('envSetting.errorTip') }}:</span>
+        <span class="red">{{ errorInfo.npm }}</span>
+      </a-space>
+    </a-space>
+
+    <a-space direction="vertical">
+      <a-row :gutter="10" align="center">
+        <a-col class="label">{{ $t('envSetting.hexoPath') }} <i class="red">*</i></a-col>
+        <a-col class="item pointer">
+          <a-input
+            v-model="form.hexoPath"
+            class="path"
+            :disabled="loading"
+            :placeholder="$t('envSetting.chooseOrInputHexoPath')"
+          >
+            <template #append>
+              <div class="choose-directory" @click="chooseDirectoryPath('hexoPath')">···</div>
+            </template>
+          </a-input>
+        </a-col>
+      </a-row>
+      <a-space v-if="versions.hexo" class="version-tips">
+        <span>{{ $t('envSetting.hexoVersion') }}:</span>
+        <a-tag color="green">{{ versions.hexo }}</a-tag>
+      </a-space>
+      <a-space v-if="errorInfo.hexo" class="version-tips">
+        <span>{{ $t('envSetting.errorTip') }}:</span>
+        <span class="red">{{ errorInfo.hexo }}</span>
+      </a-space>
     </a-space>
 
     <footer class="footer">
       <a-button @click="cancel">{{ $t('operate.cancel') }}</a-button>
-      <a-button type="outline" :disabled="disable" :loading="loading" @click="check">
+      <a-button type="outline" :disabled="disable" :loading="loading" @click="checkAllPath">
         {{ $t('envSetting.checkPath') }}
       </a-button>
       <a-button type="primary" :disabled="disable" :loading="loading" @click="confirm">
@@ -46,6 +98,12 @@ import { Message } from '@arco-design/web-vue';
 import { SharedStore } from '@root/shared/render-utils/storage';
 import { useSharedLocales } from '@/locales';
 
+const keyMap = {
+  node: 'NODE_PATH',
+  npm: 'NPM_PATH',
+  hexo: 'HEXO_PATH'
+} as const;
+
 interface ICheckResult {
   status: boolean;
   version: string | null;
@@ -57,81 +115,116 @@ interface ICheckResult {
 
 useTheme();
 const loading = ref(false);
-const version = ref<string | null>(null);
-const errorInfo = ref<string | Error | null>(null);
+
+const versions = reactive({
+  node: null as string | null,
+  npm: null as string | null,
+  hexo: null as string | null
+});
+
+const errorInfo = reactive({
+  node: null as string | Error | null,
+  npm: null as string | Error | null,
+  hexo: null as string | Error | null
+});
+
 const { t } = useSharedLocales();
 
 const form = reactive({
-  nodePath: SharedStore.getSync(STORE_KEY.NODE_PATH) || ''
+  nodePath: SharedStore.getSync(STORE_KEY.NODE_PATH) || '',
+  npmPath: SharedStore.getSync(STORE_KEY.NPM_PATH) || '',
+  hexoPath: SharedStore.getSync(STORE_KEY.HEXO_PATH) || ''
 });
 
 const disable = computed(() => {
-  return !form.nodePath;
+  return !form.nodePath || !form.npmPath || !form.hexoPath;
 });
 
-const chooseDirectoryPath = async () => {
+const chooseDirectoryPath = async (type: 'nodePath' | 'npmPath' | 'hexoPath') => {
   const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CHOOSE_FILE);
   if (rs.canceled) {
     return;
   }
-  const [nodePath] = rs.filePaths;
-  if (!nodePath) {
+  const [commandPath] = rs.filePaths;
+  if (!commandPath) {
     return;
   }
-  form.nodePath = nodePath;
+  form[type] = commandPath;
 };
 
 const cancel = () => {
   window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);
 };
 
-const handleCheckResult = (rs: ICheckResult, onSuccess?: (rs: ICheckResult) => void) => {
+const handleCheckResult = (
+  type: 'node' | 'npm' | 'hexo',
+  rs: ICheckResult,
+  onSuccess?: (type: 'node' | 'npm' | 'hexo', rs: ICheckResult) => void
+) => {
   if (rs.status) {
-    errorInfo.value = null;
-    version.value = rs.version;
-    onSuccess?.(rs);
+    errorInfo[type] = null;
+    versions[type] = type === 'hexo' ? rs.version?.split('\n')?.at(0) || null : rs.version;
+    onSuccess?.(type, rs);
   } else if (rs.error) {
-    version.value = null;
-    errorInfo.value = rs.error;
+    versions[type] = null;
+    errorInfo[type] = rs.error;
   } else if (!rs.exist) {
-    version.value = null;
-    errorInfo.value = t('exception.fileNotExist');
+    versions[type] = null;
+    errorInfo[type] = t('exception.fileNotExist');
   } else if (!rs.isFile) {
-    version.value = null;
-    errorInfo.value = t('exception.pathIsNotFile');
+    versions[type] = null;
+    errorInfo[type] = t('exception.pathIsNotFile');
   }
 };
 
-const check = async () => {
+const check = async (commandPath: string, type: 'node' | 'npm' | 'hexo') => {
   loading.value = true;
   try {
-    const rs = await window.ipcRenderer.invoke(
-      IPC_CHANNEL.CHECK_COMMAND_PATH,
-      form.nodePath,
-      'node'
-    );
-    handleCheckResult(rs);
+    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_COMMAND_PATH, commandPath, type);
+    handleCheckResult(type, rs);
   } finally {
     loading.value = false;
   }
 };
 
+const checkAllPath = async () => {
+  return Promise.all([
+    check(form.nodePath, 'node'),
+    check(form.npmPath, 'npm'),
+    check(form.hexoPath, 'hexo')
+  ]);
+};
+
+const checkAndHandleResult = async (commandPath: string, type: 'node' | 'npm' | 'hexo') => {
+  const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_COMMAND_PATH, commandPath, type);
+  handleCheckResult(type, rs, () => {
+    SharedStore.set(STORE_KEY[keyMap[type]], commandPath);
+  });
+};
+
 const confirm = async () => {
   if (!form.nodePath) {
-    Message.warning('请填写项目名称');
+    Message.warning(t('envSetting.chooseOrInputNodePath'));
+    return;
+  }
+  if (!form.npmPath) {
+    Message.warning(t('envSetting.chooseOrInputNpmPath'));
+    return;
+  }
+  if (!form.hexoPath) {
+    Message.warning(t('envSetting.chooseOrInputHexoPath'));
     return;
   }
   loading.value = true;
   try {
-    const rs = await window.ipcRenderer.invoke(
-      IPC_CHANNEL.CHECK_COMMAND_PATH,
-      form.nodePath,
-      'node'
-    );
-    handleCheckResult(rs, () => {
-      SharedStore.set(STORE_KEY.NODE_PATH, form.nodePath);
+    await Promise.all([
+      checkAndHandleResult(form.nodePath, 'node'),
+      checkAndHandleResult(form.npmPath, 'npm'),
+      checkAndHandleResult(form.hexoPath, 'hexo')
+    ]);
+    if (versions.node && versions.npm && versions.hexo) {
       window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);
-    });
+    }
   } finally {
     loading.value = false;
   }

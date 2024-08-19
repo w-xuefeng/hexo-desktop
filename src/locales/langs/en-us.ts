@@ -90,8 +90,14 @@ export default {
   },
   envSetting: {
     nodePath: 'Node Path',
-    chooseOrInputNodePath: 'Please select or input the path where the Node is located',
+    npmPath: 'NPM Path',
+    hexoPath: 'Hexo Path',
+    chooseOrInputNodePath: 'Please select or input the path where the node is located',
+    chooseOrInputNpmPath: 'Please select or input the path where the npm is located',
+    chooseOrInputHexoPath: 'Please select or input the path where the hexo is located',
     nodeVersion: 'Node version',
+    npmVersion: 'NPM version',
+    hexoVersion: 'Hexo version',
     checkPath: 'Check Path',
     errorTip: 'Error Tips'
   }

@@ -53,9 +53,9 @@ const envInfo = computed(() => {
   return env.value.filter((e) => !e.error);
 });
 
-// const envErrorInfo = computed(() => {
-//   return env.value.filter((e) => e.error);
-// });
+const envErrorInfo = computed(() => {
+  return env.value.filter((e) => e.error);
+});
 
 const checkEnv = async () => {
   try {
@@ -64,6 +64,10 @@ const checkEnv = async () => {
     console.log('checkEnv', env.value);
   } catch (error) {
     console.log('[checkEnv error]', error);
+  }
+
+  if (envErrorInfo.value.length) {
+    settings();
   }
 };
 
@@ -76,6 +80,7 @@ const createProject = () => {
     resizable: false
   });
 };
+
 const importProject = async () => {
   try {
     const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.IMPORT_PROJECT, {
@@ -94,8 +99,8 @@ const importProject = async () => {
 const settings = () => {
   window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW, '/env-setting', {
     title: t('router.envSetting'),
-    width: 500,
-    height: 300,
+    width: 600,
+    height: 500,
     darkTheme: document.body.getAttribute('arco-theme') === 'dark',
     resizable: false
   });
