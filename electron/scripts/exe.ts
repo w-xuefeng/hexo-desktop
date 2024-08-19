@@ -5,10 +5,6 @@ const scriptName = 'exe';
 const COMMAND = process.env.COMMAND!;
 const [command, ...args] = COMMAND.split(' ');
 
-if (process.env.NODE_PATH) {
-  process.execPath = process.env.NODE_PATH;
-}
-
 run(scriptName, async () => {
   const rs = await execute({
     type: command,
