@@ -22,7 +22,7 @@ export default {
     target: [
       {
         target: 'nsis',
-        arch: ['x64']
+        arch: ['x64', 'arm64']
       }
     ],
     artifactName: '${productName}-Windows-${version}-${arch}-Setup.${ext}',
