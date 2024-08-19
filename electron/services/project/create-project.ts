@@ -1,13 +1,18 @@
 import path from 'node:path';
 import { GLWins } from '../../../shared/global-manager/wins';
-import { IPC_CHANNEL } from '../../../shared/dicts/enums';
+import { GLStore } from '../../../shared/global-manager/stores';
+import { IPC_CHANNEL, STORE_KEY } from '../../../shared/dicts/enums';
 import { checkPath, createDirectory, directoryIsEmpty } from '../../../shared/service-utils';
-import { runScriptBySubProcess } from '../../../shared/service-utils/utility-process';
+import {
+  getParentPath,
+  runScriptBySubProcess
+} from '../../../shared/service-utils/utility-process';
 import R from '../common/r';
 import type { ExecuteResult, ICreateProjectOptions } from '../../../shared/utils/types';
 
 function initHexoProject(cwd: string, name: string, onData?: (data: string) => void) {
-  const hexoPath = path.join(process.env.APP_ROOT, 'node_modules', 'hexo-cli', 'bin', 'hexo');
+  const hexoPath = GLStore.get(STORE_KEY.HEXO_PATH) || 'hexo';
+  const NODE_PATH = GLStore.get(STORE_KEY.NODE_PATH) as string;
   return new Promise<ExecuteResult>((resolve) => {
     const scriptName = 'exe';
     const { child, kill } = runScriptBySubProcess(scriptName, {
@@ -15,7 +20,13 @@ function initHexoProject(cwd: string, name: string, onData?: (data: string) => v
         cwd,
         env: {
           ...process.env,
-          COMMAND: `${hexoPath} init ${name}`
+          COMMAND: `${hexoPath} init ${name}`,
+          ...(NODE_PATH
+            ? {
+                NODE_PATH,
+                PATH: `${getParentPath(NODE_PATH)}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`
+              }
+            : {})
         }
       }
     });

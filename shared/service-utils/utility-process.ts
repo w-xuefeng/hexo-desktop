@@ -14,6 +14,12 @@ export interface IRunScriptBySubProcessOptions {
 
 export const childProcessMap = new Map<string, Electron.UtilityProcess>();
 
+export function getParentPath(fullPath: string) {
+  const temp = fullPath.split(path.sep);
+  temp.pop();
+  return temp.join(path.sep);
+}
+
 export function filePath(type: string, ...filePath: string[]) {
   return path.join(os.homedir(), PKG_CONFIG.name, type, ...filePath);
 }
@@ -127,4 +133,30 @@ process.exit(0);
     logger(`[GetExecutablePath Failed to find ${command}]: ${error}`);
     return null;
   }
+}
+
+export function exeWithOuterNode(
+  nodePath: string,
+  scriptName: string,
+  scriptContent: string
+): string | null {
+  const tempDir = filePath('.temp-script');
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir);
+  }
+
+  const tempCommandFile = filePath('.temp-script', `${scriptName}.js`);
+  fs.writeFileSync(tempCommandFile, scriptContent, { encoding: 'utf-8' });
+  const rs = execSync(`${nodePath} ${tempCommandFile}`, {
+    encoding: 'utf-8',
+    env: {
+      ...process.env,
+      PATH: `${getParentPath(nodePath)}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`
+    }
+  })
+    ?.toString()
+    ?.trim();
+  fs.rmSync(tempCommandFile);
+  logger(`[ExeWithOuterNode ${scriptName}]: ${rs}`);
+  return rs;
 }

@@ -24,11 +24,14 @@ export const RENDERER_DIST = path.join(APP_ROOT, 'dist');
 
 export const VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(APP_ROOT, 'public') : RENDERER_DIST;
 
+export const PATH_ENV_DELIMITER = process.platform === 'win32' ? ';' : ':';
+
 export function initProcessEnv() {
   process.env.APP_ROOT = APP_ROOT;
   process.env.MAIN_DIST = MAIN_DIST;
   process.env.RENDERER_DIST = RENDERER_DIST;
   process.env.VITE_PUBLIC = VITE_PUBLIC;
+  process.env.PATH_ENV_DELIMITER = PATH_ENV_DELIMITER;
 }
 
 export const GLIPCEventHandled = {

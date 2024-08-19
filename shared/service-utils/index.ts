@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { runScriptBySubProcess } from './utility-process';
+import { getParentPath, runScriptBySubProcess } from './utility-process';
 import { existsSync, mkdirSync, statSync } from 'node:fs';
 import { globSync } from 'glob';
 import { GLStore } from '../global-manager/stores';
@@ -12,13 +12,19 @@ export function checkEnv() {
   const NODE_PATH = GLStore.get(STORE_KEY.NODE_PATH) as string;
   const NPM_PATH = GLStore.get(STORE_KEY.NPM_PATH) as string;
   const HEXO_PATH = GLStore.get(STORE_KEY.HEXO_PATH) as string;
+
   return new Promise<ExecuteResult[]>((resolve) => {
     const scriptName = 'check-env';
     const { child, kill } = runScriptBySubProcess(scriptName, {
       options: {
         env: {
           ...process.env,
-          ...(NODE_PATH ? { NODE_PATH } : {}),
+          ...(NODE_PATH
+            ? {
+                NODE_PATH,
+                PATH: `${getParentPath(NODE_PATH)}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`
+              }
+            : {}),
           ...(NPM_PATH ? { NPM_PATH } : {}),
           ...(HEXO_PATH ? { HEXO_PATH } : {})
         },
@@ -88,7 +94,12 @@ export function getCommandVersion(commandPath: string) {
         cwd: app.getPath('home'),
         env: {
           ...process.env,
-          ...(NODE_PATH ? { NODE_PATH } : {}),
+          ...(NODE_PATH
+            ? {
+                NODE_PATH,
+                PATH: `${getParentPath(NODE_PATH)}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`
+              }
+            : {}),
           COMMAND: `${commandPath} -v`
         }
       }
