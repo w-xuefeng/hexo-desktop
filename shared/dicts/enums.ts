@@ -5,9 +5,9 @@ export enum IPC_CHANNEL {
   STORE_REMOVE = 'store-remove',
   STORE_CHANGED = 'store-changed',
   CHECK_ENV = 'check-env',
-  CHECK_NODE_PATH = 'check-node-path',
+  CHECK_COMMAND_PATH = 'check-command-path',
   CHOOSE_DIRECTORY = 'choose-directory',
-  CHOOSE_FILE = 'choose-FILE',
+  CHOOSE_FILE = 'choose-file',
   IMPORT_PROJECT = 'import-project',
   CREATE_PROJECT = 'create-project',
   OPEN_INDEPENDENT_WINDOW = 'open-independent-window',
@@ -20,7 +20,8 @@ export enum STORE_KEY {
   LANG = 'lang',
   THEME = 'theme',
   NODE_PATH = 'node-path',
-  NPM_PATH = 'npm-path'
+  NPM_PATH = 'npm-path',
+  HEXO_PATH = 'hexo-path'
 }
 
 export enum STORAGE_KEY {}

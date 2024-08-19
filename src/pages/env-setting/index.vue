@@ -105,7 +105,11 @@ const handleCheckResult = (rs: ICheckResult, onSuccess?: (rs: ICheckResult) => v
 const check = async () => {
   loading.value = true;
   try {
-    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_NODE_PATH, form.nodePath);
+    const rs = await window.ipcRenderer.invoke(
+      IPC_CHANNEL.CHECK_COMMAND_PATH,
+      form.nodePath,
+      'node'
+    );
     handleCheckResult(rs);
   } finally {
     loading.value = false;
@@ -119,7 +123,11 @@ const confirm = async () => {
   }
   loading.value = true;
   try {
-    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_NODE_PATH, form.nodePath);
+    const rs = await window.ipcRenderer.invoke(
+      IPC_CHANNEL.CHECK_COMMAND_PATH,
+      form.nodePath,
+      'node'
+    );
     handleCheckResult(rs, () => {
       SharedStore.set(STORE_KEY.NODE_PATH, form.nodePath);
       window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);

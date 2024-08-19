@@ -4,7 +4,7 @@ import initIPCStoreEvent from '../store';
 import importProject from '../services/project/import-project';
 import { dialog, ipcMain, type OpenDialogOptions } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
-import { checkEnv, checkNodePath } from '../../shared/service-utils';
+import { checkEnv, checkCommandPath } from '../../shared/service-utils';
 import { createProject } from '../services/project/create-project';
 import { createIndependentWindow } from '../window/independent-win';
 import { GLIPCEventHandled } from '../../shared/global-manager/vars';
@@ -21,9 +21,12 @@ export default function initIPCEvent(store: Store) {
     return checkEnv();
   });
 
-  ipcMain.handle(IPC_CHANNEL.CHECK_NODE_PATH, (_, nodePath: string) => {
-    return checkNodePath(nodePath);
-  });
+  ipcMain.handle(
+    IPC_CHANNEL.CHECK_COMMAND_PATH,
+    (_, commandPath: string, checkFileName?: string) => {
+      return checkCommandPath(commandPath, checkFileName);
+    }
+  );
 
   ipcMain.handle(IPC_CHANNEL.CHOOSE_DIRECTORY, async (_, options: Partial<OpenDialogOptions>) => {
     const rs = await dialog.showOpenDialog({

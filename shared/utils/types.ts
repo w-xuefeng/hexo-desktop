@@ -27,3 +27,8 @@ export interface ICreateProjectOptions {
   themeNpmPkg?: string;
   gitRemoteOrigin?: string;
 }
+
+export interface IExecutedMessage<T, D> {
+  type: T;
+  data: D;
+}

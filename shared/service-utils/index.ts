@@ -6,7 +6,7 @@ import { GLStore } from '../global-manager/stores';
 import { STORE_KEY } from '../dicts/enums';
 import logger from './logger';
 import path from 'node:path';
-import type { ExecuteResult } from '../utils/types';
+import type { ExecuteResult, IExecutedMessage } from '../utils/types';
 
 export function checkEnv() {
   const NODE_PATH = GLStore.get(STORE_KEY.NODE_PATH) as string;
@@ -71,48 +71,56 @@ export function getDirectoryTree(checkPath: string) {
   return tree;
 }
 
-export function getNodeVersion(nodePath: string) {
+export function getCommandVersion(commandPath: string) {
   return new Promise<ExecuteResult>((resolve) => {
-    const scriptName = 'check-node-path';
+    const scriptName = 'exe';
     const { child, kill } = runScriptBySubProcess(scriptName, {
       options: {
         cwd: app.getPath('home'),
         env: {
           ...process.env,
-          NODE_PATH: nodePath
+          COMMAND: `${commandPath} -v`
         }
       }
     });
-    child.once('message', (rs: ExecuteResult) => {
-      resolve(rs);
-      kill();
-    });
+    child.on(
+      'message',
+      (rs: IExecutedMessage<'data', string> | IExecutedMessage<'result', ExecuteResult>) => {
+        if (rs.type === 'result') {
+          resolve(rs.data);
+          kill();
+        }
+      }
+    );
     child.postMessage(scriptName);
   });
 }
 
-export async function checkNodePath(nodePath: string) {
-  const nodePathInfo = checkPath(nodePath);
+export async function checkCommandPath(commandPath: string, checkFileName?: string) {
+  const commandPathInfo = checkPath(commandPath);
   const result = {
-    ...nodePathInfo,
+    ...commandPathInfo,
     status: false,
     version: null as string | null,
     error: null as Error | null
   };
-  if (!nodePathInfo.exist || !nodePathInfo.isFile) {
+  if (!commandPathInfo.exist || !commandPathInfo.isFile) {
     return result;
   }
-  if (!nodePath.split(path.sep).at(-1)?.toLocaleLowerCase()?.includes('node')) {
-    result.error = new Error(`The path does not contain 'node'`);
+  if (
+    checkFileName &&
+    !commandPath.split(path.sep).at(-1)?.toLocaleLowerCase()?.includes(checkFileName)
+  ) {
+    result.error = new Error(`The path does not contain '${checkFileName}'`);
     return result;
   }
   try {
-    const rs = await getNodeVersion(nodePath);
+    const rs = await getCommandVersion(commandPath);
     result.status = !rs.error;
     result.version = rs.output;
     return result;
   } catch (error) {
-    logger(`[getNodeVersion error]: ${error}`, { level: 'error' });
+    logger(`[getCommandVersion error]: command:${commandPath} ${error}`, { level: 'error' });
     result.error = error as Error;
     return result;
   }

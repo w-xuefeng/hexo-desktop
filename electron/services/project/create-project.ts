@@ -7,15 +7,15 @@ import R from '../common/r';
 import type { ExecuteResult, ICreateProjectOptions } from '../../../shared/utils/types';
 
 function initHexoProject(cwd: string, name: string, onData?: (data: string) => void) {
+  const hexoPath = path.join(process.env.APP_ROOT, 'node_modules', 'hexo-cli', 'bin', 'hexo');
   return new Promise<ExecuteResult>((resolve) => {
-    const scriptName = 'create-project';
+    const scriptName = 'exe';
     const { child, kill } = runScriptBySubProcess(scriptName, {
       options: {
         cwd,
         env: {
           ...process.env,
-          PROJECT_NAME: name,
-          HEXO_PATH: path.join(process.env.APP_ROOT, 'node_modules', 'hexo-cli', 'bin', 'hexo')
+          COMMAND: `${hexoPath} init ${name}`
         }
       }
     });
