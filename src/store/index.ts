@@ -34,14 +34,17 @@ export function useTheme() {
       case 'light':
         removeAutoChangeThemeEvent();
         light();
+        window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'light');
         break;
       case 'dark':
         removeAutoChangeThemeEvent();
         dark();
+        window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'dark');
         break;
       case 'auto':
         checkTheme(matchMedia);
         addAutoChangeThemeEvent();
+        window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'system');
         break;
     }
   };

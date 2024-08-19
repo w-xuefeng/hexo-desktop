@@ -2,7 +2,7 @@ import Store from 'electron-store';
 import path from 'node:path';
 import initIPCStoreEvent from '../store';
 import importProject from '../services/project/import-project';
-import { dialog, ipcMain, type OpenDialogOptions } from 'electron';
+import { dialog, ipcMain, nativeTheme, type OpenDialogOptions } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
 import { checkEnv, checkCommandPath } from '../../shared/service-utils';
 import { createProject } from '../services/project/create-project';
@@ -16,6 +16,10 @@ export default function initIPCEvent(store: Store) {
   }
 
   initIPCStoreEvent(store);
+
+  ipcMain.handle(IPC_CHANNEL.CHANGE_THEME, (_, theme: 'light' | 'dark' | 'system') => {
+    nativeTheme.themeSource = theme;
+  });
 
   ipcMain.handle(IPC_CHANNEL.CHECK_ENV, () => {
     return checkEnv();

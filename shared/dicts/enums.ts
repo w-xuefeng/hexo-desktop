@@ -1,4 +1,5 @@
 export enum IPC_CHANNEL {
+  CHANGE_THEME = 'change-theme',
   STORE_SAVE = 'store-save',
   STORE_GET = 'store-get',
   STORE_GET_SYNC = 'store-get-sync',
