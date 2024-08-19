@@ -107,7 +107,8 @@ const keyMap = {
 interface ICheckResult {
   status: boolean;
   version: string | null;
-  error: Error | null;
+  error: string | Error | null;
+  stderr: string | null;
   exist: boolean;
   isFile: boolean;
   isDirectory: boolean;
@@ -165,6 +166,10 @@ const handleCheckResult = (
     errorInfo[type] = null;
     versions[type] = type === 'hexo' ? rs.version?.split('\n')?.at(0) || null : rs.version;
     onSuccess?.(type, rs);
+  } else if (!rs.version && rs.stderr) {
+    versions[type] = null;
+    errorInfo[type] = rs.stderr;
+    return;
   } else if (rs.error) {
     versions[type] = null;
     errorInfo[type] = rs.error;

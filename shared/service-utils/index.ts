@@ -110,7 +110,8 @@ export async function checkCommandPath(commandPath: string, checkFileName?: stri
     ...commandPathInfo,
     status: false,
     version: null as string | null,
-    error: null as Error | string | null
+    error: null as Error | string | null,
+    stderr: null as string | null
   };
   if (!commandPathInfo.exist || !commandPathInfo.isFile) {
     return result;
@@ -124,9 +125,10 @@ export async function checkCommandPath(commandPath: string, checkFileName?: stri
   }
   try {
     const rs = await getCommandVersion(commandPath);
-    result.status = !rs.error;
+    result.status = !rs.error && !!rs.output;
     result.version = rs.output;
     result.error = rs.error;
+    result.stderr = rs.stderr;
     return result;
   } catch (error) {
     logger(`[getCommandVersion error]: command:${commandPath} ${error}`, { level: 'error' });
