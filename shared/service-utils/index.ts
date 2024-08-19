@@ -11,6 +11,7 @@ import type { ExecuteResult, IExecutedMessage } from '../utils/types';
 export function checkEnv() {
   const NODE_PATH = GLStore.get(STORE_KEY.NODE_PATH) as string;
   const NPM_PATH = GLStore.get(STORE_KEY.NPM_PATH) as string;
+  const HEXO_PATH = GLStore.get(STORE_KEY.HEXO_PATH) as string;
   return new Promise<ExecuteResult[]>((resolve) => {
     const scriptName = 'check-env';
     const { child, kill } = runScriptBySubProcess(scriptName, {
@@ -18,21 +19,28 @@ export function checkEnv() {
         env: {
           ...process.env,
           ...(NODE_PATH ? { NODE_PATH } : {}),
-          ...(NPM_PATH ? { NPM_PATH } : {})
+          ...(NPM_PATH ? { NPM_PATH } : {}),
+          ...(HEXO_PATH ? { HEXO_PATH } : {})
         },
         cwd: app.getPath('home')
       }
     });
-    child.once('message', (result) => {
+    child.once('message', (result: ExecuteResult[]) => {
       const appVersion = app.getVersion();
       const withAppResult = [
         {
           type: 'hexo desktop',
           output: appVersion,
           error: null,
+          stderr: null,
           code: 0
         },
-        ...result
+        ...result.map((e) => {
+          if (e.type === 'hexo') {
+            e.output = e.output?.split('\n')?.at(0) || null;
+          }
+          return e;
+        })
       ];
       resolve(withAppResult);
       kill();
