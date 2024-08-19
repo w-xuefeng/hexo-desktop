@@ -150,8 +150,7 @@ export function exeWithOuterNode(
   const rs = execSync(`${nodePath} ${tempCommandFile}`, {
     encoding: 'utf-8',
     env: {
-      ...process.env,
-      PATH: `${getParentPath(nodePath)}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`
+      ...process.env
     }
   })
     ?.toString()

@@ -242,6 +242,7 @@ const confirm = async () => {
       checkAndHandleResult(form.npmPath, 'npm'),
       checkAndHandleResult(form.hexoPath, 'hexo')
     ]);
+    window.ipcRenderer.send(IPC_CHANNEL.CHECK_ENV);
     if (versions.node && versions.npm && versions.hexo) {
       window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);
     }

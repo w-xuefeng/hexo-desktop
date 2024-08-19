@@ -58,14 +58,14 @@ const envErrorInfo = computed(() => {
 });
 
 const checkEnv = async () => {
+  window.ipcRenderer.on(IPC_CHANNEL.CHECK_ENV_FROM_OTHERS_PAGE, (_, rs) => {
+    env.value = rs;
+  });
   try {
     env.value = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_ENV);
-    // CLG
-    console.log('checkEnv', env.value);
   } catch (error) {
     console.log('[checkEnv error]', error);
   }
-
   if (envErrorInfo.value.length) {
     settings();
   }

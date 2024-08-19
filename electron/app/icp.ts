@@ -8,6 +8,7 @@ import { checkEnv, checkCommandPath } from '../../shared/service-utils';
 import { createProject } from '../services/project/create-project';
 import { createIndependentWindow } from '../window/independent-win';
 import { GLIPCEventHandled } from '../../shared/global-manager/vars';
+import { GLWins } from '../../shared/global-manager/wins';
 import { type ICreateProjectOptions } from '../../shared/utils/types';
 
 export default function initIPCEvent(store: Store) {
@@ -23,6 +24,11 @@ export default function initIPCEvent(store: Store) {
 
   ipcMain.handle(IPC_CHANNEL.CHECK_ENV, () => {
     return checkEnv();
+  });
+
+  ipcMain.on(IPC_CHANNEL.CHECK_ENV, async () => {
+    const rs = await checkEnv();
+    GLWins.mainWin?.webContents?.send(IPC_CHANNEL.CHECK_ENV_FROM_OTHERS_PAGE, rs);
   });
 
   ipcMain.handle(

@@ -6,6 +6,7 @@ export enum IPC_CHANNEL {
   STORE_REMOVE = 'store-remove',
   STORE_CHANGED = 'store-changed',
   CHECK_ENV = 'check-env',
+  CHECK_ENV_FROM_OTHERS_PAGE = 'check-env-from-other-page',
   CHECK_COMMAND_PATH = 'check-command-path',
   CHOOSE_DIRECTORY = 'choose-directory',
   CHOOSE_FILE = 'choose-file',

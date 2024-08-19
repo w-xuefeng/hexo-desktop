@@ -12,6 +12,19 @@ export function checkEnv() {
   const NODE_PATH = GLStore.get(STORE_KEY.NODE_PATH) as string;
   const NPM_PATH = GLStore.get(STORE_KEY.NPM_PATH) as string;
   const HEXO_PATH = GLStore.get(STORE_KEY.HEXO_PATH) as string;
+  const pathSet = new Set();
+
+  if (NODE_PATH) {
+    pathSet.add(getParentPath(NODE_PATH));
+  }
+  if (NPM_PATH) {
+    pathSet.add(getParentPath(NPM_PATH));
+  }
+  if (HEXO_PATH) {
+    pathSet.add(getParentPath(HEXO_PATH));
+  }
+
+  process.env.PATH = [...pathSet, process.env.PATH].join(process.env.PATH_ENV_DELIMITER);
 
   return new Promise<ExecuteResult[]>((resolve) => {
     const scriptName = 'check-env';
@@ -19,12 +32,7 @@ export function checkEnv() {
       options: {
         env: {
           ...process.env,
-          ...(NODE_PATH
-            ? {
-                NODE_PATH,
-                PATH: `${getParentPath(NODE_PATH)}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`
-              }
-            : {}),
+          ...(NODE_PATH ? { NODE_PATH } : {}),
           ...(NPM_PATH ? { NPM_PATH } : {}),
           ...(HEXO_PATH ? { HEXO_PATH } : {})
         },
@@ -86,7 +94,6 @@ export function getDirectoryTree(checkPath: string) {
 }
 
 export function getCommandVersion(commandPath: string) {
-  const NODE_PATH = GLStore.get(STORE_KEY.NODE_PATH) as string;
   return new Promise<ExecuteResult>((resolve) => {
     const scriptName = 'exe';
     const { child, kill } = runScriptBySubProcess(scriptName, {
@@ -94,12 +101,6 @@ export function getCommandVersion(commandPath: string) {
         cwd: app.getPath('home'),
         env: {
           ...process.env,
-          ...(NODE_PATH
-            ? {
-                NODE_PATH,
-                PATH: `${getParentPath(NODE_PATH)}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`
-              }
-            : {}),
           COMMAND: `${commandPath} -v`
         }
       }
