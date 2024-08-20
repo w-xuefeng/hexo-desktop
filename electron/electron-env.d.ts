@@ -26,6 +26,10 @@ declare namespace NodeJS {
      * /dist/
      */
     RENDERER_DIST: string;
+    /**
+     * : or ;
+     */
+    PATH_ENV_DELIMITER: string;
   }
 }
 

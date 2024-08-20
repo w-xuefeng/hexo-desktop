@@ -80,6 +80,7 @@
 
     <footer class="footer">
       <a-button @click="cancel">{{ $t('operate.cancel') }}</a-button>
+      <a-button type="outline" @click="getEnvPath">{{ $t('envSetting.autoGetEnvPath') }}</a-button>
       <a-button type="outline" :disabled="disable" :loading="loading" @click="checkAllPath">
         {{ $t('envSetting.checkPath') }}
       </a-button>
@@ -155,6 +156,10 @@ const chooseDirectoryPath = async (type: 'nodePath' | 'npmPath' | 'hexoPath') =>
 
 const cancel = () => {
   window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);
+};
+
+const getEnvPath = () => {
+  window.ipcRenderer.invoke(IPC_CHANNEL.GET_ENV_PATH);
 };
 
 const handleCheckResult = (

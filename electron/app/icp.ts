@@ -4,7 +4,7 @@ import initIPCStoreEvent from '../store';
 import importProject from '../services/project/import-project';
 import { dialog, ipcMain, nativeTheme, type OpenDialogOptions } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
-import { checkEnv, checkCommandPath } from '../../shared/service-utils';
+import { checkEnv, checkCommandPath, getEnvPath } from '../../shared/service-utils';
 import { createProject } from '../services/project/create-project';
 import { createIndependentWindow } from '../window/independent-win';
 import { GLIPCEventHandled } from '../../shared/global-manager/vars';
@@ -29,6 +29,10 @@ export default function initIPCEvent(store: Store) {
   ipcMain.on(IPC_CHANNEL.CHECK_ENV, async () => {
     const rs = await checkEnv();
     GLWins.mainWin?.webContents?.send(IPC_CHANNEL.CHECK_ENV_FROM_OTHERS_PAGE, rs);
+  });
+
+  ipcMain.handle(IPC_CHANNEL.GET_ENV_PATH, () => {
+    return getEnvPath();
   });
 
   ipcMain.handle(

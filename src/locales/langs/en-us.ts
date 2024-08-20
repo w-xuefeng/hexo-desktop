@@ -99,6 +99,7 @@ export default {
     npmVersion: 'NPM version',
     hexoVersion: 'Hexo version',
     checkPath: 'Check Path',
-    errorTip: 'Error Tips'
+    errorTip: 'Error Tips',
+    autoGetEnvPath: 'Auto obtain the env path'
   }
 };

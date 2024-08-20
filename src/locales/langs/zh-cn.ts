@@ -98,6 +98,7 @@ export default {
     npmVersion: 'NPM 版本',
     hexoVersion: 'Hexo 版本',
     checkPath: '校验路径',
-    errorTip: '错误信息'
+    errorTip: '错误信息',
+    autoGetEnvPath: '自动获取环境路径'
   }
 };

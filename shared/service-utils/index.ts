@@ -1,11 +1,24 @@
-import { app } from 'electron';
+import logger from './logger';
+import path from 'node:path';
+import { app, shell } from 'electron';
 import { getParentPath, runScriptBySubProcess } from './utility-process';
-import { existsSync, mkdirSync, statSync } from 'node:fs';
+import fs, {
+  chmodSync,
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync
+} from 'node:fs';
 import { globSync } from 'glob';
 import { GLStore } from '../global-manager/stores';
 import { STORE_KEY } from '../dicts/enums';
-import logger from './logger';
-import path from 'node:path';
+import { PKG_CONFIG } from '../configs/app';
+import { execSync } from 'node:child_process';
+import { envExecutePath } from '../configs/main';
+import { getPathShell } from './shell';
 import type { ExecuteResult, IExecutedMessage } from '../utils/types';
 
 export function checkEnv() {
@@ -148,5 +161,70 @@ export async function checkCommandPath(commandPath: string, checkFileName?: stri
     logger(`[getCommandVersion error]: command:${commandPath} ${error}`, { level: 'error' });
     result.error = error as Error;
     return result;
+  }
+}
+
+export function openExternal(url: string, options?: Electron.OpenExternalOptions) {
+  return shell.openExternal(url, options);
+}
+
+export function copyResource(from: string, to: string) {
+  const sourceFile = readdirSync(from, { withFileTypes: true });
+  for (const file of sourceFile) {
+    const srcFile = path.resolve(from, file.name);
+    const tagFile = path.resolve(to, file.name);
+    if (file.isDirectory() && !existsSync(tagFile)) {
+      mkdirSync(tagFile);
+      copyResource(srcFile, tagFile);
+    } else if (file.isDirectory() && existsSync(tagFile)) {
+      copyResource(srcFile, tagFile);
+    }
+    !file.isDirectory() && copyFileSync(srcFile, tagFile, fs.constants.COPYFILE_FICLONE);
+  }
+}
+
+export function getEnvPath() {
+  const checkInfo = checkPath(envExecutePath);
+  if (checkInfo.exist && checkInfo.isFile) {
+    const envPath = readFileSync(envExecutePath, { encoding: 'utf-8' });
+    process.env.PATH = `${envPath}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`;
+    return process.env.PATH;
+  }
+
+  const shellTarget = path.resolve(app.getPath('home'), PKG_CONFIG.name, 'shell');
+  const shellScript = path.resolve(
+    shellTarget,
+    `get-path.${process.platform === 'win32' ? 'bat' : 'sh'}`
+  );
+  if (!existsSync(shellTarget)) {
+    mkdirSync(shellTarget, { recursive: true });
+    writeFileSync(shellScript, getPathShell());
+  }
+
+  if (process.platform !== 'win32') {
+    chmodSync(shellScript, 0o666);
+  }
+
+  const commandMap: Record<NodeJS.Platform, string> = {
+    win32: `start cmd /c "${shellScript}"`,
+    darwin: `osascript -e 'tell application "Terminal" to do script "sh ${shellScript};exit"'`,
+    linux: `gnome-terminal -- bash -c "sh ${shellScript}; exit"`,
+    aix: `xterm -hold -e "sh ${shellScript}; exit"`,
+    android: `xterm -hold -e "sh ${shellScript}; exit"`,
+    freebsd: `xterm -hold -e "sh ${shellScript}; exit"`,
+    haiku: `xterm -hold -e "sh ${shellScript}; exit"`,
+    openbsd: `xterm -hold -e "sh ${shellScript}; exit"`,
+    sunos: `xterm -hold -e "sh ${shellScript}; exit"`,
+    cygwin: `xterm -hold -e "sh ${shellScript}; exit"`,
+    netbsd: `xterm -hold -e "sh ${shellScript}; exit"`
+  };
+
+  execSync(commandMap[process.platform]);
+
+  const checkAgainInfo = checkPath(envExecutePath);
+  if (checkAgainInfo.exist && checkAgainInfo.isFile) {
+    const envPath = readFileSync(envExecutePath, { encoding: 'utf-8' });
+    process.env.PATH = `${envPath}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`;
+    return process.env.PATH;
   }
 }
