@@ -158,8 +158,13 @@ const cancel = () => {
   window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);
 };
 
-const getEnvPath = () => {
-  window.ipcRenderer.invoke(IPC_CHANNEL.GET_ENV_PATH);
+const getEnvPath = async () => {
+  const { path, sep } = await window.ipcRenderer.invoke(IPC_CHANNEL.GET_ENV_PATH);
+  if (!path || !sep) {
+    return;
+  }
+  const paths = path.split(sep);
+  console.log('GET_ENV_PATH', paths);
 };
 
 const handleCheckResult = (

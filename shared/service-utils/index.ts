@@ -188,7 +188,10 @@ export function getEnvPath() {
   if (checkInfo.exist && checkInfo.isFile) {
     const envPath = readFileSync(envExecutePath, { encoding: 'utf-8' });
     process.env.PATH = `${envPath}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`;
-    return process.env.PATH;
+    return {
+      path: process.env.PATH,
+      sep: process.env.PATH_ENV_DELIMITER
+    };
   }
 
   const shellTarget = path.resolve(app.getPath('home'), PKG_CONFIG.name, 'shell');
@@ -205,8 +208,8 @@ export function getEnvPath() {
 
   const commandMap: Record<NodeJS.Platform, string> = {
     win32: `start cmd /c "${shellScript}"`,
-    darwin: `osascript -e 'tell application "Terminal" to do script "sh ${shellScript};exit"'`,
-    // other platform ignore
+    darwin: `osascript -e 'tell application "Terminal" to do script "sh ${shellScript}"'`,
+    // ignore other platforms
     linux: `gnome-terminal -- bash -c "sh ${shellScript}; exit"`,
     aix: `xterm -hold -e "sh ${shellScript}; exit"`,
     android: `xterm -hold -e "sh ${shellScript}; exit"`,
@@ -224,6 +227,9 @@ export function getEnvPath() {
   if (checkAgainInfo.exist && checkAgainInfo.isFile) {
     const envPath = readFileSync(envExecutePath, { encoding: 'utf-8' });
     process.env.PATH = `${envPath}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`;
-    return process.env.PATH;
+    return {
+      path: process.env.PATH,
+      sep: process.env.PATH_ENV_DELIMITER
+    };
   }
 }
