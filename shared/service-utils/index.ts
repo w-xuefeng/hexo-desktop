@@ -192,10 +192,8 @@ export function getEnvPath() {
   }
 
   const shellTarget = path.resolve(app.getPath('home'), PKG_CONFIG.name, 'shell');
-  const shellScript = path.resolve(
-    shellTarget,
-    `get-path.${process.platform === 'win32' ? 'bat' : 'sh'}`
-  );
+  const scriptName = `get-path.${process.platform === 'win32' ? 'bat' : 'sh'}`;
+  const shellScript = path.resolve(shellTarget, scriptName);
   if (!existsSync(shellTarget)) {
     mkdirSync(shellTarget, { recursive: true });
     writeFileSync(shellScript, getPathShell());
@@ -208,6 +206,7 @@ export function getEnvPath() {
   const commandMap: Record<NodeJS.Platform, string> = {
     win32: `start cmd /c "${shellScript}"`,
     darwin: `osascript -e 'tell application "Terminal" to do script "sh ${shellScript};exit"'`,
+    // other platform ignore
     linux: `gnome-terminal -- bash -c "sh ${shellScript}; exit"`,
     aix: `xterm -hold -e "sh ${shellScript}; exit"`,
     android: `xterm -hold -e "sh ${shellScript}; exit"`,
