@@ -1,14 +1,12 @@
 import path from 'node:path';
 import { GLWins } from '../../../shared/global-manager/wins';
-import { GLStore } from '../../../shared/global-manager/stores';
-import { IPC_CHANNEL, STORE_KEY } from '../../../shared/dicts/enums';
+import { IPC_CHANNEL } from '../../../shared/dicts/enums';
 import { checkPath, createDirectory, directoryIsEmpty } from '../../../shared/service-utils';
 import { runScriptBySubProcess } from '../../../shared/service-utils/utility-process';
 import R from '../common/r';
 import type { ExecuteResult, ICreateProjectOptions } from '../../../shared/utils/types';
 
 function initHexoProject(cwd: string, name: string, onData?: (data: string) => void) {
-  const hexoPath = GLStore.get(STORE_KEY.HEXO_PATH) || 'hexo';
   return new Promise<ExecuteResult>((resolve) => {
     const scriptName = 'exe';
     const { child, kill } = runScriptBySubProcess(scriptName, {
@@ -16,7 +14,7 @@ function initHexoProject(cwd: string, name: string, onData?: (data: string) => v
         cwd,
         env: {
           ...process.env,
-          COMMAND: `${hexoPath} init ${name}`
+          COMMAND: `hexo init ${name}`
         }
       }
     });
