@@ -8,7 +8,6 @@ export enum IPC_CHANNEL {
   CHECK_ENV = 'check-env',
   CHECK_ENV_FROM_OTHERS_PAGE = 'check-env-from-other-page',
   GET_ENV_PATH = 'get-env-path',
-  CHECK_COMMAND_PATH = 'check-command-path',
   CHOOSE_DIRECTORY = 'choose-directory',
   CHOOSE_FILE = 'choose-file',
   IMPORT_PROJECT = 'import-project',
@@ -22,9 +21,7 @@ export enum IPC_CHANNEL {
 export enum STORE_KEY {
   LANG = 'lang',
   THEME = 'theme',
-  NODE_PATH = 'node-path',
-  NPM_PATH = 'npm-path',
-  HEXO_PATH = 'hexo-path'
+  ENV_PATH = 'env-path'
 }
 
 export enum STORAGE_KEY {}

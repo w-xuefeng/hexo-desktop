@@ -88,16 +88,10 @@ export default {
     gitRemoteOrigin: '项目远程仓库地址'
   },
   envSetting: {
-    nodePath: 'Node 路径',
-    npmPath: 'NPM 路径',
-    hexoPath: 'Hexo 路径',
-    chooseOrInputNodePath: '请选择或者输入 Node 路径',
-    chooseOrInputNpmPath: '请选择或者输入 NPM 路径',
-    chooseOrInputHexoPath: '请选择或者输入 Hexo 路径',
-    nodeVersion: 'Node 版本',
-    npmVersion: 'NPM 版本',
-    hexoVersion: 'Hexo 版本',
+    envPath: 'PATH',
+    inputEnvPath: '请输入系统环境变量 PATH 的值',
     checkPath: '校验路径',
+    checkPathPass: '校验通过',
     errorTip: '错误信息',
     autoGetEnvPath: '自动获取环境路径'
   }

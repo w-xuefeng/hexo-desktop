@@ -1,7 +1,6 @@
-import logger from './logger';
 import path from 'node:path';
 import { app, shell } from 'electron';
-import { getParentPath, runScriptBySubProcess } from './utility-process';
+import { runScriptBySubProcess } from './utility-process';
 import fs, {
   chmodSync,
   copyFileSync,
@@ -21,33 +20,23 @@ import { envExecutePath } from '../configs/main';
 import { getPathShell } from './shell';
 import type { ExecuteResult, IExecutedMessage } from '../utils/types';
 
-export function checkEnv() {
-  const NODE_PATH = GLStore.get(STORE_KEY.NODE_PATH) as string;
-  const NPM_PATH = GLStore.get(STORE_KEY.NPM_PATH) as string;
-  const HEXO_PATH = GLStore.get(STORE_KEY.HEXO_PATH) as string;
-  const pathSet = new Set();
+export function checkEnv(envPath?: string) {
+  const ENV_PATH = envPath || (GLStore.get(STORE_KEY.ENV_PATH) as string);
 
-  if (NODE_PATH) {
-    pathSet.add(getParentPath(NODE_PATH));
-  }
-  if (NPM_PATH) {
-    pathSet.add(getParentPath(NPM_PATH));
-  }
-  if (HEXO_PATH) {
-    pathSet.add(getParentPath(HEXO_PATH));
+  if (ENV_PATH && !process.env.PATH?.includes(ENV_PATH)) {
+    process.env.PATH = [ENV_PATH, process.env.PATH].join(process.env.PATH_ENV_DELIMITER);
   }
 
-  process.env.PATH = [...pathSet, process.env.PATH].join(process.env.PATH_ENV_DELIMITER);
+  if (!ENV_PATH) {
+    getEnvPath();
+  }
 
   return new Promise<ExecuteResult[]>((resolve) => {
     const scriptName = 'check-env';
     const { child, kill } = runScriptBySubProcess(scriptName, {
       options: {
         env: {
-          ...process.env,
-          ...(NODE_PATH ? { NODE_PATH } : {}),
-          ...(NPM_PATH ? { NPM_PATH } : {}),
-          ...(HEXO_PATH ? { HEXO_PATH } : {})
+          ...process.env
         },
         cwd: app.getPath('home')
       }
@@ -131,39 +120,6 @@ export function getCommandVersion(commandPath: string) {
   });
 }
 
-export async function checkCommandPath(commandPath: string, checkFileName?: string) {
-  const commandPathInfo = checkPath(commandPath);
-  const result = {
-    ...commandPathInfo,
-    status: false,
-    version: null as string | null,
-    error: null as Error | string | null,
-    stderr: null as string | null
-  };
-  if (!commandPathInfo.exist || !commandPathInfo.isFile) {
-    return result;
-  }
-  if (
-    checkFileName &&
-    !commandPath.split(path.sep).at(-1)?.toLocaleLowerCase()?.includes(checkFileName)
-  ) {
-    result.error = new Error(`The path does not contain '${checkFileName}'`);
-    return result;
-  }
-  try {
-    const rs = await getCommandVersion(commandPath);
-    result.status = !rs.error && !!rs.output;
-    result.version = rs.output;
-    result.error = rs.error;
-    result.stderr = rs.stderr;
-    return result;
-  } catch (error) {
-    logger(`[getCommandVersion error]: command:${commandPath} ${error}`, { level: 'error' });
-    result.error = error as Error;
-    return result;
-  }
-}
-
 export function openExternal(url: string, options?: Electron.OpenExternalOptions) {
   return shell.openExternal(url, options);
 }
@@ -183,17 +139,39 @@ export function copyResource(from: string, to: string) {
   }
 }
 
-export function getEnvPath() {
+export function readEnvPath() {
   const checkInfo = checkPath(envExecutePath);
   if (checkInfo.exist && checkInfo.isFile) {
     const envPath = readFileSync(envExecutePath, { encoding: 'utf-8' });
-    process.env.PATH = `${envPath}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`;
+    if (!envPath) {
+      return {
+        success: false,
+        path: process.env.PATH,
+        sep: process.env.PATH_ENV_DELIMITER
+      };
+    }
+    GLStore.set(STORE_KEY.ENV_PATH, envPath);
+    if (!process.env.PATH?.includes(envPath)) {
+      process.env.PATH = `${envPath}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`;
+    }
     return {
+      success: true,
       path: process.env.PATH,
       sep: process.env.PATH_ENV_DELIMITER
     };
   }
+  return {
+    success: false,
+    path: process.env.PATH,
+    sep: process.env.PATH_ENV_DELIMITER
+  };
+}
 
+export function getEnvPath() {
+  const readResult = readEnvPath();
+  if (readResult.success) {
+    return readResult;
+  }
   const shellTarget = path.resolve(app.getPath('home'), PKG_CONFIG.name, 'shell');
   const scriptName = `get-path.${process.platform === 'win32' ? 'bat' : 'sh'}`;
   const shellScript = path.resolve(shellTarget, scriptName);
@@ -201,11 +179,9 @@ export function getEnvPath() {
     mkdirSync(shellTarget, { recursive: true });
     writeFileSync(shellScript, getPathShell());
   }
-
   if (process.platform !== 'win32') {
     chmodSync(shellScript, 0o666);
   }
-
   const commandMap: Record<NodeJS.Platform, string> = {
     win32: `start cmd /c "${shellScript}"`,
     darwin: `osascript -e 'tell application "Terminal" to do script "sh ${shellScript}"'`,
@@ -220,16 +196,6 @@ export function getEnvPath() {
     cygwin: `xterm -hold -e "sh ${shellScript}; exit"`,
     netbsd: `xterm -hold -e "sh ${shellScript}; exit"`
   };
-
   execSync(commandMap[process.platform]);
-
-  const checkAgainInfo = checkPath(envExecutePath);
-  if (checkAgainInfo.exist && checkAgainInfo.isFile) {
-    const envPath = readFileSync(envExecutePath, { encoding: 'utf-8' });
-    process.env.PATH = `${envPath}${process.env.PATH_ENV_DELIMITER}${process.env.PATH}`;
-    return {
-      path: process.env.PATH,
-      sep: process.env.PATH_ENV_DELIMITER
-    };
-  }
+  return readEnvPath();
 }

@@ -89,16 +89,10 @@ export default {
     gitRemoteOrigin: 'Git Remote Origin'
   },
   envSetting: {
-    nodePath: 'Node Path',
-    npmPath: 'NPM Path',
-    hexoPath: 'Hexo Path',
-    chooseOrInputNodePath: 'Please select or input the path where the node is located',
-    chooseOrInputNpmPath: 'Please select or input the path where the npm is located',
-    chooseOrInputHexoPath: 'Please select or input the path where the hexo is located',
-    nodeVersion: 'Node version',
-    npmVersion: 'NPM version',
-    hexoVersion: 'Hexo version',
-    checkPath: 'Check Path',
+    envPath: 'PATH',
+    inputEnvPath: 'Please enter the value of the system environment variable PATH',
+    checkPath: 'Verify PATH',
+    checkPathPass: 'Verification passed',
     errorTip: 'Error Tips',
     autoGetEnvPath: 'Auto obtain the env path'
   }

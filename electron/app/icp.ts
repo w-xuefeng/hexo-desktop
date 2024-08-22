@@ -4,7 +4,7 @@ import initIPCStoreEvent from '../store';
 import importProject from '../services/project/import-project';
 import { dialog, ipcMain, nativeTheme, type OpenDialogOptions } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
-import { checkEnv, checkCommandPath, getEnvPath } from '../../shared/service-utils';
+import { checkEnv, getEnvPath } from '../../shared/service-utils';
 import { createProject } from '../services/project/create-project';
 import { createIndependentWindow } from '../window/independent-win';
 import { GLIPCEventHandled } from '../../shared/global-manager/vars';
@@ -22,25 +22,18 @@ export default function initIPCEvent(store: Store) {
     nativeTheme.themeSource = theme;
   });
 
-  ipcMain.handle(IPC_CHANNEL.CHECK_ENV, () => {
-    return checkEnv();
+  ipcMain.handle(IPC_CHANNEL.CHECK_ENV, (_, envPath?: string) => {
+    return checkEnv(envPath);
   });
 
-  ipcMain.on(IPC_CHANNEL.CHECK_ENV, async () => {
-    const rs = await checkEnv();
+  ipcMain.on(IPC_CHANNEL.CHECK_ENV, async (_, envPath?: string) => {
+    const rs = await checkEnv(envPath);
     GLWins.mainWin?.webContents?.send(IPC_CHANNEL.CHECK_ENV_FROM_OTHERS_PAGE, rs);
   });
 
   ipcMain.handle(IPC_CHANNEL.GET_ENV_PATH, () => {
     return getEnvPath();
   });
-
-  ipcMain.handle(
-    IPC_CHANNEL.CHECK_COMMAND_PATH,
-    (_, commandPath: string, checkFileName?: string) => {
-      return checkCommandPath(commandPath, checkFileName);
-    }
-  );
 
   ipcMain.handle(IPC_CHANNEL.CHOOSE_DIRECTORY, async (_, options: Partial<OpenDialogOptions>) => {
     const rs = await dialog.showOpenDialog({
