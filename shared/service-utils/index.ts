@@ -177,7 +177,7 @@ export function getEnvPath() {
   const shellScript = path.resolve(shellTarget, scriptName);
   if (!existsSync(shellTarget)) {
     mkdirSync(shellTarget, { recursive: true });
-    writeFileSync(shellScript, getPathShell());
+    writeFileSync(shellScript, getPathShell(), { encoding: 'utf-8' });
   }
   if (process.platform !== 'win32') {
     chmodSync(shellScript, 0o666);
