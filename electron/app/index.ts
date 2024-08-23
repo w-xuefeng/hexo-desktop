@@ -3,9 +3,11 @@ import { GLWins } from '../../shared/global-manager/wins';
 import { GLStore } from '../../shared/global-manager/stores';
 import { createMainWindow } from '../window/main-win';
 import initIPCEvent from './icp';
+import setAppMenu from '../menus';
 
 export function initApp() {
   initIPCEvent(GLStore);
+  setAppMenu();
 
   // Quit when all windows are closed, except on macOS. There, it's common
   // for applications and their menu bar to stay active until the user quits

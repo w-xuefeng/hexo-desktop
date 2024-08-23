@@ -4,7 +4,7 @@ export function getPathShell() {
   return process.platform === 'win32'
     ? `@echo off
 
-set TARGET_FILE=${envExecutePath}
+set TARGET_FILE="${envExecutePath}"
 set USER_PATH=%PATH%
 
 echo 将 PATH 环境变量写入到 %TARGET_FILE%
