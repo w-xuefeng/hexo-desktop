@@ -4,6 +4,7 @@ import { execute, run } from './shared';
 const scriptName = 'exe';
 const COMMAND = process.env.COMMAND!;
 const [command, ...args] = COMMAND.split(' ');
+const shell = process.platform === 'win32' ? 'powershell' : void 0;
 
 run(scriptName, async () => {
   const rs = await execute({
@@ -11,7 +12,8 @@ run(scriptName, async () => {
     command: [command, args],
     options: {
       cwd: process.cwd(),
-      env: process.env
+      env: process.env,
+      shell
     },
     onData: (data) => {
       process.parentPort.postMessage({

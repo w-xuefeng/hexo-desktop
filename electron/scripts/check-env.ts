@@ -4,6 +4,7 @@ import { execute, getExecutablePath, run, type ExecuteParams } from './shared';
 const scriptName = 'check-env';
 const cwd = process.cwd();
 const env = process.env;
+const shell = process.platform === 'win32' ? 'powershell' : void 0;
 
 async function checkEnv() {
   const nodePath = getExecutablePath(scriptName, 'node') || 'node';
@@ -15,7 +16,8 @@ async function checkEnv() {
       command: ['git', ['-v']],
       options: {
         cwd,
-        env
+        env,
+        shell
       }
     },
     {
@@ -23,7 +25,8 @@ async function checkEnv() {
       command: [nodePath, ['-v']],
       options: {
         cwd,
-        env
+        env,
+        shell
       }
     },
     {
@@ -31,7 +34,8 @@ async function checkEnv() {
       command: [npmPath, ['-v']],
       options: {
         cwd,
-        env
+        env,
+        shell
       }
     },
     {
@@ -39,7 +43,8 @@ async function checkEnv() {
       command: [hexoPath, ['-v']],
       options: {
         cwd,
-        env
+        env,
+        shell
       }
     }
   ];
