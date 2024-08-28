@@ -1,13 +1,13 @@
 import { logScript } from './script-logger';
-import { execute, getExecutablePath, run, type ExecuteParams } from './shared';
+import { execute, run, type ExecuteParams } from './shared';
 
 const scriptName = 'check-env';
 const cwd = process.cwd();
 
 async function checkEnv() {
-  const nodePath = getExecutablePath(scriptName, 'node') || 'node';
-  const npmPath = getExecutablePath(scriptName, 'npm') || 'npm';
-  const hexoPath = getExecutablePath(scriptName, 'hexo') || 'hexo';
+  const nodePath = 'node';
+  const npmPath = 'npm';
+  const hexoPath = 'hexo';
   const candidateCommands: ExecuteParams[] = [
     {
       type: 'git',
