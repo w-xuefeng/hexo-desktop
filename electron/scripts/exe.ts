@@ -1,10 +1,11 @@
 import { logScript } from './script-logger';
-import { execute, run } from './shared';
+import { execute, getExecutablePath, run } from './shared';
 
 const scriptName = 'exe';
 const COMMAND = process.env.COMMAND!;
 const [command, ...args] = COMMAND.split(' ');
-const shell = void 0;
+const shell =
+  process.platform === 'win32' ? getExecutablePath(scriptName, 'cmd') || void 0 : void 0;
 
 run(scriptName, async () => {
   const rs = await execute({
