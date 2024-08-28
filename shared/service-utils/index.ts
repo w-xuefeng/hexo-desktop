@@ -183,7 +183,7 @@ export function getEnvPath() {
     chmodSync(shellScript, 0o666);
   }
   const commandMap: Record<NodeJS.Platform, string> = {
-    win32: `start cmd /c "${shellScript}"`,
+    win32: `powershell.exe -NoProfile -Command "& {Start-Process powershell.exe -ArgumentList '-NoProfile -File "${shellScript}"' -NoNewWindow -Wait; exit}"`,
     darwin: `osascript -e 'tell application "Terminal" to do script "sh ${shellScript}"'`,
     // ignore other platforms
     linux: `gnome-terminal -- bash -c "sh ${shellScript}; exit"`,
