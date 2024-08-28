@@ -10,7 +10,8 @@ run(scriptName, async () => {
     type: command,
     command: [command, args],
     options: {
-      cwd: process.cwd()
+      cwd: process.cwd(),
+      env: process.env
     },
     onData: (data) => {
       process.parentPort.postMessage({

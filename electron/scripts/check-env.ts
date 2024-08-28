@@ -13,28 +13,32 @@ async function checkEnv() {
       type: 'git',
       command: ['git', ['-v']],
       options: {
-        cwd
+        cwd,
+        env: process.env
       }
     },
     {
       type: 'node',
       command: [nodePath, ['-v']],
       options: {
-        cwd
+        cwd,
+        env: process.env
       }
     },
     {
       type: 'npm',
       command: [npmPath, ['-v']],
       options: {
-        cwd
+        cwd,
+        env: process.env
       }
     },
     {
       type: 'hexo',
       command: [hexoPath, ['-v']],
       options: {
-        cwd
+        cwd,
+        env: process.env
       }
     }
   ];
