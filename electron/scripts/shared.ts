@@ -66,7 +66,7 @@ export function getExecutablePath(scriptName: string, command: string): string |
     const paths = output.split(/\r?\n/);
     const rs = paths.length > 0 ? path.resolve(paths[0]) : null;
     logScript(scriptName, `[GetExecutablePath find ${command} path]: ${rs}`);
-    return rs;
+    return rs ? JSON.stringify(rs) : null;
   } catch (error) {
     logScript(scriptName, `[GetExecutablePath Failed to find ${command}]: ${error}`);
     return null;
