@@ -71,6 +71,7 @@
     "nocheck",
     "nsis",
     "osascript",
+    "outfile",
     "Ployfill",
     "setlocal",
     "tangyuan",

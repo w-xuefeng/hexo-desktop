@@ -2,12 +2,10 @@ import { envExecutePath } from '../configs/main';
 
 export function getPathShell() {
   return process.platform === 'win32'
-    ? `@echo off
-setlocal
-set outputFile=${envExecutePath}
-echo %PATH% > "%outputFile%"
-endlocal
-@echo off`
+    ? `$path = [System.Environment]::GetEnvironmentVariable('PATH', 'Machine')
+$outfile = "${envExecutePath}"
+$path | Out-File -FilePath $outfile -Encoding utf8
+`
     : `#!/bin/bash
 
 TARGET_FILE="${envExecutePath}"

@@ -173,7 +173,7 @@ export function getEnvPath() {
     return readResult;
   }
   const shellTarget = path.resolve(app.getPath('home'), PKG_CONFIG.name, 'shell');
-  const scriptName = `get-path.${process.platform === 'win32' ? 'bat' : 'sh'}`;
+  const scriptName = `get-path.${process.platform === 'win32' ? 'ps1' : 'sh'}`;
   const shellScript = path.resolve(shellTarget, scriptName);
   if (!existsSync(shellTarget)) {
     mkdirSync(shellTarget, { recursive: true });
