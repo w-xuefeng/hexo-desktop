@@ -4,8 +4,7 @@ import { execute, getExecutablePath, run, type ExecuteParams } from './shared';
 const scriptName = 'check-env';
 const cwd = process.cwd();
 const env = process.env;
-const shell =
-  process.platform === 'win32' ? getExecutablePath(scriptName, 'cmd') || void 0 : void 0;
+const shell = void 0;
 
 async function checkEnv() {
   logScript(scriptName, `env: ${JSON.stringify(env)}`);
