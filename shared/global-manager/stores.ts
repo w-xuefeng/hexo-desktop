@@ -8,6 +8,9 @@ const initialStore = {
 
 export const GLStore = new Store();
 
-Object.keys(initialStore).forEach((k) =>
-  GLStore.set(k, initialStore[k as keyof typeof initialStore])
-);
+if (!GLStore.get(STORE_KEY.INITIALED)) {
+  Object.keys(initialStore).forEach((k) =>
+    GLStore.set(k, initialStore[k as keyof typeof initialStore])
+  );
+  GLStore.set(STORE_KEY.INITIALED, true);
+}

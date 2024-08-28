@@ -21,7 +21,8 @@ export enum IPC_CHANNEL {
 export enum STORE_KEY {
   LANG = 'lang',
   THEME = 'theme',
-  ENV_PATH = 'env-path'
+  ENV_PATH = 'env-path',
+  INITIALED = 'initialed'
 }
 
 export enum STORAGE_KEY {}
