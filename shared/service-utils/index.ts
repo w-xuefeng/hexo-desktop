@@ -86,12 +86,16 @@ export function createDirectory(createPath: string) {
 }
 
 export function directoryIsEmpty(checkPath: string) {
-  const content = globSync(`${checkPath}/*`);
+  const content = globSync(`${checkPath}/*`, {
+    windowsPathsNoEscape: process.platform === 'win32'
+  });
   return content.length === 0;
 }
 
 export function getDirectoryTree(checkPath: string) {
-  const tree = globSync(`${checkPath}/**/*`);
+  const tree = globSync(`${checkPath}/**/*`, {
+    windowsPathsNoEscape: process.platform === 'win32'
+  });
   return tree;
 }
 
