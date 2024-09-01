@@ -4,7 +4,7 @@ import { execute, run } from './shared';
 const scriptName = 'exe';
 const COMMAND = process.env.COMMAND!;
 const [command, ...args] = COMMAND.split(' ');
-const shell = void 0;
+const shell = true;
 
 run(scriptName, async () => {
   const rs = await execute({

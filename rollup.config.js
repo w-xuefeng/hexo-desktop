@@ -36,7 +36,9 @@ export default {
     babelPlugin,
     cleanup({ comments: 'none' })
   ],
-  input: globSync(path.join(__dirname, `electron/${entryType}/*.ts`)),
+  input: globSync(path.join(__dirname, `electron/${entryType}/*.ts`), {
+    windowsPathsNoEscape: process.platform === 'win32'
+  }),
   output: {
     format: 'es',
     dir: path.join(__dirname, 'dist-electron'),
