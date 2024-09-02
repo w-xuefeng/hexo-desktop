@@ -6,7 +6,7 @@
           :text="`${$t('welcome.creating')} ${form.name}...`"
           :description="`${$t('welcome.projectPath')}: ${[form.path, sep, form.name].join('')}`"
         />
-        <div class="tip">{{ progressLog.at(-1) }}</div>
+        <div class="tip">{{ stripAnsiCodes(progressLog.at(-1)) }}</div>
       </a-space>
     </template>
 
@@ -84,6 +84,7 @@ import { reactive } from 'vue';
 import { npmKeyword } from 'npm-keyword';
 import { useTheme } from '@/store';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
+import { stripAnsiCodes } from '@root/shared/utils';
 import { Message } from '@arco-design/web-vue';
 import { useSharedLocales } from '@/locales';
 import Loading from '@/components/loading.vue';

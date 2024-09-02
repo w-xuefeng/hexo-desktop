@@ -14,3 +14,12 @@ export function omit<T extends Record<string | symbol, any>, K extends keyof T>(
     {} as Omit<T, K>
   );
 }
+
+export function stripAnsiCodes(str?: string) {
+  return (
+    str?.replace(
+      /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nq-uy=><]/g,
+      ''
+    ) || ''
+  );
+}

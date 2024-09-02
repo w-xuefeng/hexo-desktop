@@ -21,7 +21,8 @@ export default ts.config(
       'vue/html-self-closing': 'off',
       'vue/max-attributes-per-line': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/ban-ts-comment': 'off'
+      '@typescript-eslint/ban-ts-comment': 'off',
+      'no-control-regex': 'off'
     }
   },
   {
