@@ -3,6 +3,7 @@ import { dialog, type OpenDialogOptions } from 'electron';
 import { GLWins } from '../../../shared/global-manager/wins';
 import { IPC_CHANNEL } from '../../../shared/dicts/enums';
 import { checkPath, directoryIsHexoProject } from '../../../shared/service-utils';
+import { initHexoEditor } from './project-editor/init';
 import logger from '../../../shared/service-utils/logger';
 
 export default async function importProject(options: Partial<OpenDialogOptions>) {
@@ -26,6 +27,8 @@ export default async function importProject(options: Partial<OpenDialogOptions>)
     if (!directoryIsHexoProject(projectPath)) {
       return R.fail('exception.directoryIsNotHexoProject');
     }
+
+    await initHexoEditor(projectPath);
 
     GLWins.mainWin?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
       name: 'main-editor',

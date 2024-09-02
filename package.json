@@ -24,6 +24,7 @@
     "@arco-design/web-vue": "^2.56.0",
     "electron-log": "^5.1.7",
     "electron-store": "^10.0.0",
+    "hexo": "^7.3.0",
     "hexo-cli": "^4.3.2",
     "npm-keyword": "^8.0.0",
     "vue": "^3.4.35",

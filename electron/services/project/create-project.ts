@@ -3,6 +3,7 @@ import { GLWins } from '../../../shared/global-manager/wins';
 import { IPC_CHANNEL } from '../../../shared/dicts/enums';
 import { checkPath, createDirectory, directoryIsEmpty } from '../../../shared/service-utils';
 import { runScriptBySubProcess } from '../../../shared/service-utils/utility-process';
+import { initHexoEditor } from './project-editor/init';
 import R from '../common/r';
 import type { ExecuteResult, ICreateProjectOptions } from '../../../shared/utils/types';
 
@@ -52,6 +53,8 @@ export async function createProject(
   if (rs.error) {
     return R.fail(rs.error);
   }
+
+  await initHexoEditor(projectPath);
 
   fromEvent?.sender.close();
   GLWins.mainWin?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {

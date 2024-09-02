@@ -28,7 +28,7 @@ export default defineConfig({
         vite: {
           build: {
             rollupOptions: {
-              external: ['hexo-cli']
+              external: ['hexo-cli', 'hexo']
             }
           }
         }
