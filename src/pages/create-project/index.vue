@@ -6,7 +6,7 @@
           :text="`${$t('welcome.creating')} ${form.name}...`"
           :description="`${$t('welcome.projectPath')}: ${[form.path, sep, form.name].join('')}`"
         />
-        <div class="tip">{{ stripAnsiCodes(progressLog.at(-1)) }}</div>
+        <div class="tip-log">{{ stripAnsiCodes(progressLog.at(-1)) }}</div>
       </a-space>
     </template>
 
@@ -204,6 +204,11 @@ window.ipcRenderer.on(IPC_CHANNEL.CREATE_PROJECT_PROGRESS, (_, data: string) => 
     align-items: center;
     justify-content: center;
     flex-grow: 1;
+
+    .tip-log {
+      font-size: 10px;
+      color: gray;
+    }
   }
 
   .red {
