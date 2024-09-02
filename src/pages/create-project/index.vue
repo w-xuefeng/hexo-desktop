@@ -6,7 +6,7 @@
           :text="`${$t('welcome.creating')} ${form.name}...`"
           :description="`${$t('welcome.projectPath')}:${[form.path, sep, form.name].join('')}`"
         />
-        <div>{{ progressLog.at(-1) }}</div>
+        <div class="tip">{{ progressLog.at(-1) }}</div>
       </a-space>
     </template>
 
