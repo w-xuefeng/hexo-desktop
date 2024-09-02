@@ -4,7 +4,7 @@
       <a-space direction="vertical" class="loading">
         <Loading
           :text="`${$t('welcome.creating')} ${form.name}...`"
-          :description="`${$t('welcome.projectPath')}:${[form.path, sep, form.name].join('')}`"
+          :description="`${$t('welcome.projectPath')}: ${[form.path, sep, form.name].join('')}`"
         />
         <div class="tip">{{ progressLog.at(-1) }}</div>
       </a-space>

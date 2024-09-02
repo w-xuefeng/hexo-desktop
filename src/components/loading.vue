@@ -264,7 +264,7 @@ path {
   text-align: center;
   font-weight: bold;
   margin-block-start: 20px;
-  font-size: 11px;
+  font-size: 14px;
   color: #a0a0a0;
 }
 .description {
@@ -272,7 +272,7 @@ path {
   letter-spacing: 1px;
   text-align: center;
   font-weight: bold;
-  font-size: 11px;
+  font-size: 12px;
   color: #a0a0a0;
   white-space: nowrap;
 }
