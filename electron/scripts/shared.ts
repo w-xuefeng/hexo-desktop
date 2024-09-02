@@ -64,7 +64,12 @@ export function getExecutablePath(scriptName: string, command: string): string |
     const cmd = platform === 'win32' ? `where ${command}` : `which ${command}`;
     const output = execSync(cmd).toString().trim();
     const paths = output.split(/\r?\n/);
-    const rs = paths.length > 0 ? path.resolve(paths[0]) : null;
+    let rs = paths.length > 0 ? path.resolve(paths[0]) : null;
+
+    if (rs?.includes(' ')) {
+      rs = `"${rs}"`;
+    }
+
     logScript(scriptName, `[GetExecutablePath find ${command} path]: ${rs}`);
     return rs;
   } catch (error) {
