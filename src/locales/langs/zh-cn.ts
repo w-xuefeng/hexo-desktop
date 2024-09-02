@@ -18,7 +18,13 @@ export default {
     withoutProjectPath: '未获取到项目路径',
     projectPathIsNotEmpty: '项目路径下存在其他文件',
     fileNotExist: '文件不存在',
-    pathIsNotFile: '路径不是有效文件'
+    pathIsNotFile: '路径不是有效文件',
+    directoryNotExist: '目录不存在',
+    directoryIsNotHexoProject: '目录不是 Hexo 项目'
+  },
+  waringTips: {
+    inputProjectName: '请填写项目名称',
+    inputProjectPath: '请填写项目路径'
   },
   operate: {
     submit: '提交',
@@ -85,7 +91,9 @@ export default {
     projectLocation: '项目位置',
     projectTheme: '项目主题',
     optional: '可选',
-    gitRemoteOrigin: '项目远程仓库地址'
+    gitRemoteOrigin: '项目远程仓库地址',
+    creating: '正在创建',
+    projectPath: '项目路径'
   },
   envSetting: {
     envPath: 'PATH',

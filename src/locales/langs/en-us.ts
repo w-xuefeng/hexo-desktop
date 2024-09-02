@@ -19,7 +19,13 @@ export default {
     withoutProjectPath: 'The project path is not got',
     projectPathIsNotEmpty: 'The project path is not empty',
     fileNotExist: 'The File does not exist',
-    pathIsNotFile: 'The path is not a valid file'
+    pathIsNotFile: 'The path is not a valid file',
+    directoryNotExist: 'The directory does not exist',
+    directoryIsNotHexoProject: 'The directory is not a Hexo project'
+  },
+  waringTips: {
+    inputProjectName: 'Please fill in the project name',
+    inputProjectPath: 'Please fill in the project path'
   },
   operate: {
     submit: 'Submit',
@@ -86,7 +92,9 @@ export default {
     projectLocation: 'Project Location',
     projectTheme: 'Project Theme',
     optional: 'Optional',
-    gitRemoteOrigin: 'Git Remote Origin'
+    gitRemoteOrigin: 'Git Remote Origin',
+    creating: 'Creating',
+    projectPath: 'Project Path'
   },
   envSetting: {
     envPath: 'PATH',

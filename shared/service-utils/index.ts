@@ -203,3 +203,12 @@ export function getEnvPath() {
   execSync(commandMap[process.platform]);
   return readEnvPath();
 }
+
+export function directoryIsHexoProject(checkPath: string) {
+  const content = globSync(`${checkPath}/*`, {
+    windowsPathsNoEscape: process.platform === 'win32'
+  });
+  return ['package.json', '_config.yml', 'source', 'scaffolds'].every((item) =>
+    content.some((e) => e.endsWith(item))
+  );
+}

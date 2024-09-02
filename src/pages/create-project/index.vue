@@ -1,70 +1,75 @@
 <template>
   <div class="create-project-panel">
-    <a-row :gutter="10" align="center">
-      <a-col class="label">{{ $t('welcome.projectName') }} <i class="red">*</i></a-col>
-      <a-col class="item">
-        <a-input v-model="form.name" :placeholder="$t('welcome.inputName')"></a-input>
-      </a-col>
-    </a-row>
-    <a-row :gutter="10" align="center">
-      <a-col class="label">{{ $t('welcome.projectLocation') }} <i class="red">*</i></a-col>
-      <a-col class="item pointer">
-        <a-input
-          v-model="form.path"
-          class="path"
-          readonly
-          :placeholder="$t('welcome.chooseProjectDirectory')"
-        >
-          <template #append>
-            <div class="choose-directory" @click="chooseDirectoryPath">···</div>
-          </template>
-        </a-input>
-      </a-col>
-    </a-row>
+    <template v-if="projectCreating">
+      <a-space direction="vertical" class="loading">
+        <Loading
+          :text="`${$t('welcome.creating')} ${form.name}...`"
+          :description="`${$t('welcome.projectPath')}:${[form.path, sep, form.name].join('')}`"
+        />
+        <div>{{ progressLog.at(-1) }}</div>
+      </a-space>
+    </template>
 
-    <a-row v-if="form.path && form.name" class="tip">
-      项目路径 {{ form.path }}{{ sep }}{{ form.name }}
-    </a-row>
+    <template v-else>
+      <a-row :gutter="10" align="center">
+        <a-col class="label">{{ $t('welcome.projectName') }} <i class="red">*</i></a-col>
+        <a-col class="item">
+          <a-input v-model="form.name" :placeholder="$t('welcome.inputName')"></a-input>
+        </a-col>
+      </a-row>
+      <a-row :gutter="10" align="center">
+        <a-col class="label">{{ $t('welcome.projectLocation') }} <i class="red">*</i></a-col>
+        <a-col class="item pointer">
+          <a-input
+            v-model="form.path"
+            class="path"
+            readonly
+            :placeholder="$t('welcome.chooseProjectDirectory')"
+          >
+            <template #append>
+              <div class="choose-directory" @click="chooseDirectoryPath">···</div>
+            </template>
+          </a-input>
+        </a-col>
+      </a-row>
 
-    <a-row align="center">
-      <a-col class="label">
-        {{ $t('welcome.projectTheme') }}（{{ $t('welcome.optional') }}）
-      </a-col>
-      <a-col class="item">
-        <a-select
-          v-model="form.themeNpmPkg"
-          :placeholder="$t('welcome.selectProjectTheme')"
-          :loading="searchingTheme"
-          allow-create
-          allow-clear
-          @popup-visible-change="onSelectTheme"
-        >
-          <a-option v-for="theme in themeList" :key="theme.name">{{ theme.name }}</a-option>
-        </a-select>
-      </a-col>
-    </a-row>
+      <a-row v-if="form.path && form.name" class="tip">
+        {{ $t('welcome.projectPath') }}: {{ form.path }}{{ sep }}{{ form.name }}
+      </a-row>
 
-    <a-row align="center">
-      <a-col class="label">
-        {{ $t('welcome.gitRemoteOrigin') }}（{{ $t('welcome.optional') }}）
-      </a-col>
-      <a-col class="item">
-        <a-input
-          v-model="form.gitRemoteOrigin"
-          :placeholder="$t('welcome.inputGitRemoteOrigin')"
-        ></a-input>
-      </a-col>
-    </a-row>
+      <a-row align="center">
+        <a-col class="label">
+          {{ $t('welcome.projectTheme') }}（{{ $t('welcome.optional') }}）
+        </a-col>
+        <a-col class="item">
+          <a-select
+            v-model="form.themeNpmPkg"
+            :placeholder="$t('welcome.selectProjectTheme')"
+            :loading="searchingTheme"
+            allow-create
+            allow-clear
+            @popup-visible-change="onSelectTheme"
+          >
+            <a-option v-for="theme in themeList" :key="theme.name">{{ theme.name }}</a-option>
+          </a-select>
+        </a-col>
+      </a-row>
 
-    <!-- TODO -->
-    <div>
-      <ul>
-        <li v-for="(log, index) in progressLog" :key="index">{{ log }}</li>
-      </ul>
-    </div>
+      <a-row align="center">
+        <a-col class="label">
+          {{ $t('welcome.gitRemoteOrigin') }}（{{ $t('welcome.optional') }}）
+        </a-col>
+        <a-col class="item">
+          <a-input
+            v-model="form.gitRemoteOrigin"
+            :placeholder="$t('welcome.inputGitRemoteOrigin')"
+          ></a-input>
+        </a-col>
+      </a-row>
+    </template>
 
     <footer class="footer">
-      <a-button @click="cancel">{{ $t('operate.cancel') }}</a-button>
+      <a-button :disabled="projectCreating" @click="cancel">{{ $t('operate.cancel') }}</a-button>
       <a-button type="primary" :disabled="disable" :loading="projectCreating" @click="confirm">
         {{ $t('operate.confirm') }}
       </a-button>
@@ -81,6 +86,7 @@ import { useTheme } from '@/store';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import { Message } from '@arco-design/web-vue';
 import { useSharedLocales } from '@/locales';
+import Loading from '@/components/loading.vue';
 
 useTheme();
 const { t } = useSharedLocales();
@@ -155,11 +161,11 @@ const cancel = () => {
 
 const confirm = async () => {
   if (!form.name) {
-    Message.warning('请填写项目名称');
+    Message.warning(t('waringTips.inputProjectName'));
     return;
   }
   if (!form.path) {
-    Message.warning('请填写项目路径');
+    Message.warning(t('waringTips.inputProjectPath'));
     return;
   }
   try {
@@ -190,6 +196,14 @@ window.ipcRenderer.on(IPC_CHANNEL.CREATE_PROJECT_PROGRESS, (_, data: string) => 
   box-sizing: border-box;
   gap: 20px;
   height: 100%;
+
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+  }
 
   .red {
     color: #f40;
