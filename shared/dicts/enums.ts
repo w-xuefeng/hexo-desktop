@@ -15,7 +15,9 @@ export enum IPC_CHANNEL {
   OPEN_INDEPENDENT_WINDOW = 'open-independent-window',
   CLOSE_WINDOW = 'close-window',
   CHANGE_ROUTER = 'change-router',
-  CREATE_PROJECT_PROGRESS = 'create-project-progress'
+  CREATE_PROJECT_PROGRESS = 'create-project-progress',
+  INIT_HEXO_PROJECT = 'init-hexo-project',
+  GET_HEXO_DOCUMENT = 'get-hexo-document'
 }
 
 export enum STORE_KEY {
