@@ -27,5 +27,10 @@ export function initApp() {
     }
   });
 
-  app.whenReady().then(createMainWindow);
+  app.on('open-file', (event, path) => {
+    event.preventDefault();
+    createMainWindow(path);
+  });
+
+  app.whenReady().then(() => createMainWindow());
 }

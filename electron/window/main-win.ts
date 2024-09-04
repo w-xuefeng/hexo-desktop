@@ -5,9 +5,10 @@ import { GLHexo } from '../../shared/global-manager/hexo';
 import { GLWins } from '../../shared/global-manager/wins';
 import { importProjectByDrop } from '../services/project/import-project';
 import { devToolsVisible, devToolsEnable } from '../../shared/configs';
+import logger from '../../shared/service-utils/logger';
 import path from 'path';
 
-export function createMainWindow() {
+export function createMainWindow(projectPath?: string) {
   GLWins.mainWin = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'logo.svg'),
     width: 850,
@@ -29,8 +30,9 @@ export function createMainWindow() {
 
   GLWins.mainWin.webContents.on('did-finish-load', async () => {
     GLWins.mainWin?.webContents.send(IPC_CHANNEL.MAIN_PROCESS_START, new Date().toLocaleString());
-    if (process.argv.length >= 2) {
-      const directoryPath = process.argv[1];
+    if (projectPath || process.argv.length >= 2) {
+      const directoryPath = projectPath || process.argv[1];
+      logger(`[Start with argv]: ${projectPath || directoryPath || JSON.stringify(process.argv)}`);
       const rs = await importProjectByDrop(directoryPath);
       GLWins.mainWin?.webContents.send(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP_REPLY, rs);
     }
