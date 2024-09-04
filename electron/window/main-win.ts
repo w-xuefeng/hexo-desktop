@@ -30,12 +30,16 @@ export function createMainWindow(projectPath?: string) {
 
   GLWins.mainWin.webContents.on('did-finish-load', async () => {
     GLWins.mainWin?.webContents.send(IPC_CHANNEL.MAIN_PROCESS_START, new Date().toLocaleString());
-    if (projectPath || process.argv.length >= 2) {
-      const directoryPath = projectPath || process.argv[1];
-      logger(`[Start with argv]: ${projectPath || directoryPath || JSON.stringify(process.argv)}`);
-      const rs = await importProjectByDrop(directoryPath);
-      GLWins.mainWin?.webContents.send(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP_REPLY, rs);
+    if (!projectPath && process.argv.length < 2) {
+      return;
     }
+    const directoryPath = projectPath || process.argv[1];
+    logger(`[StartWithArgv]: path: ${directoryPath} - argv:${JSON.stringify(process.argv)}`);
+    if (directoryPath === '.') {
+      return;
+    }
+    const rs = await importProjectByDrop(directoryPath);
+    GLWins.mainWin?.webContents.send(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP_REPLY, rs);
   });
 
   GLWins.mainWin.webContents.on('destroyed', () => {
