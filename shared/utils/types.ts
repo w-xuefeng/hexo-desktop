@@ -1,3 +1,4 @@
+import moment from 'moment';
 import type { SpawnOptionsWithoutStdio } from 'node:child_process';
 
 export interface ICommonResponse<T = any> extends Record<string, any> {
@@ -37,7 +38,7 @@ export interface IExecutedMessage<T, D> {
  * hexo
  */
 
-export interface IHexoMoment extends Record<string, any> {}
+export interface IHexoMoment extends moment.Moment {}
 
 export interface IHexoQuery<T = Record<string, any>> {
   data: T[];
@@ -127,4 +128,12 @@ export interface IHexoProjectBaseInfo {
     }[];
   };
   data: Record<string, any>;
+}
+
+export interface IHexoPostData {
+  title?: string | number;
+  layout?: string;
+  slug?: string | number;
+  path?: string;
+  [prop: string]: any;
 }

@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+import { GLHexo } from '../../shared/global-manager/hexo';
 import { GLWins } from '../../shared/global-manager/wins';
 import { fileURLToPath } from 'url';
 import { devToolsVisible, devToolsEnable } from '../../shared/configs';
@@ -20,6 +21,7 @@ export function createMainWindow() {
   });
 
   GLWins.mainWin.on('close', () => {
+    GLHexo.exit();
     GLWins.mainWin = null;
   });
 

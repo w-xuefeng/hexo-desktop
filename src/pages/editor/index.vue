@@ -1,5 +1,6 @@
 <template>
   <div>
+    <a-button @click="createArticle">new</a-button>
     <ul>
       <li v-for="post in state.posts.data" :key="post.id" @click="getContent(post.id)">
         {{ post.title }}
@@ -59,6 +60,18 @@ const getContent = async (id: string) => {
   } finally {
     loading.value = false;
   }
+};
+
+const createArticle = async () => {
+  // loading.value = true;
+  // try {
+  //   const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_HEXO_DOCUMENT, {
+  //     title: 'new article'
+  //   });
+  //   console.log('data', rs);
+  // } finally {
+  //   loading.value = false;
+  // }
 };
 
 init();
