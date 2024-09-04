@@ -1,4 +1,5 @@
 export enum IPC_CHANNEL {
+  MAIN_PROCESS_START = 'main-process-start',
   CHANGE_THEME = 'change-theme',
   STORE_SAVE = 'store-save',
   STORE_GET = 'store-get',
@@ -11,6 +12,8 @@ export enum IPC_CHANNEL {
   CHOOSE_DIRECTORY = 'choose-directory',
   CHOOSE_FILE = 'choose-file',
   IMPORT_PROJECT = 'import-project',
+  IMPORT_PROJECT_BY_DROP = 'import-project-by-drop',
+  IMPORT_PROJECT_BY_DROP_REPLY = 'import-project-by-drop-reply',
   CREATE_PROJECT = 'create-project',
   OPEN_INDEPENDENT_WINDOW = 'open-independent-window',
   CLOSE_WINDOW = 'close-window',

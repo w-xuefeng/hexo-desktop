@@ -16,7 +16,14 @@ export default {
       }
     ],
     artifactName: '${productName}-Mac-${version}-${arch}-Installer.${ext}',
-    icon: 'res/icons/ios/AppIcon.appiconset'
+    icon: 'res/icons/ios/AppIcon.appiconset',
+    fileAssociations: [
+      {
+        ext: ['directory'],
+        name: 'Folder',
+        role: 'Editor'
+      }
+    ]
   },
   win: {
     target: [
@@ -26,7 +33,14 @@ export default {
       }
     ],
     artifactName: '${productName}-Windows-${version}-${arch}-Setup.${ext}',
-    icon: 'res/icons/win/Icon-App-512x512@1x.png'
+    icon: 'res/icons/win/Icon-App-512x512@1x.png',
+    fileAssociations: [
+      {
+        ext: ['directory'],
+        name: 'Folder',
+        role: 'Editor'
+      }
+    ]
   },
   nsis: {
     oneClick: false,

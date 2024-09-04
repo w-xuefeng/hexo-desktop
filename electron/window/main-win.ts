@@ -1,7 +1,9 @@
+import { fileURLToPath } from 'url';
 import { BrowserWindow } from 'electron';
+import { IPC_CHANNEL } from '../../shared/dicts/enums';
 import { GLHexo } from '../../shared/global-manager/hexo';
 import { GLWins } from '../../shared/global-manager/wins';
-import { fileURLToPath } from 'url';
+import { importProjectByDrop } from '../services/project/import-project';
 import { devToolsVisible, devToolsEnable } from '../../shared/configs';
 import path from 'path';
 
@@ -25,8 +27,13 @@ export function createMainWindow() {
     GLWins.mainWin = null;
   });
 
-  GLWins.mainWin.webContents.on('did-finish-load', () => {
-    GLWins.mainWin?.webContents.send('main-process-message', new Date().toLocaleString());
+  GLWins.mainWin.webContents.on('did-finish-load', async () => {
+    GLWins.mainWin?.webContents.send(IPC_CHANNEL.MAIN_PROCESS_START, new Date().toLocaleString());
+    if (process.argv.length >= 2) {
+      const directoryPath = process.argv[1];
+      const rs = await importProjectByDrop(directoryPath);
+      GLWins.mainWin?.webContents.send(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP_REPLY, rs);
+    }
   });
 
   GLWins.mainWin.webContents.on('destroyed', () => {

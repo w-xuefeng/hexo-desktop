@@ -5,7 +5,35 @@ import { IPC_CHANNEL } from '../../../shared/dicts/enums';
 import { checkPath, directoryIsHexoProject } from '../../../shared/service-utils';
 import logger from '../../../shared/service-utils/logger';
 
-export default async function importProject(options: Partial<OpenDialogOptions>) {
+export async function importProjectByDrop(projectPath?: string) {
+  try {
+    if (!projectPath) {
+      return R.fail('exception.withoutProjectPath');
+    }
+    const projectPathState = checkPath(projectPath);
+    if (!projectPathState.exist || !projectPathState.isDirectory) {
+      return R.fail('exception.directoryNotExist');
+    }
+
+    if (!directoryIsHexoProject(projectPath)) {
+      return R.fail('exception.directoryIsNotHexoProject');
+    }
+
+    GLWins.mainWin?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
+      name: 'main-editor',
+      query: {
+        path: projectPath
+      }
+    });
+    GLWins.mainWin?.maximize();
+    return R.success(projectPath);
+  } catch (error) {
+    logger(`[ImportProject Error]: ${error}`);
+    return R.fail();
+  }
+}
+
+export async function importProject(options: Partial<OpenDialogOptions>) {
   try {
     const target = await dialog.showOpenDialog({
       ...options,

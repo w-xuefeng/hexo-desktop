@@ -1,5 +1,5 @@
 <template>
-  <div class="welcome">
+  <div class="welcome" @drop="drop" @dragover="dragover">
     <div class="header">
       <switch-lang />
       <switch-theme />
@@ -61,6 +61,7 @@ const checkEnv = async () => {
   window.ipcRenderer.on(IPC_CHANNEL.CHECK_ENV_FROM_OTHERS_PAGE, (_, rs) => {
     env.value = rs;
   });
+
   try {
     env.value = await window.ipcRenderer.invoke(IPC_CHANNEL.CHECK_ENV);
   } catch (error) {
@@ -68,6 +69,32 @@ const checkEnv = async () => {
   }
   if (envErrorInfo.value.length) {
     settings();
+  }
+};
+
+const dragover = (e: DragEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.dataTransfer) {
+    e.dataTransfer.dropEffect = 'copy';
+  }
+};
+
+const drop = async (e: DragEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+  const [directory] = Array.from(e.dataTransfer?.files || []);
+  if (!directory?.path) {
+    return;
+  }
+  try {
+    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP, directory.path);
+    if (!rs?.success || !rs?.data) {
+      Message.error(t(rs.message));
+      return;
+    }
+  } catch (error) {
+    console.log('[IMPORT_PROJECT error]', error);
   }
 };
 
@@ -106,7 +133,17 @@ const settings = () => {
   });
 };
 
-checkEnv();
+const init = () => {
+  checkEnv();
+  window.ipcRenderer.on(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP_REPLY, (_, rs) => {
+    if (!rs?.success || !rs?.data) {
+      Message.error(t(rs.message));
+      return;
+    }
+  });
+};
+
+init();
 </script>
 
 <style scoped lang="less">

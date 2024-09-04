@@ -2,14 +2,14 @@ import Store from 'electron-store';
 import path from 'node:path';
 import initIPCStoreEvent from '../store';
 import initIPCEditorEvent from '../editor/events';
-import importProject from '../services/project/import-project';
 import { dialog, ipcMain, nativeTheme, type OpenDialogOptions } from 'electron';
+import { GLWins } from '../../shared/global-manager/wins';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
 import { checkEnv, getEnvPath } from '../../shared/service-utils';
-import { createProject } from '../services/project/create-project';
 import { createIndependentWindow } from '../window/independent-win';
 import { GLIPCEventHandled } from '../../shared/global-manager/vars';
-import { GLWins } from '../../shared/global-manager/wins';
+import { createProject } from '../services/project/create-project';
+import { importProject, importProjectByDrop } from '../services/project/import-project';
 import { type ICreateProjectOptions } from '../../shared/utils/types';
 
 export default function initIPCEvent(store: Store) {
@@ -58,6 +58,10 @@ export default function initIPCEvent(store: Store) {
 
   ipcMain.handle(IPC_CHANNEL.IMPORT_PROJECT, (_, options: Partial<OpenDialogOptions>) => {
     return importProject(options);
+  });
+
+  ipcMain.handle(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP, (_, projectPath: string) => {
+    return importProjectByDrop(projectPath);
   });
 
   ipcMain.handle(

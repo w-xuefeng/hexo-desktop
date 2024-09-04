@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import App from './App.vue';
 import router from './routers';
 import ArcoVue from '@arco-design/web-vue';
@@ -13,7 +14,7 @@ createApp(App)
   .mount('#app')
   .$nextTick(() => {
     postMessage({ payload: 'removeLoading' }, '*');
-    window.ipcRenderer.on('main-process-message', (_event, message) => {
+    window.ipcRenderer.on(IPC_CHANNEL.MAIN_PROCESS_START, (_event, message) => {
       console.log(message);
     });
   });
