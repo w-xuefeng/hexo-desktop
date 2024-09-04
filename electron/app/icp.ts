@@ -31,7 +31,7 @@ export default function initIPCEvent(store: Store) {
 
   ipcMain.on(IPC_CHANNEL.CHECK_ENV, async (_, envPath?: string) => {
     const rs = await checkEnv(envPath);
-    GLWins.mainWin?.webContents?.send(IPC_CHANNEL.CHECK_ENV_FROM_OTHERS_PAGE, rs);
+    GLWins.mainWin?.win?.webContents?.send(IPC_CHANNEL.CHECK_ENV_FROM_OTHERS_PAGE, rs);
   });
 
   ipcMain.handle(IPC_CHANNEL.GET_ENV_PATH, () => {

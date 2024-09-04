@@ -19,13 +19,13 @@ export async function importProjectByDrop(projectPath?: string) {
       return R.fail('exception.directoryIsNotHexoProject');
     }
 
-    GLWins.mainWin?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
+    GLWins.mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
       name: 'main-editor',
       query: {
         path: projectPath
       }
     });
-    GLWins.mainWin?.maximize();
+    GLWins.mainWin?.win?.maximize();
     return R.success(projectPath);
   } catch (error) {
     logger(`[ImportProject Error]: ${error}`);
@@ -55,13 +55,13 @@ export async function importProject(options: Partial<OpenDialogOptions>) {
       return R.fail('exception.directoryIsNotHexoProject');
     }
 
-    GLWins.mainWin?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
+    GLWins.mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
       name: 'main-editor',
       query: {
         path: projectPath
       }
     });
-    GLWins.mainWin?.maximize();
+    GLWins.mainWin?.win?.maximize();
     return R.success(projectPath);
   } catch (error) {
     logger(`[ImportProject Error]: ${error}`);
