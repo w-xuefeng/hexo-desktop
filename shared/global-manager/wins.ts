@@ -1,11 +1,16 @@
-import { randomUUID } from 'crypto';
 import { BrowserWindow } from 'electron';
+import { GlobalHexo } from './hexo';
+
+export interface IGLMainWin {
+  id: string;
+  win: BrowserWindow | null;
+  hexo: GlobalHexo | null;
+}
 
 export class GlobalWindows {
-  static ALL_MAIN_WIN: { id: string; win: BrowserWindow }[] = [];
+  static ALL_MAIN_WIN: IGLMainWin[] = [];
 
-  #id = randomUUID().toString();
-  #mainWin: BrowserWindow | null = null;
+  #mainWin: IGLMainWin | null = null;
 
   dialogWin: BrowserWindow | null = null;
   floatWin: BrowserWindow | null = null;
@@ -15,19 +20,21 @@ export class GlobalWindows {
     return this.#mainWin;
   }
 
-  set mainWin(win: BrowserWindow | null) {
-    if (win) {
-      GlobalWindows.ALL_MAIN_WIN.push({
-        win,
-        id: this.#id
-      });
-    } else if (win === null) {
-      const index = GlobalWindows.ALL_MAIN_WIN.findIndex((e) => e.id === this.#id);
+  set mainWin(data: IGLMainWin | null) {
+    if (
+      data?.id &&
+      data.win &&
+      data.hexo &&
+      !GlobalWindows.ALL_MAIN_WIN.some((e) => e.id === data.id)
+    ) {
+      GlobalWindows.ALL_MAIN_WIN.push(data);
+    } else if (data?.id && data.win === null) {
+      const index = GlobalWindows.ALL_MAIN_WIN.findIndex((e) => e.id === data.id);
       if (index >= 0) {
         GlobalWindows.ALL_MAIN_WIN.splice(index, 1);
       }
     }
-    this.#mainWin = win;
+    this.#mainWin = data;
   }
 
   constructor() {}

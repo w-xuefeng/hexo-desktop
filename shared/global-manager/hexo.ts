@@ -10,5 +10,3 @@ export class GlobalHexo {
     this.value = null;
   }
 }
-
-export const GLHexo = new GlobalHexo();

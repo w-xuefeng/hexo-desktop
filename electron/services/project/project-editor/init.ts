@@ -1,5 +1,5 @@
 import Hexo from 'hexo';
-import { GLHexo } from '../../../../shared/global-manager/hexo';
+import { GLWins } from '../../../../shared/global-manager/wins';
 import type {
   IHexoProjectBaseInfo,
   IHexoObject,
@@ -73,7 +73,9 @@ export async function initHexoEditor(
   const hexo = new Hexo(cwd, options);
   await hexo.init();
   await hexo.load();
-  GLHexo.path = cwd;
-  GLHexo.value = hexo;
+  if (GLWins.mainWin?.hexo) {
+    GLWins.mainWin.hexo.path = cwd;
+    GLWins.mainWin.hexo.value = hexo;
+  }
   return getHexoProjectBaseInfo(hexo.locals.toObject() as IHexoObject);
 }

@@ -1,4 +1,4 @@
-import { GLHexo } from '../../../../shared/global-manager/hexo';
+import { GLWins } from '../../../../shared/global-manager/wins';
 import type {
   IHexoDocument,
   IHexoPostData,
@@ -7,7 +7,8 @@ import type {
 } from '../../../../shared/utils/types';
 
 export function getDocument(id: string) {
-  if (!GLHexo.value) {
+  const GLHexo = GLWins.mainWin?.hexo;
+  if (!GLHexo?.value) {
     return;
   }
   const posts = GLHexo.value.locals.get('posts') as IHexoQuery<IHexoDocument>;
@@ -41,7 +42,8 @@ export function getDocument(id: string) {
 
 export function createDocument(data: IHexoPostData, replace: boolean) {
   return new Promise((resolve, reject) => {
-    if (!GLHexo.value) {
+    const GLHexo = GLWins.mainWin?.hexo;
+    if (!GLHexo?.value) {
       reject();
       return;
     }

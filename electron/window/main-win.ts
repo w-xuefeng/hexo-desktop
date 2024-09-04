@@ -1,38 +1,51 @@
 import { fileURLToPath } from 'url';
 import { app, BrowserWindow } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
-import { GLHexo } from '../../shared/global-manager/hexo';
-import { GLWins } from '../../shared/global-manager/wins';
+import { GlobalHexo } from '../../shared/global-manager/hexo';
+import { GLWins, type IGLMainWin } from '../../shared/global-manager/wins';
 import { importProjectByDrop } from '../services/project/import-project';
 import { devToolsVisible, devToolsEnable } from '../../shared/configs';
+import { randomUUID } from 'crypto';
 import logger from '../../shared/service-utils/logger';
 import path from 'path';
 
 export function createMainWindow(projectPath?: string) {
-  GLWins.mainWin = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'logo.svg'),
-    width: 850,
-    height: 600,
-    minWidth: 850,
-    minHeight: 600,
-    webPreferences: {
-      preload: path.join(fileURLToPath(import.meta.url), '..', 'preload.mjs'),
-      nodeIntegration: true,
-      contextIsolation: true,
-      devTools: devToolsEnable
-    }
-  });
+  const current: IGLMainWin = {
+    id: `${Date.now()}-${randomUUID()}`,
+    hexo: new GlobalHexo(),
+    win: new BrowserWindow({
+      icon: path.join(process.env.VITE_PUBLIC, 'logo.svg'),
+      width: 850,
+      height: 600,
+      minWidth: 850,
+      minHeight: 600,
+      webPreferences: {
+        preload: path.join(fileURLToPath(import.meta.url), '..', 'preload.mjs'),
+        nodeIntegration: true,
+        contextIsolation: true,
+        devTools: devToolsEnable
+      }
+    })
+  };
 
-  GLWins.mainWin.on('close', () => {
-    GLHexo.exit();
-    GLWins.mainWin = null;
+  current.win?.on('close', () => {
+    current.hexo?.exit();
+    GLWins.mainWin = {
+      id: current.id,
+      win: null,
+      hexo: null
+    };
     if (BrowserWindow.getAllWindows().length === 0) {
       app.quit();
     }
   });
 
-  GLWins.mainWin.webContents.on('did-finish-load', async () => {
-    GLWins.mainWin?.webContents.send(IPC_CHANNEL.MAIN_PROCESS_START, new Date().toLocaleString());
+  current.win?.on('focus', () => {
+    GLWins.mainWin = current;
+  });
+
+  current.win?.webContents.on('did-finish-load', async () => {
+    current.win?.webContents.send(IPC_CHANNEL.MAIN_PROCESS_START, new Date().toLocaleString());
     if (!projectPath && process.argv.length < 2) {
       return;
     }
@@ -42,17 +55,19 @@ export function createMainWindow(projectPath?: string) {
       return;
     }
     const rs = await importProjectByDrop(directoryPath);
-    GLWins.mainWin?.webContents.send(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP_REPLY, rs);
+    current.win?.webContents.send(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP_REPLY, rs);
   });
 
-  GLWins.mainWin.webContents.on('destroyed', () => {
-    GLWins.mainWin?.close();
+  current.win?.webContents.on('destroyed', () => {
+    current.win?.close();
   });
 
   if (process.env['VITE_DEV_SERVER_URL']) {
-    GLWins.mainWin.loadURL(process.env['VITE_DEV_SERVER_URL']);
-    devToolsEnable && devToolsVisible && GLWins.mainWin.webContents.openDevTools();
+    current.win?.loadURL(process.env['VITE_DEV_SERVER_URL']);
+    devToolsEnable && devToolsVisible && current.win?.webContents.openDevTools();
   } else if (process.env.RENDERER_DIST) {
-    GLWins.mainWin.loadFile(path.join(process.env.RENDERER_DIST, 'index.html'));
+    current.win?.loadFile(path.join(process.env.RENDERER_DIST, 'index.html'));
   }
+
+  GLWins.mainWin = current;
 }
