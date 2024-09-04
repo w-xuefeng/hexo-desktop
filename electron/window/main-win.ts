@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'url';
-import { BrowserWindow } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
 import { GLHexo } from '../../shared/global-manager/hexo';
 import { GLWins } from '../../shared/global-manager/wins';
@@ -26,6 +26,9 @@ export function createMainWindow(projectPath?: string) {
   GLWins.mainWin.on('close', () => {
     GLHexo.exit();
     GLWins.mainWin = null;
+    if (BrowserWindow.getAllWindows().length === 0) {
+      app.quit();
+    }
   });
 
   GLWins.mainWin.webContents.on('did-finish-load', async () => {

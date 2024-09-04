@@ -1,22 +1,42 @@
 import Hexo from 'hexo';
 import { GLHexo } from '../../../../shared/global-manager/hexo';
-import type { IHexoProjectBaseInfo, IHexoObject } from '../../../../shared/utils/types';
+import type {
+  IHexoProjectBaseInfo,
+  IHexoObject,
+  IHexoDocument,
+  IHexoPostsListItem
+} from '../../../../shared/utils/types';
+
+export function getHexoPostsListItem(e: IHexoDocument): IHexoPostsListItem {
+  return {
+    id: e._id,
+    title: e.title,
+    source: e.source,
+    slug: e.slug,
+    published: e.published,
+    date: e.date.format('YYYY-MM-DD HH:mm:ss'),
+    updated: e.updated.format('YYYY-MM-DD HH:mm:ss'),
+    comments: e.comments,
+    layout: e.layout,
+    photos: e.photos,
+    path: e.path,
+    permalink: e.permalink,
+    full_source: e.full_source,
+    asset_dir: e.asset_dir,
+    tags: e.tags?.data?.map((t) => t.name) || [],
+    categories: e.categories?.data?.map((c) => c.name) || []
+  };
+}
 
 export function getHexoProjectBaseInfo(ho: IHexoObject): IHexoProjectBaseInfo {
   return {
     posts: {
       length: ho.posts.length,
-      data: ho.posts.data.map((e) => ({
-        id: e._id,
-        title: e.title
-      }))
+      data: ho.posts.data.map(getHexoPostsListItem)
     },
     pages: {
       length: ho.pages.length,
-      data: ho.pages.data.map((e) => ({
-        id: e._id,
-        title: e.title
-      }))
+      data: ho.pages.data.map(getHexoPostsListItem)
     },
     categories: {
       length: ho.categories.length,

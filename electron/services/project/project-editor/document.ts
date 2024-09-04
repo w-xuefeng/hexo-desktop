@@ -1,5 +1,10 @@
 import { GLHexo } from '../../../../shared/global-manager/hexo';
-import type { IHexoDocument, IHexoPostData, IHexoQuery } from '../../../../shared/utils/types';
+import type {
+  IHexoDocument,
+  IHexoPostData,
+  IHexoPostsDetailItem,
+  IHexoQuery
+} from '../../../../shared/utils/types';
 
 export function getDocument(id: string) {
   if (!GLHexo.value) {
@@ -29,9 +34,9 @@ export function getDocument(id: string) {
     permalink: current.permalink,
     full_source: current.full_source,
     asset_dir: current.asset_dir,
-    tags: current.tags.data.map((e) => e.name),
-    categories: current.categories.data.map((e) => e.name)
-  };
+    tags: current.tags?.data?.map((e) => e.name) || [],
+    categories: current.categories?.data?.map((e) => e.name) || []
+  } as IHexoPostsDetailItem;
 }
 
 export function createDocument(data: IHexoPostData, replace: boolean) {

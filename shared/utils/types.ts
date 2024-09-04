@@ -98,20 +98,33 @@ export interface IHexoObject {
   data: Record<string, any>;
 }
 
+export interface IHexoPostsListItem {
+  id: string;
+  title: string;
+  source: string;
+  slug: string;
+  published: boolean;
+  date: string;
+  updated: string;
+  comments: boolean;
+  layout: string;
+  photos: any[];
+  path: string;
+  permalink: string;
+  full_source: string;
+  asset_dir: string;
+  tags: string[];
+  categories: string[];
+}
+
 export interface IHexoProjectBaseInfo {
   posts: {
     length: number;
-    data: {
-      id: string;
-      title: string;
-    }[];
+    data: IHexoPostsListItem[];
   };
   pages: {
     length: number;
-    data: {
-      id: string;
-      title: string;
-    }[];
+    data: IHexoPostsListItem[];
   };
   categories: {
     length: number;
@@ -136,4 +149,27 @@ export interface IHexoPostData {
   slug?: string | number;
   path?: string;
   [prop: string]: any;
+}
+
+export interface IHexoPostsDetailItem {
+  id: string;
+  title: string;
+  source: string;
+  raw: string;
+  slug: string;
+  published: boolean;
+  date: string;
+  updated: string;
+  comments: boolean;
+  layout: string;
+  photos: string[];
+  content: string;
+  excerpt: string;
+  more: string;
+  path: string;
+  permalink: string;
+  full_source: string;
+  asset_dir: string;
+  tags: string[];
+  categories: string[];
 }

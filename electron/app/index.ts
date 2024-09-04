@@ -1,5 +1,7 @@
-import { app, BrowserWindow } from 'electron';
-import { GLWins } from '../../shared/global-manager/wins';
+import {
+  app
+  // BrowserWindow
+} from 'electron';
 import { GLStore } from '../../shared/global-manager/stores';
 import { createMainWindow } from '../window/main-win';
 import initIPCEvent from './icp';
@@ -15,16 +17,15 @@ export function initApp() {
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
       app.quit();
-      GLWins.mainWin = null;
     }
   });
 
   app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createMainWindow();
-    }
+    // if (BrowserWindow.getAllWindows().length === 0) {
+    createMainWindow();
+    // }
   });
 
   app.on('open-file', (event, path) => {
