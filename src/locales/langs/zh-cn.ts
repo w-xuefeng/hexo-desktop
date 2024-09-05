@@ -93,7 +93,8 @@ export default {
     optional: '可选',
     gitRemoteOrigin: '项目远程仓库地址',
     creating: '正在创建',
-    projectPath: '项目路径'
+    projectPath: '项目路径',
+    keepWinOpen: '请不要关闭当前窗口'
   },
   envSetting: {
     envPath: 'PATH',

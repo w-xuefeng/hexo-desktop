@@ -94,7 +94,8 @@ export default {
     optional: 'Optional',
     gitRemoteOrigin: 'Git Remote Origin',
     creating: 'Creating',
-    projectPath: 'Project Path'
+    projectPath: 'Project Path',
+    keepWinOpen: 'Please do not close the current window'
   },
   envSetting: {
     envPath: 'PATH',

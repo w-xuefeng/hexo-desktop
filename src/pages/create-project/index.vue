@@ -3,7 +3,7 @@
     <template v-if="projectCreating">
       <a-space direction="vertical" class="loading">
         <Loading
-          :text="`${$t('welcome.creating')} ${form.name}...`"
+          :text="`${$t('welcome.keepWinOpen')}, ${$t('welcome.creating')} ${form.name}...`"
           :description="`${$t('welcome.projectPath')}: ${[form.path, sep, form.name].join('')}`"
         />
         <div class="tip-log">{{ stripAnsiCodes(progressLog.at(-1)) }}</div>
