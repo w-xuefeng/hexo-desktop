@@ -1,4 +1,8 @@
 export default {
+  app: {
+    newWindow: 'New Window',
+    createWindow: 'Create a new window'
+  },
   system: {
     loading: 'Loading...',
     loadingInfo: 'Loading information...',

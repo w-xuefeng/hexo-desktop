@@ -18,6 +18,7 @@ import { PKG_CONFIG } from '../configs/app';
 import { execSync } from 'node:child_process';
 import { envExecutePath } from '../configs/main';
 import { getPathShell } from './shell';
+import { i18n, type Langs, type ExtraMessage } from '../utils/i18n';
 import type { ExecuteResult, IExecutedMessage } from '../utils/types';
 
 export function checkEnv(envPath?: string) {
@@ -211,4 +212,9 @@ export function directoryIsHexoProject(checkPath: string) {
   return ['package.json', '_config.yml', 'source', 'scaffolds'].every((item) =>
     content.some((e) => e.endsWith(item))
   );
+}
+
+export function useI18n<EM>(extraMsg?: ExtraMessage<EM>) {
+  const lang = GLStore.get(STORE_KEY.LANG) as Langs;
+  return i18n(lang, extraMsg);
 }

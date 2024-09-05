@@ -1,4 +1,8 @@
 export default {
+  app: {
+    newWindow: '新建窗口',
+    createWindow: '创建一个新的窗口'
+  },
   system: {
     loading: '加载中...',
     loadingInfo: '信息加载中...',

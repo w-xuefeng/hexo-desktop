@@ -9,8 +9,8 @@ import ArcoEnUS from '@arco-design/web-vue/es/locale/lang/en-us';
 import ArcoZhCN from '@arco-design/web-vue/es/locale/lang/zh-cn';
 import type { ArcoLang } from '@arco-design/web-vue/es/locale/interface';
 
-import enUs from './langs/en-us';
-import zhCn from './langs/zh-cn';
+import enUs from '@root/shared/langs/en-us';
+import zhCn from '@root/shared/langs/zh-cn';
 import { loadExternalJsFile } from '@root/shared/render-utils';
 import { SharedStore } from '@root/shared/render-utils/storage';
 import { IPC_CHANNEL, STORE_KEY } from '@root/shared/dicts/enums';

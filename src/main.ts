@@ -12,14 +12,13 @@ import './style.less';
 window.ipcRenderer.on(IPC_CHANNEL.MAIN_PROCESS_START, (_event, winId, time) => {
   console.log(`[MAIN_PROCESS_START]: ${time}`);
   setCurrentWinId(winId);
+  createApp(App)
+    .use(router)
+    .use(sharedI18n)
+    .use(ArcoVue)
+    .use(createPinia())
+    .mount('#app')
+    .$nextTick(() => {
+      postMessage({ payload: 'removeLoading' }, '*');
+    });
 });
-
-createApp(App)
-  .use(router)
-  .use(sharedI18n)
-  .use(ArcoVue)
-  .use(createPinia())
-  .mount('#app')
-  .$nextTick(() => {
-    postMessage({ payload: 'removeLoading' }, '*');
-  });

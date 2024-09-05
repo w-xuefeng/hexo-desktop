@@ -1,15 +1,14 @@
-import {
-  app
-  // BrowserWindow
-} from 'electron';
+import { app, BrowserWindow } from 'electron';
 import { GLStore } from '../../shared/global-manager/stores';
 import { createMainWindow } from '../window/main-win';
 import initIPCEvent from './icp';
 import setAppMenu from '../menus';
+import setUserTasks from './tasks';
 
 export function initApp() {
   initIPCEvent(GLStore);
   setAppMenu();
+  setUserTasks();
 
   // Quit when all windows are closed, except on macOS. There, it's common
   // for applications and their menu bar to stay active until the user quits
@@ -23,9 +22,9 @@ export function initApp() {
   app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    // if (BrowserWindow.getAllWindows().length === 0) {
-    createMainWindow();
-    // }
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createMainWindow();
+    }
   });
 
   app.on('open-file', (event, path) => {

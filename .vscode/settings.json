@@ -86,7 +86,7 @@
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "i18n-ally.localesPaths": [
-    "src/locales/langs"
+    "shared/langs"
   ],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.namespace": true,
