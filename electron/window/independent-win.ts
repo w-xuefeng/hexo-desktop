@@ -1,36 +1,61 @@
 import path from 'node:path';
 import { GLWins } from '../../shared/global-manager/wins';
 import { devToolsEnable } from '../../shared/configs';
+import { IPC_CHANNEL } from '../../shared/dicts/enums';
 import { BrowserWindow } from 'electron';
 import { fileURLToPath } from 'node:url';
 
+export function loadIndependentWin(
+  win: BrowserWindow,
+  routePath: string,
+  combineSymbol: string,
+  search: string
+) {
+  if (process.env['VITE_DEV_SERVER_URL']) {
+    const url = new URL(process.env['VITE_DEV_SERVER_URL']);
+    url.hash = `${routePath}${combineSymbol}${search}`;
+    console.log(`[URL] ${url.toString()}`, url);
+    win.loadURL(url.toString());
+  } else {
+    win.loadFile(path.join(process.env.RENDERER_DIST, 'index.html'), {
+      hash: `${routePath}${combineSymbol}${search}`
+    });
+  }
+}
+
 export function createIndependentWindow(
   routePath: string,
-  options?: Partial<Electron.BrowserWindowConstructorOptions>
+  options?: Partial<Electron.BrowserWindowConstructorOptions> & { query?: Record<string, any> }
 ) {
+  const { query, ...otherOptions } = options || {};
+
+  const search = query ? new URLSearchParams(query).toString() : '';
+  const combineSymbol = search ? '?' : '';
+
   if (GLWins.independentWin) {
-    if (process.env['VITE_DEV_SERVER_URL']) {
-      GLWins.independentWin.loadURL(`${process.env['VITE_DEV_SERVER_URL']}#${routePath}`);
-    } else {
-      GLWins.independentWin.loadFile(path.join(process.env.RENDERER_DIST, 'index.html'), {
-        hash: routePath
-      });
-    }
+    loadIndependentWin(GLWins.independentWin, routePath, combineSymbol, search);
     GLWins.independentWin.show();
     return;
   }
 
   GLWins.independentWin = new BrowserWindow({
-    ...options,
+    ...otherOptions,
     icon: path.join(process.env.VITE_PUBLIC, 'icon.ico'),
     autoHideMenuBar: true,
     webPreferences: {
-      ...options?.webPreferences,
+      ...otherOptions?.webPreferences,
       nodeIntegration: true,
       contextIsolation: true,
       devTools: devToolsEnable,
       preload: path.join(fileURLToPath(import.meta.url), '..', 'preload.mjs')
     }
+  });
+
+  GLWins.independentWin?.webContents.on('did-finish-load', async () => {
+    GLWins.independentWin?.webContents.send(
+      IPC_CHANNEL.INDEPENDENT_WIN_START,
+      new Date().toLocaleString()
+    );
   });
 
   GLWins.independentWin.on('close', () => {
@@ -41,11 +66,5 @@ export function createIndependentWindow(
     GLWins.independentWin?.close();
   });
 
-  if (process.env['VITE_DEV_SERVER_URL']) {
-    GLWins.independentWin.loadURL(`${process.env['VITE_DEV_SERVER_URL']}#${routePath}`);
-  } else {
-    GLWins.independentWin.loadFile(path.join(process.env.RENDERER_DIST, 'index.html'), {
-      hash: routePath
-    });
-  }
+  loadIndependentWin(GLWins.independentWin, routePath, combineSymbol, search);
 }

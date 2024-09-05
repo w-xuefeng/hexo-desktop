@@ -1,5 +1,6 @@
 export enum IPC_CHANNEL {
   MAIN_PROCESS_START = 'main-process-start',
+  INDEPENDENT_WIN_START = 'independent-win-start',
   CHANGE_THEME = 'change-theme',
   STORE_SAVE = 'store-save',
   STORE_GET = 'store-get',

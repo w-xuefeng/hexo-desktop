@@ -105,17 +105,16 @@ const drop = async (e: DragEvent) => {
 };
 
 const createProject = () => {
-  window.ipcRenderer.invoke(
-    IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW,
-    `/create-project-panel?from=${winId}`,
-    {
-      title: t('welcome.create'),
-      width: 800,
-      height: 600,
-      darkTheme: document.body.getAttribute('arco-theme') === 'dark',
-      resizable: false
+  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW, '/create-project-panel', {
+    title: t('welcome.create'),
+    width: 800,
+    height: 600,
+    darkTheme: document.body.getAttribute('arco-theme') === 'dark',
+    resizable: false,
+    query: {
+      from: winId
     }
-  );
+  });
 };
 
 const importProject = async () => {
@@ -134,12 +133,15 @@ const importProject = async () => {
 };
 
 const settings = () => {
-  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW, `/env-setting?from=${winId}`, {
+  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW, '/env-setting', {
     title: t('router.envSetting'),
     width: 600,
     height: 500,
     darkTheme: document.body.getAttribute('arco-theme') === 'dark',
-    resizable: false
+    resizable: false,
+    query: {
+      from: winId
+    }
   });
 };
 

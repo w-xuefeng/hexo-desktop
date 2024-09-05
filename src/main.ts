@@ -9,9 +9,7 @@ import { setCurrentWinId } from '@root/shared/render-utils/win-id';
 import '@arco-design/web-vue/dist/arco.min.css';
 import './style.less';
 
-window.ipcRenderer.on(IPC_CHANNEL.MAIN_PROCESS_START, (_event, winId, time) => {
-  console.log(`[MAIN_PROCESS_START]: ${time}`);
-  setCurrentWinId(winId);
+function render() {
   createApp(App)
     .use(router)
     .use(sharedI18n)
@@ -21,4 +19,15 @@ window.ipcRenderer.on(IPC_CHANNEL.MAIN_PROCESS_START, (_event, winId, time) => {
     .$nextTick(() => {
       postMessage({ payload: 'removeLoading' }, '*');
     });
+}
+
+window.ipcRenderer.on(IPC_CHANNEL.MAIN_PROCESS_START, (_event, winId, time) => {
+  console.log(`[MAIN_PROCESS_START]: ${time}`);
+  setCurrentWinId(winId);
+  render();
+});
+
+window.ipcRenderer.on(IPC_CHANNEL.INDEPENDENT_WIN_START, (_event, time) => {
+  console.log(`[INDEPENDENT_WIN_START]: ${time}`);
+  render();
 });
