@@ -38,17 +38,17 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { IPC_CHANNEL, STORAGE_KEY } from '@root/shared/dicts/enums';
+import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
 import { useSharedLocales } from '@/locales';
 import { IconPlus, IconImport, IconSettings } from '@arco-design/web-vue/es/icon';
 import { Message } from '@arco-design/web-vue';
-import { SharedStorage } from '@root/shared/render-utils/storage';
+import { getCurrentWinId } from '@root/shared/render-utils/win-id';
 import type { ExecuteResult } from '@root/shared/utils/types';
 
 const { t } = useSharedLocales();
-const winId = SharedStorage.getSession<string>(STORAGE_KEY.WIN_ID) as string;
+const winId = getCurrentWinId();
 const env = ref<ExecuteResult[]>([]);
 
 const envInfo = computed(() => {

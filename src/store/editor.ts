@@ -1,14 +1,14 @@
-import { IPC_CHANNEL, STORAGE_KEY } from '@root/shared/dicts/enums';
-import { SharedStorage } from '@root/shared/render-utils/storage';
+import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import type {
   IHexoPostData,
   IHexoPostsDetailItem,
   IHexoProjectBaseInfo
 } from '@root/shared/utils/types';
 import { defineStore } from 'pinia';
+import { getCurrentWinId } from '@root/shared/render-utils/win-id';
 
 export const useArticleStore = defineStore('article-store', () => {
-  const winId = SharedStorage.getSession(STORAGE_KEY.WIN_ID);
+  const winId = getCurrentWinId();
   const path = ref<string>();
   const loading = ref(false);
   const currentArticle = ref<IHexoPostsDetailItem>();
