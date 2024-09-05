@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { useI18n } from '../../shared/service-utils';
 import { app } from 'electron';
 
@@ -7,7 +8,7 @@ export default function setUserTasks() {
     app.setUserTasks([
       {
         program: process.execPath,
-        arguments: '--new-window',
+        arguments: [path.join(process.env.MAIN_DIST, 'main.js'), '--no-sandbox'].join(' '),
         iconPath: process.execPath,
         iconIndex: 0,
         title: t('app.newWindow'),
