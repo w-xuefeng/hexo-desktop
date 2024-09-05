@@ -38,15 +38,17 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { IPC_CHANNEL } from '@root/shared/dicts/enums';
+import { IPC_CHANNEL, STORAGE_KEY } from '@root/shared/dicts/enums';
 import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
 import { useSharedLocales } from '@/locales';
 import { IconPlus, IconImport, IconSettings } from '@arco-design/web-vue/es/icon';
 import { Message } from '@arco-design/web-vue';
+import { SharedStorage } from '@root/shared/render-utils/storage';
 import type { ExecuteResult } from '@root/shared/utils/types';
 
 const { t } = useSharedLocales();
+const winId = SharedStorage.getSession<string>(STORAGE_KEY.WIN_ID) as string;
 const env = ref<ExecuteResult[]>([]);
 
 const envInfo = computed(() => {
@@ -88,7 +90,11 @@ const drop = async (e: DragEvent) => {
     return;
   }
   try {
-    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP, directory.path);
+    const rs = await window.ipcRenderer.invoke(
+      IPC_CHANNEL.IMPORT_PROJECT_BY_DROP,
+      winId,
+      directory.path
+    );
     if (!rs?.success || !rs?.data) {
       Message.error(t(rs.message));
       return;
@@ -99,18 +105,22 @@ const drop = async (e: DragEvent) => {
 };
 
 const createProject = () => {
-  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW, '/create-project-panel', {
-    title: t('welcome.create'),
-    width: 800,
-    height: 600,
-    darkTheme: document.body.getAttribute('arco-theme') === 'dark',
-    resizable: false
-  });
+  window.ipcRenderer.invoke(
+    IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW,
+    `/create-project-panel?from=${winId}`,
+    {
+      title: t('welcome.create'),
+      width: 800,
+      height: 600,
+      darkTheme: document.body.getAttribute('arco-theme') === 'dark',
+      resizable: false
+    }
+  );
 };
 
 const importProject = async () => {
   try {
-    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.IMPORT_PROJECT, {
+    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.IMPORT_PROJECT, winId, {
       title: t('welcome.import'),
       message: t('welcome.chooseProjectDirectory')
     });
@@ -124,7 +134,7 @@ const importProject = async () => {
 };
 
 const settings = () => {
-  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW, '/env-setting', {
+  window.ipcRenderer.invoke(IPC_CHANNEL.OPEN_INDEPENDENT_WINDOW, `/env-setting?from=${winId}`, {
     title: t('router.envSetting'),
     width: 600,
     height: 500,

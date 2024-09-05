@@ -31,6 +31,7 @@
 
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue';
+import { useRoute } from 'vue-router';
 import { useTheme } from '@/store';
 import { IPC_CHANNEL, STORE_KEY } from '@root/shared/dicts/enums';
 import { Message } from '@arco-design/web-vue';
@@ -40,10 +41,13 @@ import type { ExecuteResult } from '@root/shared/utils/types';
 
 useTheme();
 const loading = ref(false);
+const route = useRoute();
 
 const { t } = useSharedLocales();
 
 const env = ref<ExecuteResult[]>([]);
+
+const replyToWinId = ref(route.query.from);
 
 const form = reactive({
   envPath: SharedStore.getSync(STORE_KEY.ENV_PATH) || ''
@@ -96,7 +100,7 @@ const confirm = async () => {
       return;
     }
     SharedStore.set(STORE_KEY.ENV_PATH, form.envPath);
-    window.ipcRenderer.send(IPC_CHANNEL.CHECK_ENV);
+    window.ipcRenderer.send(IPC_CHANNEL.CHECK_ENV, replyToWinId.value);
     window.ipcRenderer.invoke(IPC_CHANNEL.CLOSE_WINDOW);
   } finally {
     loading.value = false;

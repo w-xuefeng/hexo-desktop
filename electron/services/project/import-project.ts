@@ -5,7 +5,7 @@ import { IPC_CHANNEL } from '../../../shared/dicts/enums';
 import { checkPath, directoryIsHexoProject } from '../../../shared/service-utils';
 import logger from '../../../shared/service-utils/logger';
 
-export async function importProjectByDrop(projectPath?: string) {
+export async function importProjectByDrop(winId: string, projectPath?: string) {
   try {
     if (!projectPath) {
       return R.fail('exception.withoutProjectPath');
@@ -19,13 +19,15 @@ export async function importProjectByDrop(projectPath?: string) {
       return R.fail('exception.directoryIsNotHexoProject');
     }
 
-    GLWins.mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
+    const mainWin = GLWins.getMainWin(winId);
+
+    mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
       name: 'main-editor',
       query: {
         path: projectPath
       }
     });
-    GLWins.mainWin?.win?.maximize();
+    mainWin?.win?.maximize();
     return R.success(projectPath);
   } catch (error) {
     logger(`[ImportProject Error]: ${error}`);
@@ -33,7 +35,7 @@ export async function importProjectByDrop(projectPath?: string) {
   }
 }
 
-export async function importProject(options: Partial<OpenDialogOptions>) {
+export async function importProject(winId: string, options: Partial<OpenDialogOptions>) {
   try {
     const target = await dialog.showOpenDialog({
       ...options,
@@ -55,13 +57,15 @@ export async function importProject(options: Partial<OpenDialogOptions>) {
       return R.fail('exception.directoryIsNotHexoProject');
     }
 
-    GLWins.mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
+    const mainWin = GLWins.getMainWin(winId);
+
+    mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
       name: 'main-editor',
       query: {
         path: projectPath
       }
     });
-    GLWins.mainWin?.win?.maximize();
+    mainWin?.win?.maximize();
     return R.success(projectPath);
   } catch (error) {
     logger(`[ImportProject Error]: ${error}`);

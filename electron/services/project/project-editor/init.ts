@@ -57,6 +57,7 @@ export function getHexoProjectBaseInfo(ho: IHexoObject): IHexoProjectBaseInfo {
 }
 
 export async function initHexoEditor(
+  winId: string,
   cwd: string,
   options?: {
     debug?: boolean;
@@ -73,9 +74,10 @@ export async function initHexoEditor(
   const hexo = new Hexo(cwd, options);
   await hexo.init();
   await hexo.load();
-  if (GLWins.mainWin?.hexo) {
-    GLWins.mainWin.hexo.path = cwd;
-    GLWins.mainWin.hexo.value = hexo;
+  const win = GLWins.getMainWin(winId);
+  if (win?.hexo) {
+    win.hexo.path = cwd;
+    win.hexo.value = hexo;
   }
   return getHexoProjectBaseInfo(hexo.locals.toObject() as IHexoObject);
 }

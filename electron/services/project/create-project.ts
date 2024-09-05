@@ -33,6 +33,7 @@ function initHexoProject(cwd: string, name: string, onData?: (data: string) => v
 }
 
 export async function createProject(
+  winId: string,
   options: ICreateProjectOptions,
   fromEvent?: Electron.IpcMainInvokeEvent
 ) {
@@ -54,12 +55,14 @@ export async function createProject(
   }
 
   fromEvent?.sender.close();
-  GLWins.mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
+
+  const mainWin = GLWins.getMainWin(winId);
+  mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
     name: 'main-editor',
     query: {
       path: projectPath
     }
   });
-  GLWins.mainWin?.win?.maximize();
+  mainWin?.win?.maximize();
   return R.success(projectPath);
 }

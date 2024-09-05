@@ -79,6 +79,7 @@
 
 <script setup lang="ts">
 import { ref, toRaw, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { ICreateProjectOptions } from '@root/shared/utils/types';
 import { reactive } from 'vue';
 import { npmKeyword } from 'npm-keyword';
@@ -93,6 +94,8 @@ useTheme();
 const { t } = useSharedLocales();
 const sep = ref('/');
 const projectCreating = ref(false);
+const route = useRoute();
+const replyToWinId = ref(route.query.from);
 
 const form = reactive<ICreateProjectOptions>({
   name: '',
@@ -171,7 +174,11 @@ const confirm = async () => {
   }
   try {
     projectCreating.value = true;
-    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_PROJECT, toRaw(form));
+    const rs = await window.ipcRenderer.invoke(
+      IPC_CHANNEL.CREATE_PROJECT,
+      replyToWinId.value,
+      toRaw(form)
+    );
     if (!rs?.success || !rs?.data) {
       Message.error(t(rs.message));
       return;

@@ -6,8 +6,8 @@ import type {
   IHexoQuery
 } from '../../../../shared/utils/types';
 
-export function getDocument(id: string) {
-  const GLHexo = GLWins.mainWin?.hexo;
+export function getDocument(winId: string, id: string) {
+  const GLHexo = GLWins.getMainWin(winId)?.hexo;
   if (!GLHexo?.value) {
     return;
   }
@@ -40,9 +40,9 @@ export function getDocument(id: string) {
   } as IHexoPostsDetailItem;
 }
 
-export function createDocument(data: IHexoPostData, replace: boolean) {
+export function createDocument(winId: string, data: IHexoPostData, replace: boolean) {
   return new Promise((resolve, reject) => {
-    const GLHexo = GLWins.mainWin?.hexo;
+    const GLHexo = GLWins.getMainWin(winId)?.hexo;
     if (!GLHexo?.value) {
       reject();
       return;

@@ -1,4 +1,5 @@
-import { IPC_CHANNEL } from '@root/shared/dicts/enums';
+import { IPC_CHANNEL, STORAGE_KEY } from '@root/shared/dicts/enums';
+import { SharedStorage } from '@root/shared/render-utils/storage';
 import type {
   IHexoPostData,
   IHexoPostsDetailItem,
@@ -7,6 +8,7 @@ import type {
 import { defineStore } from 'pinia';
 
 export const useArticleStore = defineStore('article-store', () => {
+  const winId = SharedStorage.getSession(STORAGE_KEY.WIN_ID);
   const path = ref<string>();
   const loading = ref(false);
   const currentArticle = ref<IHexoPostsDetailItem>();
@@ -36,7 +38,7 @@ export const useArticleStore = defineStore('article-store', () => {
     }
     loading.value = true;
     try {
-      const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.INIT_HEXO_PROJECT, path.value);
+      const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.INIT_HEXO_PROJECT, winId, path.value);
       Object.keys(rs).forEach((k) => {
         state[k as keyof IHexoProjectBaseInfo] = rs[k];
       });
@@ -48,7 +50,7 @@ export const useArticleStore = defineStore('article-store', () => {
   const getContent = async (id: string) => {
     loading.value = true;
     try {
-      const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.GET_HEXO_DOCUMENT, id);
+      const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.GET_HEXO_DOCUMENT, winId, id);
       currentArticle.value = rs;
     } finally {
       loading.value = false;
@@ -58,7 +60,7 @@ export const useArticleStore = defineStore('article-store', () => {
   const createArticle = async (options: IHexoPostData) => {
     loading.value = true;
     try {
-      const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_HEXO_DOCUMENT, options);
+      const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_HEXO_DOCUMENT, winId, options);
       console.log('data', rs);
     } finally {
       loading.value = false;

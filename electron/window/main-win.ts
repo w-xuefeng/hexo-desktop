@@ -30,22 +30,18 @@ export function createMainWindow(projectPath?: string) {
 
   current.win?.on('close', () => {
     current.hexo?.exit();
-    GLWins.mainWin = {
-      id: current.id,
-      win: null,
-      hexo: null
-    };
+    GLWins.removeMainWin(current.id);
     if (BrowserWindow.getAllWindows().length === 0) {
       app.quit();
     }
   });
 
-  current.win?.on('focus', () => {
-    GLWins.mainWin = current;
-  });
-
   current.win?.webContents.on('did-finish-load', async () => {
-    current.win?.webContents.send(IPC_CHANNEL.MAIN_PROCESS_START, new Date().toLocaleString());
+    current.win?.webContents.send(
+      IPC_CHANNEL.MAIN_PROCESS_START,
+      current.id,
+      new Date().toLocaleString()
+    );
     if (!projectPath && process.argv.length < 2) {
       return;
     }
@@ -69,5 +65,5 @@ export function createMainWindow(projectPath?: string) {
     current.win?.loadFile(path.join(process.env.RENDERER_DIST, 'index.html'));
   }
 
-  GLWins.mainWin = current;
+  GLWins.addMainWin(current);
 }

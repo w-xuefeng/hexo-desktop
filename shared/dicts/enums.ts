@@ -31,4 +31,6 @@ export enum STORE_KEY {
   INITIALED = 'initialed'
 }
 
-export enum STORAGE_KEY {}
+export enum STORAGE_KEY {
+  WIN_ID = 'window-id'
+}

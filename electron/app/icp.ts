@@ -29,9 +29,12 @@ export default function initIPCEvent(store: Store) {
     return checkEnv(envPath);
   });
 
-  ipcMain.on(IPC_CHANNEL.CHECK_ENV, async (_, envPath?: string) => {
+  ipcMain.on(IPC_CHANNEL.CHECK_ENV, async (_, replyToWinId: string, envPath?: string) => {
     const rs = await checkEnv(envPath);
-    GLWins.mainWin?.win?.webContents?.send(IPC_CHANNEL.CHECK_ENV_FROM_OTHERS_PAGE, rs);
+    GLWins.getMainWin(replyToWinId)?.win?.webContents?.send(
+      IPC_CHANNEL.CHECK_ENV_FROM_OTHERS_PAGE,
+      rs
+    );
   });
 
   ipcMain.handle(IPC_CHANNEL.GET_ENV_PATH, () => {
@@ -56,12 +59,15 @@ export default function initIPCEvent(store: Store) {
     return rs;
   });
 
-  ipcMain.handle(IPC_CHANNEL.IMPORT_PROJECT, (_, options: Partial<OpenDialogOptions>) => {
-    return importProject(options);
-  });
+  ipcMain.handle(
+    IPC_CHANNEL.IMPORT_PROJECT,
+    (_, winId: string, options: Partial<OpenDialogOptions>) => {
+      return importProject(winId, options);
+    }
+  );
 
-  ipcMain.handle(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP, (_, projectPath: string) => {
-    return importProjectByDrop(projectPath);
+  ipcMain.handle(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP, (_, winId: string, projectPath: string) => {
+    return importProjectByDrop(winId, projectPath);
   });
 
   ipcMain.handle(
@@ -75,9 +81,12 @@ export default function initIPCEvent(store: Store) {
     event.sender.close();
   });
 
-  ipcMain.handle(IPC_CHANNEL.CREATE_PROJECT, (event, options: ICreateProjectOptions) => {
-    return createProject(options, event);
-  });
+  ipcMain.handle(
+    IPC_CHANNEL.CREATE_PROJECT,
+    (event, winId: string, options: ICreateProjectOptions) => {
+      return createProject(winId, options, event);
+    }
+  );
 
   GLIPCEventHandled.current = true;
 }
