@@ -1,9 +1,9 @@
 import { app, BrowserWindow } from 'electron';
 import { GLStore } from '../../shared/global-manager/stores';
 import { createMainWindow } from '../window/main-win';
+import { buildDockMenu, setUserTasks } from './tasks';
 import initIPCEvent from './icp';
 import setAppMenu from '../menus';
-import setUserTasks from './tasks';
 
 export function initApp() {
   initIPCEvent(GLStore);
@@ -32,5 +32,12 @@ export function initApp() {
     createMainWindow(path);
   });
 
-  app.whenReady().then(() => createMainWindow());
+  app
+    .whenReady()
+    .then(() => {
+      if (process.platform === 'darwin') {
+        app.dock.setMenu(buildDockMenu());
+      }
+    })
+    .then(() => createMainWindow());
 }
