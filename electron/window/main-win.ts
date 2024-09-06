@@ -7,7 +7,7 @@ import { importProjectByDrop } from '../services/project/import-project';
 import { devToolsVisible, devToolsEnable } from '../../shared/configs';
 import { randomUUID } from 'crypto';
 import logger from '../../shared/service-utils/logger';
-import path from 'path';
+import path from 'node:path';
 
 export function createMainWindow(projectPath?: string) {
   const current: IGLMainWin = {
@@ -37,10 +37,15 @@ export function createMainWindow(projectPath?: string) {
   });
 
   current.win?.webContents.on('did-finish-load', async () => {
+    const platformInfo = {
+      sep: path.sep,
+      platform: process.platform
+    };
     current.win?.webContents.send(
       IPC_CHANNEL.MAIN_PROCESS_START,
       current.id,
-      new Date().toLocaleString()
+      new Date().toLocaleString(),
+      platformInfo
     );
     if (!projectPath && process.argv.length < 2) {
       return;
@@ -50,7 +55,7 @@ export function createMainWindow(projectPath?: string) {
     if (directoryPath === '.') {
       return;
     }
-    const rs = await importProjectByDrop(directoryPath);
+    const rs = await importProjectByDrop(current.id, directoryPath);
     current.win?.webContents.send(IPC_CHANNEL.IMPORT_PROJECT_BY_DROP_REPLY, rs);
   });
 

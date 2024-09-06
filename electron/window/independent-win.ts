@@ -52,9 +52,14 @@ export function createIndependentWindow(
   });
 
   GLWins.independentWin?.webContents.on('did-finish-load', async () => {
+    const platformInfo = {
+      sep: path.sep,
+      platform: process.platform
+    };
     GLWins.independentWin?.webContents.send(
       IPC_CHANNEL.INDEPENDENT_WIN_START,
-      new Date().toLocaleString()
+      new Date().toLocaleString(),
+      platformInfo
     );
   });
 

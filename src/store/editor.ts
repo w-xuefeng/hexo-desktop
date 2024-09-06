@@ -6,6 +6,8 @@ import type {
 } from '@root/shared/utils/types';
 import { defineStore } from 'pinia';
 import { getCurrentWinId } from '@root/shared/render-utils/win-id';
+import { PlatformInfo } from '@root/shared/render-utils/storage';
+import { defaultTitle } from '@root/shared/configs/render';
 
 export const useArticleStore = defineStore('article-store', () => {
   const winId = getCurrentWinId();
@@ -32,6 +34,17 @@ export const useArticleStore = defineStore('article-store', () => {
     data: {}
   });
 
+  const modifyTitle = () => {
+    if (!path.value) {
+      return;
+    }
+    const projectName = path.value.split(PlatformInfo.get('sep')).at(-1);
+    if (!projectName) {
+      return;
+    }
+    document.title = `${projectName} - ${defaultTitle}`;
+  };
+
   const init = async () => {
     if (!path.value) {
       return;
@@ -44,6 +57,7 @@ export const useArticleStore = defineStore('article-store', () => {
       });
     } finally {
       loading.value = false;
+      modifyTitle();
     }
   };
 

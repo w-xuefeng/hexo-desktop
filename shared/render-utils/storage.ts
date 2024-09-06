@@ -1,4 +1,4 @@
-import { IPC_CHANNEL } from '../dicts/enums';
+import { IPC_CHANNEL, STORAGE_KEY } from '../dicts/enums';
 
 export class SharedStorage {
   /**
@@ -95,5 +95,20 @@ export class SharedStore {
 
   public static remove(key: string) {
     window.ipcRenderer.invoke(IPC_CHANNEL.STORE_REMOVE, key);
+  }
+}
+
+export interface IPlatformInfo extends Record<string, any> {
+  platform: string;
+  sep: string;
+}
+
+export class PlatformInfo {
+  static set(data: IPlatformInfo) {
+    SharedStorage.setStorage(STORAGE_KEY.PLATFORM_INFO, data);
+  }
+  static get(key?: keyof IPlatformInfo) {
+    const data = SharedStorage.getStorage(STORAGE_KEY.PLATFORM_INFO) as IPlatformInfo;
+    return key && data && key in data ? data[key] : data;
   }
 }

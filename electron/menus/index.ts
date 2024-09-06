@@ -2,7 +2,7 @@ import { GLStore } from '../../shared/global-manager/stores';
 import { STORE_KEY } from '../../shared/dicts/enums';
 import { app, Menu } from 'electron';
 
-export default function setAppMenu() {
+export default function buildAppMenu() {
   const isMac = process.platform === 'darwin';
   const template: any[] = [
     ...(isMac
@@ -107,6 +107,16 @@ export default function setAppMenu() {
       label: '工具',
       submenu: [
         {
+          label: '打开最近的文件',
+          role: 'recentdocuments',
+          submenu: [
+            {
+              label: '清除最近打开的...',
+              role: 'clearrecentdocuments'
+            }
+          ]
+        },
+        {
           label: '清除缓存',
           click: () => {
             GLStore.delete(STORE_KEY.ENV_PATH);
@@ -117,5 +127,5 @@ export default function setAppMenu() {
   ];
 
   const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  return menu;
 }

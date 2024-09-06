@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { app } from 'electron';
 import { GLWins } from '../../../shared/global-manager/wins';
 import { IPC_CHANNEL } from '../../../shared/dicts/enums';
 import { checkPath, createDirectory, directoryIsEmpty } from '../../../shared/service-utils';
@@ -64,5 +65,6 @@ export async function createProject(
     }
   });
   mainWin?.win?.maximize();
+  app.addRecentDocument(projectPath);
   return R.success(projectPath);
 }

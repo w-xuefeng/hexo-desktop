@@ -1,5 +1,5 @@
 import R from '../common/r';
-import { dialog, type OpenDialogOptions } from 'electron';
+import { app, dialog, type OpenDialogOptions } from 'electron';
 import { GLWins } from '../../../shared/global-manager/wins';
 import { IPC_CHANNEL } from '../../../shared/dicts/enums';
 import { checkPath, directoryIsHexoProject } from '../../../shared/service-utils';
@@ -28,6 +28,7 @@ export async function importProjectByDrop(winId: string, projectPath?: string) {
       }
     });
     mainWin?.win?.maximize();
+    app.addRecentDocument(projectPath);
     return R.success(projectPath);
   } catch (error) {
     logger(`[ImportProject Error]: ${error}`);
@@ -66,6 +67,7 @@ export async function importProject(winId: string, options: Partial<OpenDialogOp
       }
     });
     mainWin?.win?.maximize();
+    app.addRecentDocument(projectPath);
     return R.success(projectPath);
   } catch (error) {
     logger(`[ImportProject Error]: ${error}`);

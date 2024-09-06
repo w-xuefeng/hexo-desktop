@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory, type RouteLocationRaw } from 'vue-router';
 import { routes } from './route';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
-export const defaultTitle = 'Hexo Desktop';
+import { defaultTitle } from '@root/shared/configs/render';
 
 const router = createRouter({
   history: createWebHashHistory(),

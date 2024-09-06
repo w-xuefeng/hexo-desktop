@@ -1,13 +1,19 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import { GLStore } from '../../shared/global-manager/stores';
 import { createMainWindow } from '../window/main-win';
 import { buildDockMenu, setUserTasks } from './tasks';
+import buildAppMenu from '../menus';
 import initIPCEvent from './icp';
-import setAppMenu from '../menus';
+
+function onAppReady() {
+  Menu.setApplicationMenu(buildAppMenu());
+  if (process.platform === 'darwin') {
+    app.dock.setMenu(buildDockMenu());
+  }
+}
 
 export function initApp() {
   initIPCEvent(GLStore);
-  setAppMenu();
   setUserTasks();
 
   // Quit when all windows are closed, except on macOS. There, it's common
@@ -34,10 +40,6 @@ export function initApp() {
 
   app
     .whenReady()
-    .then(() => {
-      if (process.platform === 'darwin') {
-        app.dock.setMenu(buildDockMenu());
-      }
-    })
+    .then(onAppReady)
     .then(() => createMainWindow());
 }

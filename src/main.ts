@@ -6,6 +6,7 @@ import ArcoVue from '@arco-design/web-vue';
 import sharedI18n from './locales';
 import { createPinia } from 'pinia';
 import { setCurrentWinId } from '@root/shared/render-utils/win-id';
+import { PlatformInfo } from '@root/shared/render-utils/storage';
 import '@arco-design/web-vue/dist/arco.min.css';
 import './style.less';
 
@@ -21,13 +22,15 @@ function render() {
     });
 }
 
-window.ipcRenderer.on(IPC_CHANNEL.MAIN_PROCESS_START, (_event, winId, time) => {
+window.ipcRenderer.on(IPC_CHANNEL.MAIN_PROCESS_START, (_event, winId, time, platformInfo) => {
   console.log(`[MAIN_PROCESS_START]: ${time}`);
   setCurrentWinId(winId);
+  PlatformInfo.set(platformInfo);
   render();
 });
 
-window.ipcRenderer.on(IPC_CHANNEL.INDEPENDENT_WIN_START, (_event, time) => {
+window.ipcRenderer.on(IPC_CHANNEL.INDEPENDENT_WIN_START, (_event, time, platformInfo) => {
   console.log(`[INDEPENDENT_WIN_START]: ${time}`);
+  PlatformInfo.set(platformInfo);
   render();
 });
