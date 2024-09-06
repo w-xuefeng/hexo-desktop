@@ -7,13 +7,13 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '@/store';
+import { useTheme } from '@/store/theme';
 
 withDefaults(defineProps<{ hidden?: boolean }>(), {
   hidden: false
 });
 
-const { theme } = useTheme();
+const { theme } = useTheme().watch();
 </script>
 
 <style scoped lang="less"></style>

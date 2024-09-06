@@ -9,6 +9,7 @@ import { setCurrentWinId } from '@root/shared/render-utils/win-id';
 import { PlatformInfo } from '@root/shared/render-utils/storage';
 import '@arco-design/web-vue/dist/arco.min.css';
 import './style.less';
+import { storeChangeHandler } from './store-change-handler';
 
 function render() {
   createApp(App)
@@ -33,4 +34,8 @@ window.ipcRenderer.on(IPC_CHANNEL.INDEPENDENT_WIN_START, (_event, time, platform
   console.log(`[INDEPENDENT_WIN_START]: ${time}`);
   PlatformInfo.set(platformInfo);
   render();
+});
+
+window.ipcRenderer.on(IPC_CHANNEL.STORE_CHANGED, (_, store) => {
+  storeChangeHandler(store);
 });

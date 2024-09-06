@@ -1,7 +1,20 @@
-import { createRouter, createWebHashHistory, type RouteLocationRaw } from 'vue-router';
+import {
+  createRouter,
+  createWebHashHistory,
+  type RouteMeta,
+  type RouteLocationRaw
+} from 'vue-router';
 import { routes } from './route';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import { defaultTitle } from '@root/shared/configs/render';
+
+export function getMenuTitle(menu: { meta: RouteMeta }) {
+  return typeof menu.meta?.title === 'function'
+    ? menu.meta?.title()
+    : menu.meta?.title
+      ? menu.meta?.title
+      : defaultTitle;
+}
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -9,12 +22,7 @@ const router = createRouter({
 });
 
 router.afterEach((to) => {
-  document.title =
-    typeof to.meta?.title === 'function'
-      ? to.meta?.title()
-      : to.meta?.title
-        ? to.meta?.title
-        : defaultTitle;
+  document.title = getMenuTitle(to);
 });
 
 window.ipcRenderer.on(

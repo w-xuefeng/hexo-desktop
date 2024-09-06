@@ -108,5 +108,10 @@ export default {
     checkPathPass: 'Verification passed',
     errorTip: 'Error Tips',
     autoGetEnvPath: 'Auto obtain the env path'
+  },
+  menus: {
+    articleList: 'Article List',
+    projectConfig: "Project's Config",
+    themeConfig: "Theme's Config"
   }
 };

@@ -4,19 +4,20 @@
       <ArticleList :posts="store.state.posts.data" @details="store.getContent" />
     </a-layout-sider>
     <a-layout-content class="layout-content">
-      <router-view />
+      <ContentEditor />
     </a-layout-content>
   </a-layout>
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
 import { useArticleStore } from '@/store/editor';
 import ArticleList from '@/components/article-list.vue';
+import ContentEditor from './content-editor.vue';
 
-const props = defineProps<{ path: string }>();
-
+const route = useRoute();
 const store = useArticleStore();
-store.path = props.path;
+store.path = route.query.path as string;
 store.init();
 </script>
 

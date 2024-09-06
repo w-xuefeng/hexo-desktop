@@ -1,5 +1,6 @@
 import { useSharedLocales } from '@/locales';
 import { RouteRecordRaw } from 'vue-router';
+import { menus } from './menus';
 
 const { t } = useSharedLocales();
 
@@ -20,14 +21,8 @@ export const routes: RouteRecordRaw[] = [
       authorized: []
     },
     component: () => import('@/layout/layout-page.vue'),
-    redirect: '/main/editor',
-    children: [
-      {
-        path: '/main/editor',
-        name: 'main-editor',
-        component: () => import('@/pages/editor/index.vue')
-      }
-    ]
+    redirect: '/main/article-list',
+    children: menus
   },
   {
     path: '/create-project-panel',

@@ -13,7 +13,7 @@ import enUs from '@root/shared/langs/en-us';
 import zhCn from '@root/shared/langs/zh-cn';
 import { loadExternalJsFile } from '@root/shared/render-utils';
 import { SharedStore } from '@root/shared/render-utils/storage';
-import { IPC_CHANNEL, STORE_KEY } from '@root/shared/dicts/enums';
+import { STORE_KEY } from '@root/shared/dicts/enums';
 
 if (!('dayjs' in globalThis)) {
   // @ts-ignore
@@ -106,12 +106,5 @@ export const currentLocale = computed(() => sharedI18n.global.locale.value);
 export function useSharedLocales() {
   return sharedI18n.global;
 }
-
-window.ipcRenderer.on(IPC_CHANNEL.STORE_CHANGED, (_, store) => {
-  if (store[STORE_KEY.LANG] !== sharedI18n.global.locale.value) {
-    langChangeFromStore = true;
-    setI18nLanguage(store[STORE_KEY.LANG]);
-  }
-});
 
 export default sharedI18n;

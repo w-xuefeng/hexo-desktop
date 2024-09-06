@@ -33,7 +33,7 @@ export const useArticleStore = defineStore('article-store', () => {
     data: {}
   });
 
-  const modifyTitle = (current?: string) => {
+  const modifyTitle = (current: string | undefined = currentArticle.value?.title) => {
     if (!path.value) {
       return;
     }
@@ -88,6 +88,7 @@ export const useArticleStore = defineStore('article-store', () => {
     currentArticle,
     init,
     getContent,
-    createArticle
+    createArticle,
+    modifyTitle
   };
 });

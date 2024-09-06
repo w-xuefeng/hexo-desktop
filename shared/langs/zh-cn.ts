@@ -107,5 +107,10 @@ export default {
     checkPathPass: '校验通过',
     errorTip: '错误信息',
     autoGetEnvPath: '自动获取环境路径'
+  },
+  menus: {
+    articleList: '文章列表',
+    projectConfig: '项目配置',
+    themeConfig: '主题配置'
   }
 };

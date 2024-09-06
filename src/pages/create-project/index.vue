@@ -83,14 +83,14 @@ import { useRoute } from 'vue-router';
 import { ICreateProjectOptions } from '@root/shared/utils/types';
 import { reactive } from 'vue';
 import { npmKeyword } from 'npm-keyword';
-import { useTheme } from '@/store';
+import { useTheme } from '@/store/theme';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import { stripAnsiCodes } from '@root/shared/utils';
 import { Message } from '@arco-design/web-vue';
 import { useSharedLocales } from '@/locales';
 import Loading from '@/components/loading.vue';
 
-useTheme();
+useTheme().watch();
 const { t } = useSharedLocales();
 const sep = ref('/');
 const projectCreating = ref(false);

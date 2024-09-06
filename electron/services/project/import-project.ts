@@ -22,7 +22,7 @@ export async function importProjectByDrop(winId: string, projectPath?: string) {
     const mainWin = GLWins.getMainWin(winId);
 
     mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
-      name: 'main-editor',
+      name: 'main',
       query: {
         path: projectPath
       }
@@ -61,7 +61,7 @@ export async function importProject(winId: string, options: Partial<OpenDialogOp
     const mainWin = GLWins.getMainWin(winId);
 
     mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
-      name: 'main-editor',
+      name: 'main',
       query: {
         path: projectPath
       }

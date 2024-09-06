@@ -59,7 +59,7 @@ export async function createProject(
 
   const mainWin = GLWins.getMainWin(winId);
   mainWin?.win?.webContents.send(IPC_CHANNEL.CHANGE_ROUTER, 'replace', {
-    name: 'main-editor',
+    name: 'main',
     query: {
       path: projectPath
     }

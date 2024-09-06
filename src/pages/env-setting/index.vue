@@ -32,14 +32,14 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import { useTheme } from '@/store';
+import { useTheme } from '@/store/theme';
 import { IPC_CHANNEL, STORE_KEY } from '@root/shared/dicts/enums';
 import { Message } from '@arco-design/web-vue';
 import { SharedStore } from '@root/shared/render-utils/storage';
 import { useSharedLocales } from '@/locales';
 import type { ExecuteResult } from '@root/shared/utils/types';
 
-useTheme();
+useTheme().watch();
 const loading = ref(false);
 const route = useRoute();
 
