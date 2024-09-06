@@ -7,7 +7,8 @@ import type {
 } from '../../../../shared/utils/types';
 
 export function getDocument(winId: string, id: string) {
-  const GLHexo = GLWins.getMainWin(winId)?.hexo;
+  const mainWin = GLWins.getMainWin(winId);
+  const GLHexo = mainWin?.hexo;
   if (!GLHexo?.value) {
     return;
   }
@@ -15,6 +16,9 @@ export function getDocument(winId: string, id: string) {
   const current = posts.data.find((e) => e._id === id);
   if (!current) {
     return;
+  }
+  if (process.platform === 'darwin') {
+    mainWin?.win?.setRepresentedFilename(current.full_source);
   }
   return {
     id: current._id,

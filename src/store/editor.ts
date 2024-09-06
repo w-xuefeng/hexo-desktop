@@ -7,7 +7,6 @@ import type {
 import { defineStore } from 'pinia';
 import { getCurrentWinId } from '@root/shared/render-utils/win-id';
 import { PlatformInfo } from '@root/shared/render-utils/storage';
-import { defaultTitle } from '@root/shared/configs/render';
 
 export const useArticleStore = defineStore('article-store', () => {
   const winId = getCurrentWinId();
@@ -34,7 +33,7 @@ export const useArticleStore = defineStore('article-store', () => {
     data: {}
   });
 
-  const modifyTitle = () => {
+  const modifyTitle = (current?: string) => {
     if (!path.value) {
       return;
     }
@@ -42,7 +41,7 @@ export const useArticleStore = defineStore('article-store', () => {
     if (!projectName) {
       return;
     }
-    document.title = `${projectName} - ${defaultTitle}`;
+    document.title = `${current ? `${current} - ` : ''}${projectName}`;
   };
 
   const init = async () => {
@@ -65,6 +64,7 @@ export const useArticleStore = defineStore('article-store', () => {
     loading.value = true;
     try {
       const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.GET_HEXO_DOCUMENT, winId, id);
+      modifyTitle(rs.title);
       currentArticle.value = rs;
     } finally {
       loading.value = false;
