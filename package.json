@@ -29,9 +29,9 @@
     "moment": "^2.30.1",
     "npm-keyword": "^8.0.0",
     "pinia": "^2.2.2",
-    "vue": "^3.4.35",
+    "vue": "^3.5.3",
     "vue-i18n": "9",
-    "vue-router": "4.4.2",
+    "vue-router": "4.4.3",
     "yarn": "^1.22.22"
   },
   "devDependencies": {
@@ -46,8 +46,8 @@
     "@types/node": "^22.1.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue-jsx": "^4.0.0",
-    "electron": "^31.3.1",
-    "electron-builder": "^24.13.3",
+    "electron": "^32.0.2",
+    "electron-builder": "^25.0.5",
     "eslint": "^9.8.0",
     "eslint-plugin-vue": "^9.27.0",
     "glob": "^11.0.0",
@@ -59,11 +59,11 @@
     "typescript": "^5.2.2",
     "typescript-eslint": "^7.18.0",
     "unplugin-auto-import": "^0.18.2",
-    "vite": "^5.3.5",
-    "vite-plugin-electron": "^0.28.6",
+    "vite": "^5.4.3",
+    "vite-plugin-electron": "^0.28.7",
     "vite-plugin-electron-renderer": "^0.14.5",
-    "vue-tsc": "^2.0.29"
+    "vue-tsc": "^2.1.6"
   },
   "main": "dist-electron/main.js",
-  "packageManager": "yarn@4.3.1"
+  "packageManager": "yarn@4.4.1"
 }
