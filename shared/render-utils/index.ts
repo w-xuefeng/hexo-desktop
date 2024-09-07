@@ -21,3 +21,13 @@ export function loadExternalJsFile(url: string, name?: string) {
     }, 3000);
   });
 }
+
+export function forbiddenRefresh() {
+  document.addEventListener('keydown', (e) => {
+    const key = e.key.toLocaleLowerCase();
+    if ((e.ctrlKey && key === 'r') || (e.metaKey && key === 'r') || key === 'f5') {
+      e.preventDefault();
+      console.log('刷新快捷键被禁用');
+    }
+  });
+}

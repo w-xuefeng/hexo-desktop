@@ -7,11 +7,13 @@ import sharedI18n from './locales';
 import { createPinia } from 'pinia';
 import { setCurrentWinId } from '@root/shared/render-utils/win-id';
 import { PlatformInfo } from '@root/shared/render-utils/storage';
+import { storeChangeHandler } from './store-change-handler';
+import { forbiddenRefresh } from '@root/shared/render-utils';
 import '@arco-design/web-vue/dist/arco.min.css';
 import './style.less';
-import { storeChangeHandler } from './store-change-handler';
 
 function render() {
+  forbiddenRefresh();
   createApp(App)
     .use(router)
     .use(sharedI18n)
