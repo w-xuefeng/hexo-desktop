@@ -34,5 +34,6 @@ export enum STORE_KEY {
 
 export enum STORAGE_KEY {
   WIN_ID = 'window-id',
-  PLATFORM_INFO = 'platform-info'
+  PLATFORM_INFO = 'platform-info',
+  CWD = 'cwd'
 }

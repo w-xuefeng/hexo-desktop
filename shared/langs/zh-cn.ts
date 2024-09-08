@@ -28,7 +28,8 @@ export default {
   },
   waringTips: {
     inputProjectName: '请填写项目名称',
-    inputProjectPath: '请填写项目路径'
+    inputProjectPath: '请填写项目路径',
+    selectOrCreateArticle: '请选择或者创建一篇文章'
   },
   operate: {
     submit: '提交',

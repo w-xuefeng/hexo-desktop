@@ -2,11 +2,16 @@
   <div v-if="store.currentArticle" class="content">
     <MonacoEditor :default-value="rawContent" @editor-initialed="editorInitialed" />
   </div>
-  <a-empty v-else :description="'请选择或者创建一篇文章'" class="empty"></a-empty>
+  <a-empty v-else :description="$t('waringTips.selectOrCreateArticle')" class="empty">
+    <template #image>
+      <img :src="IconEmpty" width="40px" height="40px" />
+    </template>
+  </a-empty>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import IconEmpty from '@/assets/imgs/empty.svg';
 import { useArticleStore } from '@/store/editor';
 import MonacoEditor from '@/components/monaco-editor/monaco-editor.vue';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';

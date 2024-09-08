@@ -29,7 +29,8 @@ export default {
   },
   waringTips: {
     inputProjectName: 'Please fill in the project name',
-    inputProjectPath: 'Please fill in the project path'
+    inputProjectPath: 'Please fill in the project path',
+    selectOrCreateArticle: 'Please select or create an article'
   },
   operate: {
     submit: 'Submit',

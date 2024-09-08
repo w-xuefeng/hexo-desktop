@@ -1,4 +1,4 @@
-import { IPC_CHANNEL } from '@root/shared/dicts/enums';
+import { IPC_CHANNEL, STORAGE_KEY } from '@root/shared/dicts/enums';
 import type {
   IHexoPostData,
   IHexoPostsDetailItem,
@@ -6,12 +6,12 @@ import type {
 } from '@root/shared/utils/types';
 import { defineStore } from 'pinia';
 import { getCurrentWinId } from '@root/shared/render-utils/win-id';
-import { PlatformInfo } from '@root/shared/render-utils/storage';
+import { PlatformInfo, SharedStorage } from '@root/shared/render-utils/storage';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 export const useArticleStore = defineStore('article-store', () => {
   const winId = getCurrentWinId();
-  const path = ref<string>();
+  const path = ref<string>(SharedStorage.getSession<string>(STORAGE_KEY.CWD) || '');
   const loading = ref(false);
   const currentArticle = ref<IHexoPostsDetailItem>();
   const monacoEditor = shallowRef<monaco.editor.IStandaloneCodeEditor>();
@@ -44,6 +44,11 @@ export const useArticleStore = defineStore('article-store', () => {
       return;
     }
     document.title = `${current ? `${current} - ` : ''}${projectName}`;
+  };
+
+  const setPath = (value: string) => {
+    path.value = value;
+    SharedStorage.setSession(STORAGE_KEY.CWD, value);
   };
 
   const init = async () => {
@@ -89,6 +94,7 @@ export const useArticleStore = defineStore('article-store', () => {
     state,
     currentArticle,
     init,
+    setPath,
     getContent,
     createArticle,
     modifyTitle,

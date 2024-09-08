@@ -17,8 +17,14 @@ import ContentEditor from './content-editor.vue';
 
 const route = useRoute();
 const store = useArticleStore();
-store.path = route.query.path as string;
-store.init();
+const init = () => {
+  if (!route.query.path) {
+    return;
+  }
+  store.setPath(route.query.path as string);
+  store.init();
+};
+init();
 </script>
 
 <style scoped lang="less">
@@ -41,8 +47,7 @@ store.init();
   .layout-list {
     height: 100%;
     width: var(--layout-list-sider-width) !important;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
   }
   .layout-content {
     height: 100%;
