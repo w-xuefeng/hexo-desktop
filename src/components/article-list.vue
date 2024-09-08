@@ -1,5 +1,5 @@
 <template>
-  <a-list class="list" scrollbar :bordered="false" max-height="100vh">
+  <a-list class="list" :bordered="false" max-height="100vh">
     <a-list-item
       v-for="post in posts"
       :key="post.id"
@@ -60,8 +60,8 @@ const store = useArticleStore();
 
   :deep(.arco-scrollbar),
   :deep(.arco-scrollbar-container),
-  :deep(.arco-list-content-wrapper),
-  :deep(.arco-list-content),
+  :deep(.arco-list-content-wrapper:has(.arco-empty)),
+  :deep(.arco-list-content:has(.arco-empty)),
   :deep(.arco-empty) {
     height: 100%;
   }
