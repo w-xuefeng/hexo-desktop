@@ -1,14 +1,28 @@
 <template>
-  <div class="content">
-    {{ content }}
+  <div v-if="store.currentArticle" class="content">
+    <MonacoEditor :default-value="rawContent" @editor-initialed="editorInitialed" />
   </div>
+  <a-empty v-else :description="'请选择或者创建一篇文章'" class="empty"></a-empty>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useArticleStore } from '@/store/editor';
+import MonacoEditor from '@/components/monaco-editor/monaco-editor.vue';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
 const store = useArticleStore();
-const content = computed(() => JSON.stringify(store.currentArticle, null, 2));
+const rawContent = computed({
+  get: () => store.currentArticle?.raw,
+  set: (value: string) => {
+    if (store.currentArticle) {
+      store.currentArticle.raw = value;
+    }
+  }
+});
+const editorInitialed = (editor: monaco.editor.IStandaloneCodeEditor) => {
+  store.monacoEditor = editor;
+};
 </script>
 
 <style scoped lang="less">
@@ -17,5 +31,11 @@ const content = computed(() => JSON.stringify(store.currentArticle, null, 2));
   height: 100%;
   white-space: pre-line;
   padding: 14px;
+}
+.empty {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

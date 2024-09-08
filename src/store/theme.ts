@@ -36,27 +36,34 @@ const addAutoChangeThemeEvent = () => {
   matchMedia.addEventListener('change', checkTheme);
 };
 
-const switchTheme = (e: any) => {
+const switchTheme = (
+  e: any,
+  onThemeChange?: (e: ThemeType, details: Omit<ThemeType, 'auto'>) => void
+) => {
   switch (e as ThemeType) {
     case 'light':
       removeAutoChangeThemeEvent();
       light();
       window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'light');
+      typeof onThemeChange === 'function' && onThemeChange('light', 'light');
       break;
     case 'dark':
       removeAutoChangeThemeEvent();
       dark();
       window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'dark');
+      typeof onThemeChange === 'function' && onThemeChange('dark', 'dark');
       break;
     case 'auto':
       checkTheme(matchMedia);
       addAutoChangeThemeEvent();
       window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'system');
+      typeof onThemeChange === 'function' &&
+        onThemeChange('auto', matchMedia.matches ? 'light' : 'dark');
       break;
   }
 };
 
-export function useTheme() {
+export function useTheme(onThemeChange?: (e: ThemeType, details: Omit<ThemeType, 'auto'>) => void) {
   const store = useThemeStore();
   const theme = computed({
     get: () => {
@@ -70,7 +77,7 @@ export function useTheme() {
     vueWatch(
       () => store.theme,
       (e) => {
-        switchTheme(e);
+        switchTheme(e, onThemeChange);
         if (GLStoreRef.themeChangeFromStore) {
           GLStoreRef.themeChangeFromStore = false;
         } else {

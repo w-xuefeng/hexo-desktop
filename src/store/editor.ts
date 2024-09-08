@@ -7,12 +7,14 @@ import type {
 import { defineStore } from 'pinia';
 import { getCurrentWinId } from '@root/shared/render-utils/win-id';
 import { PlatformInfo } from '@root/shared/render-utils/storage';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 export const useArticleStore = defineStore('article-store', () => {
   const winId = getCurrentWinId();
   const path = ref<string>();
   const loading = ref(false);
   const currentArticle = ref<IHexoPostsDetailItem>();
+  const monacoEditor = shallowRef<monaco.editor.IStandaloneCodeEditor>();
   const state = reactive<IHexoProjectBaseInfo>({
     posts: {
       length: 0,
@@ -89,6 +91,7 @@ export const useArticleStore = defineStore('article-store', () => {
     init,
     getContent,
     createArticle,
-    modifyTitle
+    modifyTitle,
+    monacoEditor
   };
 });
