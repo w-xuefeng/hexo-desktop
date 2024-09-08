@@ -9,7 +9,6 @@
     >
       <a-list-item-meta :title="post.title" :description="post.date"> </a-list-item-meta>
       <template #actions>
-        <icon-edit />
         <icon-delete />
       </template>
     </a-list-item>
@@ -26,7 +25,7 @@
 
 <script setup lang="ts">
 import IconEmpty from '@/assets/imgs/empty.svg';
-import { IconEdit, IconDelete } from '@arco-design/web-vue/es/icon';
+import { IconDelete } from '@arco-design/web-vue/es/icon';
 import { useArticleStore } from '@/store/editor';
 import type { IHexoPostsListItem } from '@root/shared/utils/types';
 
