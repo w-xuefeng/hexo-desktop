@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTheme, type ThemeType } from '@/store/theme';
+import { useTheme, GLThemeRef, type ThemeObject } from '@/store/theme';
 import IconSun from '@/assets/imgs/sun.svg';
 import IconMoon from '@/assets/imgs/moon.svg';
 import IconSystemDark from '@/assets/imgs/system-dark.svg';
@@ -20,12 +20,10 @@ withDefaults(defineProps<{ mini?: boolean }>(), {
   mini: false
 });
 
-const internalTheme = ref<ThemeType>();
+const internalTheme = ref<keyof Omit<ThemeObject, 'auto'>>();
 const { theme } = useTheme((_, value) => {
   internalTheme.value = value;
 }).watch();
-
-internalTheme.value = theme.value;
 
 const icon = () => {
   switch (theme.value) {
@@ -54,6 +52,13 @@ const changeTheme = () => {
     return;
   }
 };
+
+const init = () => {
+  internalTheme.value =
+    theme.value === 'auto' ? (GLThemeRef.matchMedia.matches ? 'light' : 'dark') : theme.value;
+};
+
+init();
 </script>
 
 <style scoped lang="less">

@@ -6,9 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '@/store/theme';
 import MenuLayout from '@/components/menu-layout.vue';
-useTheme().watch();
 </script>
 
 <style scoped lang="less">

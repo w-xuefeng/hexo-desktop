@@ -19,11 +19,9 @@ export const useThemeStore = defineStore('theme-store', () => {
   };
 });
 
-const GLThemeRef = {
+export const GLThemeRef = {
   matchMedia: window.matchMedia('(prefers-color-scheme: light)'),
-  onThemeChange: void 0 as
-    | undefined
-    | ((e: ThemeType, details: keyof Omit<ThemeObject, 'auto'>) => void)
+  onThemeChanges: [] as ((e: ThemeType, details: keyof Omit<ThemeObject, 'auto'>) => void)[]
 };
 
 const dark = () => {
@@ -36,8 +34,10 @@ const light = () => {
 
 const checkTheme = (e: MediaQueryListEvent | { matches: boolean }) => {
   e.matches ? light() : dark();
-  if (typeof GLThemeRef.onThemeChange === 'function') {
-    GLThemeRef.onThemeChange('auto', e.matches ? 'light' : 'dark');
+  if (GLThemeRef.onThemeChanges.length) {
+    GLThemeRef.onThemeChanges.forEach((handleChange) =>
+      handleChange('auto', e.matches ? 'light' : 'dark')
+    );
   }
 };
 
@@ -71,7 +71,9 @@ function handleDark(
 function handleAuto(
   onThemeChange?: (e: ThemeType, details: keyof Omit<ThemeObject, 'auto'>) => void
 ) {
-  GLThemeRef.onThemeChange = onThemeChange;
+  if (typeof onThemeChange === 'function' && !GLThemeRef.onThemeChanges.includes(onThemeChange)) {
+    GLThemeRef.onThemeChanges.push(onThemeChange);
+  }
   checkTheme(GLThemeRef.matchMedia);
   addAutoChangeThemeEvent();
   window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'system');
@@ -116,10 +118,11 @@ export function useTheme(
         } else {
           SharedStore.set(STORE_KEY.THEME, e);
         }
+      },
+      {
+        immediate: true
       }
     );
-    switchTheme(store.theme);
-
     return {
       theme,
       switchTheme
