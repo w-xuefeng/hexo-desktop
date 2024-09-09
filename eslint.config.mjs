@@ -22,7 +22,8 @@ export default ts.config(
       'vue/max-attributes-per-line': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
-      'no-control-regex': 'off'
+      '@typescript-eslint/no-unused-expressions': 'off',
+      'no-control-regex': 'off',
     }
   },
   {

@@ -4,7 +4,13 @@ import { IPC_CHANNEL, STORE_KEY } from '@root/shared/dicts/enums';
 import { SharedStore } from '@root/shared/render-utils/storage';
 import { defineStore } from 'pinia';
 
-export type ThemeType = 'light' | 'dark' | 'auto';
+export type ThemeObject = {
+  light: string;
+  dark: string;
+  auto: string;
+};
+
+export type ThemeType = keyof ThemeObject;
 
 export const useThemeStore = defineStore('theme-store', () => {
   const theme = ref<ThemeType>(SharedStore.getSync(STORE_KEY.THEME) || 'auto');
@@ -12,6 +18,13 @@ export const useThemeStore = defineStore('theme-store', () => {
     theme
   };
 });
+
+const GLThemeRef = {
+  matchMedia: window.matchMedia('(prefers-color-scheme: light)'),
+  onThemeChange: void 0 as
+    | undefined
+    | ((e: ThemeType, details: keyof Omit<ThemeObject, 'auto'>) => void)
+};
 
 const dark = () => {
   document.body.setAttribute('arco-theme', 'dark');
@@ -23,47 +36,67 @@ const light = () => {
 
 const checkTheme = (e: MediaQueryListEvent | { matches: boolean }) => {
   e.matches ? light() : dark();
+  if (typeof GLThemeRef.onThemeChange === 'function') {
+    GLThemeRef.onThemeChange('auto', e.matches ? 'light' : 'dark');
+  }
 };
 
-const matchMedia = window.matchMedia('(prefers-color-scheme: light)');
-
 const removeAutoChangeThemeEvent = () => {
-  matchMedia.removeEventListener('change', checkTheme);
+  GLThemeRef.matchMedia.removeEventListener('change', checkTheme);
 };
 
 const addAutoChangeThemeEvent = () => {
   removeAutoChangeThemeEvent();
-  matchMedia.addEventListener('change', checkTheme);
+  GLThemeRef.matchMedia.addEventListener('change', checkTheme);
 };
+
+function handleLight(
+  onThemeChange?: (e: ThemeType, details: keyof Omit<ThemeObject, 'auto'>) => void
+) {
+  removeAutoChangeThemeEvent();
+  light();
+  window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'light');
+  typeof onThemeChange === 'function' && onThemeChange('light', 'light');
+}
+
+function handleDark(
+  onThemeChange?: (e: ThemeType, details: keyof Omit<ThemeObject, 'auto'>) => void
+) {
+  removeAutoChangeThemeEvent();
+  dark();
+  window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'dark');
+  typeof onThemeChange === 'function' && onThemeChange('dark', 'dark');
+}
+
+function handleAuto(
+  onThemeChange?: (e: ThemeType, details: keyof Omit<ThemeObject, 'auto'>) => void
+) {
+  GLThemeRef.onThemeChange = onThemeChange;
+  checkTheme(GLThemeRef.matchMedia);
+  addAutoChangeThemeEvent();
+  window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'system');
+}
 
 const switchTheme = (
   e: any,
-  onThemeChange?: (e: ThemeType, details: Omit<ThemeType, 'auto'>) => void
+  onThemeChange?: (e: ThemeType, details: keyof Omit<ThemeObject, 'auto'>) => void
 ) => {
   switch (e as ThemeType) {
     case 'light':
-      removeAutoChangeThemeEvent();
-      light();
-      window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'light');
-      typeof onThemeChange === 'function' && onThemeChange('light', 'light');
+      handleLight(onThemeChange);
       break;
     case 'dark':
-      removeAutoChangeThemeEvent();
-      dark();
-      window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'dark');
-      typeof onThemeChange === 'function' && onThemeChange('dark', 'dark');
+      handleDark(onThemeChange);
       break;
     case 'auto':
-      checkTheme(matchMedia);
-      addAutoChangeThemeEvent();
-      window.ipcRenderer.invoke(IPC_CHANNEL.CHANGE_THEME, 'system');
-      typeof onThemeChange === 'function' &&
-        onThemeChange('auto', matchMedia.matches ? 'light' : 'dark');
+      handleAuto(onThemeChange);
       break;
   }
 };
 
-export function useTheme(onThemeChange?: (e: ThemeType, details: Omit<ThemeType, 'auto'>) => void) {
+export function useTheme(
+  onThemeChange?: (e: ThemeType, details: keyof Omit<ThemeObject, 'auto'>) => void
+) {
   const store = useThemeStore();
   const theme = computed({
     get: () => {

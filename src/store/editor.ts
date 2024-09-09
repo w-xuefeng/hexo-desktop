@@ -9,12 +9,16 @@ import { getCurrentWinId } from '@root/shared/render-utils/win-id';
 import { PlatformInfo, SharedStorage } from '@root/shared/render-utils/storage';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
+export type TEditorType = 'richText' | 'rawCode';
+
 export const useArticleStore = defineStore('article-store', () => {
   const winId = getCurrentWinId();
   const path = ref<string>(SharedStorage.getSession<string>(STORAGE_KEY.CWD) || '');
   const loading = ref(false);
   const currentArticle = ref<IHexoPostsDetailItem>();
   const monacoEditor = shallowRef<monaco.editor.IStandaloneCodeEditor>();
+  const richTextEditor = shallowRef<any>();
+  const editorType = ref<TEditorType>('richText');
   const state = reactive<IHexoProjectBaseInfo>({
     posts: {
       length: 0,
@@ -98,6 +102,8 @@ export const useArticleStore = defineStore('article-store', () => {
     getContent,
     createArticle,
     modifyTitle,
-    monacoEditor
+    richTextEditor,
+    monacoEditor,
+    editorType
   };
 });

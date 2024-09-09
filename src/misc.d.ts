@@ -1,5 +1,4 @@
-/// <reference types="vue-router" />
-/// <reference types="vue-i18n" />
+import 'vue-router';
 
 declare module 'vue-router' {
   interface RouteMeta extends Record<string, any> {

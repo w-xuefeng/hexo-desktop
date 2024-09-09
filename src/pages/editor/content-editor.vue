@@ -1,6 +1,18 @@
 <template>
   <div v-if="store.currentArticle" class="content">
-    <MonacoEditor :default-value="rawContent" @editor-initialed="editorInitialed" />
+    <EditorToolbar />
+    <div class="editor-container">
+      <RichTextEditor
+        v-show="store.editorType === 'richText'"
+        :default-value="richTextContent"
+        @editor-initialed="richTextEditorInitialed"
+      />
+      <MonacoEditor
+        v-show="store.editorType === 'rawCode'"
+        :default-value="rawContent"
+        @editor-initialed="monacoEditorInitialed"
+      />
+    </div>
   </div>
   <a-empty v-else :description="$t('waringTips.selectOrCreateArticle')" class="empty">
     <template #image>
@@ -14,9 +26,19 @@ import { computed } from 'vue';
 import IconEmpty from '@/assets/imgs/empty.svg';
 import { useArticleStore } from '@/store/editor';
 import MonacoEditor from '@/components/monaco-editor/monaco-editor.vue';
+import RichTextEditor from '@/components/rich-text-editor/rich-text-editor.vue';
+import EditorToolbar from '@/components/editor-toolbar/editor-toolbar.vue';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 const store = useArticleStore();
+const richTextContent = computed({
+  get: () => store.currentArticle?.content,
+  set: (value: string) => {
+    if (store.currentArticle) {
+      store.currentArticle.content = value;
+    }
+  }
+});
 const rawContent = computed({
   get: () => store.currentArticle?.raw,
   set: (value: string) => {
@@ -25,7 +47,10 @@ const rawContent = computed({
     }
   }
 });
-const editorInitialed = (editor: monaco.editor.IStandaloneCodeEditor) => {
+const richTextEditorInitialed = (editor: any) => {
+  store.richTextEditor = editor;
+};
+const monacoEditorInitialed = (editor: monaco.editor.IStandaloneCodeEditor) => {
   store.monacoEditor = editor;
 };
 </script>
@@ -34,8 +59,11 @@ const editorInitialed = (editor: monaco.editor.IStandaloneCodeEditor) => {
 .content {
   width: 100%;
   height: 100%;
-  white-space: pre-line;
-  padding: 14px;
+
+  .editor-container {
+    width: 100%;
+    height: calc(100% - var(--layout-editor-toolbar-height));
+  }
 }
 .empty {
   height: 100%;

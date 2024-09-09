@@ -11,11 +11,16 @@
         <component :is="menu.meta.icon"></component>
       </template>
     </MenuItem>
+
+    <div class="menu-end">
+      <switch-theme mini />
+    </div>
   </a-layout-sider>
 </template>
 
 <script setup lang="ts">
 import MenuItem from './menu-item.vue';
+import SwitchTheme from '@/components/switch-theme.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { menus } from '@/routers/menus';
 import { getMenuTitle } from '@/routers';
@@ -43,6 +48,14 @@ const changeMenu = (menu: { path: string }) => {
     flex-direction: column;
     align-items: center;
     gap: 20px;
+  }
+
+  .menu-end {
+    margin-block-start: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
