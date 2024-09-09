@@ -63,6 +63,7 @@ const monacoEditorInitialed = (editor: monaco.editor.IStandaloneCodeEditor) => {
   .editor-container {
     width: 100%;
     height: calc(100% - var(--layout-editor-toolbar-height));
+    overflow: hidden;
   }
 }
 .empty {

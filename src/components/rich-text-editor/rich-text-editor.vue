@@ -1,48 +1,22 @@
 <template>
-  <div ref="editorRef" class="right-text-editor-container">
-    {{ defaultValue }}
+  <div class="right-text-editor-container">
+    <editor-content :editor="editor" />
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  onMounted,
-  useTemplateRef,
-  shallowRef
-  // watch,
-  // computed
-} from 'vue';
-// import { useTheme } from '@/store/theme';
+import { onMounted, onUnmounted, shallowRef, watch } from 'vue';
+import { Editor, EditorContent } from '@tiptap/vue-3';
+import StarterKit from '@tiptap/starter-kit';
+import Strike from '@tiptap/extension-strike';
+import Iframe from './nodes/iframe';
+import Img from './nodes/img';
+import Style from './nodes/img';
+import Script from './nodes/script';
 
-type TRichTextEditor = any;
+const editor = shallowRef<Editor>();
 
-const editorRef = useTemplateRef('editorRef');
-const editor = shallowRef<TRichTextEditor>();
-// const { theme } = useTheme((_, themeDetail) => {
-//   if (themeDetail === 'dark') {
-//     monaco.editor.setTheme('vs-dark');
-//   }
-//   if (themeDetail === 'light') {
-//     monaco.editor.setTheme('default');
-//   }
-// }).watch();
-
-// const editorTheme = computed(() => {
-//   if (theme.value === 'dark') {
-//     return 'vs-dark';
-//   }
-//   if (theme.value === 'light') {
-//     return 'default';
-//   }
-//   if (theme.value === 'auto') {
-//     const matchMedia = window.matchMedia('(prefers-color-scheme: light)');
-//     return matchMedia.matches ? 'default' : 'vs-dark';
-//   }
-//   return 'default';
-// });
-
-// const props =
-withDefaults(
+const props = withDefaults(
   defineProps<{
     defaultValue?: string;
   }>(),
@@ -51,32 +25,56 @@ withDefaults(
   }
 );
 const emits = defineEmits<{
-  'editor-initialed': [richTextEditor: TRichTextEditor];
+  'editor-initialed': [richTextEditor: Editor];
 }>();
 
 const initEditor = () => {
-  if (!editorRef.value) {
-    return;
-  }
-  const richTextEditor = {};
+  const richTextEditor = new Editor({
+    content: props.defaultValue,
+    extensions: [StarterKit, Strike, Iframe, Img, Style, Script]
+  });
   emits('editor-initialed', richTextEditor);
   editor.value = richTextEditor;
 };
 
-// watch(
-//   () => props.defaultValue,
-//   (data) => {
-//     editor.value?.setValue?.(data);
-//   }
-// );
+watch(
+  () => props.defaultValue,
+  (data) => {
+    if (editor.value) {
+      editor.value.commands.setContent(data);
+    }
+  },
+  {
+    immediate: true
+  }
+);
 
 onMounted(() => {
   initEditor();
+});
+
+onUnmounted(() => {
+  editor.value?.destroy();
 });
 </script>
 
 <style scoped lang="less">
 .right-text-editor-container {
+  width: 100%;
   height: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 10px 15%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: none;
+
+  :deep(*) {
+    outline: none;
+  }
+
+  :deep(img) {
+    max-width: 100%;
+  }
 }
 </style>
