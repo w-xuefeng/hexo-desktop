@@ -87,17 +87,10 @@
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
-  "i18n-ally.localesPaths": [
-    "shared/langs"
-  ],
+  "i18n-ally.localesPaths": ["shared/langs"],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.namespace": true,
-  "i18n-ally.enabledParsers": [
-    "ts",
-    "json",
-    "js",
-    "yaml"
-  ],
+  "i18n-ally.enabledParsers": ["ts", "json", "js", "yaml"],
   "i18n-ally.sortKeys": true,
   "i18n-ally.sourceLanguage": "en-us",
   "i18n-ally.displayLanguage": "zh-cn",
