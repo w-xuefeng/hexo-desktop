@@ -4,7 +4,7 @@
   </div>
   <a-empty v-else :description="$t('waringTips.selectOrCreateArticle')" class="empty">
     <template #image>
-      <img :src="IconEmpty" width="40px" height="40px" />
+      <img :src="IconEmpty" class="empty-icon" />
     </template>
   </a-empty>
 </template>
@@ -42,5 +42,10 @@ const editorInitialed = (editor: monaco.editor.IStandaloneCodeEditor) => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+  }
 }
 </style>

@@ -32,6 +32,7 @@ const changeMenu = (menu: { path: string }) => {
 .layout-menu {
   height: 100%;
   width: var(--layout-menu-sider-width) !important;
+  margin-inline-end: var(--layout-menu-sider-margin-inline-end);
   box-sizing: border-box;
   padding: 20px 0;
   :deep(.arco-layout-sider-children) {

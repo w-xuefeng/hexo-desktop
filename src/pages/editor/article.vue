@@ -72,12 +72,6 @@ init();
     min-width: 100%;
   }
 
-  .layout-menu {
-    height: 100%;
-    width: var(--layout-menu-sider-width) !important;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
   .layout-list {
     height: 100%;
     width: 100% !important;

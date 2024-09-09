@@ -43,7 +43,6 @@ const store = useArticleStore();
 <style scoped lang="less">
 .list {
   height: 100%;
-  border-left: 1px solid #2b2b2b;
   .item {
     cursor: pointer;
   }
@@ -53,8 +52,8 @@ const store = useArticleStore();
   }
 
   .icon {
-    width: 40px;
-    height: 40px;
+    width: 80px;
+    height: 80px;
   }
 
   :deep(.arco-scrollbar),
