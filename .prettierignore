@@ -6,3 +6,4 @@ dist-electron
 res
 auto-imports.d.ts
 .yarn
+shared/langs/dayjs

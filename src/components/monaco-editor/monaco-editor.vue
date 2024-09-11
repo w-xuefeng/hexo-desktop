@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, useTemplateRef, shallowRef, watch, computed } from 'vue';
+import { onMounted, onBeforeUnmount, useTemplateRef, shallowRef, watch, computed } from 'vue';
 import { useTheme } from '@/store/theme';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import 'monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution';
@@ -70,7 +70,7 @@ onMounted(() => {
   initEditor();
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   editor.value?.dispose();
 });
 </script>

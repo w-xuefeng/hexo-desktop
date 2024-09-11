@@ -1,20 +1,23 @@
 <template>
   <div v-if="store.currentArticle" class="content">
-    <EditorToolbar />
+    <EditorToolbar :unsupport-rich-text-editor="unsupportRichTextEditor" />
     <div class="editor-container">
       <RichTextEditor
-        v-show="store.editorType === 'richText'"
-        :default-value="richTextContent"
+        v-if="store.editorType === 'richText' && !unsupportRichTextEditor"
+        :key="`rich-text-content-${locale}-${store.currentArticle.id}`"
+        v-model:model-value="richTextContent"
+        v-model:title="richTextTitle"
         @editor-initialed="richTextEditorInitialed"
       />
       <MonacoEditor
-        v-show="store.editorType === 'rawCode'"
+        v-if="store.editorType === 'rawCode' || unsupportRichTextEditor"
+        :key="`raw-${store.currentArticle.id}`"
         :default-value="rawContent"
         @editor-initialed="monacoEditorInitialed"
       />
     </div>
   </div>
-  <a-empty v-else :description="$t('waringTips.selectOrCreateArticle')" class="empty">
+  <a-empty v-else :description="t('waringTips.selectOrCreateArticle')" class="empty">
     <template #image>
       <img :src="IconEmpty" class="empty-icon" />
     </template>
@@ -25,17 +28,32 @@
 import { computed } from 'vue';
 import IconEmpty from '@/assets/imgs/empty.svg';
 import { useArticleStore } from '@/store/editor';
+import { useSharedLocales } from '@/locales';
 import MonacoEditor from '@/components/monaco-editor/monaco-editor.vue';
 import RichTextEditor from '@/components/rich-text-editor/rich-text-editor.vue';
 import EditorToolbar from '@/components/editor-toolbar/editor-toolbar.vue';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 const store = useArticleStore();
+const { t, locale } = useSharedLocales();
+
+const unsupportRichTextEditor = computed(() => {
+  return ['<style', '<script'].some((e) => store.currentArticle?.raw.includes(e));
+});
+
 const richTextContent = computed({
   get: () => store.currentArticle?.content,
   set: (value: string) => {
     if (store.currentArticle) {
       store.currentArticle.content = value;
+    }
+  }
+});
+const richTextTitle = computed({
+  get: () => store.currentArticle?.title,
+  set: (value: string) => {
+    if (store.currentArticle) {
+      store.currentArticle.title = value;
     }
   }
 });

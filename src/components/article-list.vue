@@ -14,7 +14,7 @@
     </a-list-item>
 
     <template #empty>
-      <a-empty :description="$t('system.empty')">
+      <a-empty :description="t('system.empty')">
         <template #image>
           <img :src="IconEmpty" class="icon" />
         </template>
@@ -27,7 +27,10 @@
 import IconEmpty from '@/assets/imgs/empty.svg';
 import { IconDelete } from '@arco-design/web-vue/es/icon';
 import { useArticleStore } from '@/store/editor';
+import { useSharedLocales } from '@/locales';
 import type { IHexoPostsListItem } from '@root/shared/utils/types';
+
+const { t } = useSharedLocales();
 
 defineProps<{
   posts: IHexoPostsListItem[];

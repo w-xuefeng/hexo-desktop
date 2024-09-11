@@ -36,7 +36,8 @@ export default ts.config(
       '**/*/lib',
       'auto-imports.d.ts',
       '.yarn',
-      'rollup.config.js'
+      'rollup.config.js',
+      'shared/langs/dayjs'
     ]
   }
 );

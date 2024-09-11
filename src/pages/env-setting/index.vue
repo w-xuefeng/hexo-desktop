@@ -2,13 +2,13 @@
   <div class="env-setting-panel">
     <a-space direction="vertical">
       <a-row :gutter="10" align="center">
-        <a-col class="label">{{ $t('envSetting.envPath') }} <i class="red">*</i></a-col>
+        <a-col class="label">{{ t('envSetting.envPath') }} <i class="red">*</i></a-col>
         <a-col class="item pointer">
           <a-textarea
             v-model="form.envPath"
             class="path"
             :disabled="loading"
-            :placeholder="$t('envSetting.inputEnvPath')"
+            :placeholder="t('envSetting.inputEnvPath')"
             :auto-size="{ minRows: 10, maxRows: 15 }"
           >
           </a-textarea>
@@ -17,13 +17,13 @@
     </a-space>
 
     <footer class="footer">
-      <a-button @click="cancel">{{ $t('operate.cancel') }}</a-button>
-      <a-button type="outline" @click="getEnvPath">{{ $t('envSetting.autoGetEnvPath') }}</a-button>
+      <a-button @click="cancel">{{ t('operate.cancel') }}</a-button>
+      <a-button type="outline" @click="getEnvPath">{{ t('envSetting.autoGetEnvPath') }}</a-button>
       <a-button type="outline" :disabled="disable" :loading="loading" @click="check()">
-        {{ $t('envSetting.checkPath') }}
+        {{ t('envSetting.checkPath') }}
       </a-button>
       <a-button type="primary" :disabled="disable" :loading="loading" @click="confirm">
-        {{ $t('operate.save') }}
+        {{ t('operate.save') }}
       </a-button>
     </footer>
   </div>

@@ -11,9 +11,10 @@ import type { ArcoLang } from '@arco-design/web-vue/es/locale/interface';
 
 import enUs from '@root/shared/langs/en-us';
 import zhCn from '@root/shared/langs/zh-cn';
-import { loadExternalJsFile } from '@root/shared/render-utils';
 import { SharedStore } from '@root/shared/render-utils/storage';
 import { STORE_KEY } from '@root/shared/dicts/enums';
+
+import { i18nChangeLanguage } from '@wangeditor/editor';
 
 if (!('dayjs' in globalThis)) {
   // @ts-ignore
@@ -26,6 +27,11 @@ if (!('dayjs' in globalThis)) {
     value: dayjs
   });
 }
+
+// @ts-ignore
+import('@root/shared/langs/dayjs/zh-cn.js');
+// @ts-ignore
+import('@root/shared/langs/dayjs/en.js');
 
 export const supportLanguages = {
   'zh-cn': '中文 (简体中文)',
@@ -55,24 +61,21 @@ export const arcoLangs: Partial<Record<TLanguage, ArcoLang>> = {
   'en-us': ArcoEnUS
 };
 
-export const dayjsLangs: Record<TLanguage, { url: string; lang: string }> = {
-  'zh-cn': {
-    url: `https://unpkg.com/dayjs/locale/zh-cn.js`,
-    lang: 'zh-cn'
-  },
-  'en-us': {
-    url: `https://unpkg.com/dayjs/locale/en.js`,
-    lang: 'en'
-  }
+export const dayjsLangs: Record<TLanguage, string> = {
+  'zh-cn': 'dayjs_locale_zh_cn',
+  'en-us': 'dayjs_locale_en'
+};
+
+export const wangEditorLangs: Record<TLanguage, string> = {
+  'en-us': 'en',
+  'zh-cn': 'zh-CN'
 };
 
 let langChangeFromStore = false;
 
 export async function loadDayJsLocals(locale: TLanguage) {
-  const name = `dayjs_locale_${locale.replace(/-/, '_')}`;
   try {
-    await loadExternalJsFile(dayjsLangs[locale].url, name);
-    dayjs.locale(dayjsLangs[locale].lang);
+    dayjs.locale(dayjsLangs[locale]);
   } catch (error) {
     console.log(`[LoadDayJsLocals ${locale} Error]`, error);
   }
@@ -93,6 +96,7 @@ export const sharedI18n = createI18n({
 export async function setI18nLanguage(locale: TLanguage) {
   loadDayJsLocals(locale);
   sharedI18n.global.locale.value = locale;
+  i18nChangeLanguage(wangEditorLangs[locale]);
   document.querySelector('html')!.setAttribute('lang', locale.substring(0, 2));
   if (langChangeFromStore) {
     langChangeFromStore = false;

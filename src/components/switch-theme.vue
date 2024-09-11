@@ -1,9 +1,9 @@
 <template>
   <img v-if="mini" class="theme-icon" :src="icon()" alt="icon" @click="changeTheme" />
   <a-select v-else v-model="theme">
-    <a-option value="light"> {{ $t('theme.light') }} </a-option>
-    <a-option value="dark"> {{ $t('theme.dark') }} </a-option>
-    <a-option value="auto"> {{ $t('theme.auto') }} </a-option>
+    <a-option value="light"> {{ t('theme.light') }} </a-option>
+    <a-option value="dark"> {{ t('theme.dark') }} </a-option>
+    <a-option value="auto"> {{ t('theme.auto') }} </a-option>
   </a-select>
 </template>
 
@@ -14,6 +14,9 @@ import IconSun from '@/assets/imgs/sun.svg';
 import IconMoon from '@/assets/imgs/moon.svg';
 import IconSystemDark from '@/assets/imgs/system-dark.svg';
 import IconSystemLight from '@/assets/imgs/system-light.svg';
+import { useSharedLocales } from '@/locales';
+
+const { t } = useSharedLocales();
 
 withDefaults(defineProps<{ mini?: boolean }>(), {
   hidden: false,

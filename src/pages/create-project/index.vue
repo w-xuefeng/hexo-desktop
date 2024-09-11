@@ -3,8 +3,8 @@
     <template v-if="projectCreating">
       <a-space direction="vertical" class="loading">
         <Loading
-          :text="`${$t('welcome.keepWinOpen')}, ${$t('welcome.creating')} ${form.name}...`"
-          :description="`${$t('welcome.projectPath')}: ${[form.path, sep, form.name].join('')}`"
+          :text="`${t('welcome.keepWinOpen')}, ${t('welcome.creating')} ${form.name}...`"
+          :description="`${t('welcome.projectPath')}: ${[form.path, sep, form.name].join('')}`"
         />
         <div class="tip-log">{{ stripAnsiCodes(progressLog.at(-1)) }}</div>
       </a-space>
@@ -12,19 +12,19 @@
 
     <template v-else>
       <a-row :gutter="10" align="center">
-        <a-col class="label">{{ $t('welcome.projectName') }} <i class="red">*</i></a-col>
+        <a-col class="label">{{ t('welcome.projectName') }} <i class="red">*</i></a-col>
         <a-col class="item">
-          <a-input v-model="form.name" :placeholder="$t('welcome.inputName')"></a-input>
+          <a-input v-model="form.name" :placeholder="t('welcome.inputName')"></a-input>
         </a-col>
       </a-row>
       <a-row :gutter="10" align="center">
-        <a-col class="label">{{ $t('welcome.projectLocation') }} <i class="red">*</i></a-col>
+        <a-col class="label">{{ t('welcome.projectLocation') }} <i class="red">*</i></a-col>
         <a-col class="item pointer">
           <a-input
             v-model="form.path"
             class="path"
             readonly
-            :placeholder="$t('welcome.chooseProjectDirectory')"
+            :placeholder="t('welcome.chooseProjectDirectory')"
           >
             <template #append>
               <div class="choose-directory" @click="chooseDirectoryPath">···</div>
@@ -34,17 +34,17 @@
       </a-row>
 
       <a-row v-if="form.path && form.name" class="tip">
-        {{ $t('welcome.projectPath') }}: {{ form.path }}{{ sep }}{{ form.name }}
+        {{ t('welcome.projectPath') }}: {{ form.path }}{{ sep }}{{ form.name }}
       </a-row>
 
       <a-row align="center">
         <a-col class="label">
-          {{ $t('welcome.projectTheme') }}（{{ $t('welcome.optional') }}）
+          {{ t('welcome.projectTheme') }}（{{ t('welcome.optional') }}）
         </a-col>
         <a-col class="item">
           <a-select
             v-model="form.themeNpmPkg"
-            :placeholder="$t('welcome.selectProjectTheme')"
+            :placeholder="t('welcome.selectProjectTheme')"
             :loading="searchingTheme"
             allow-create
             allow-clear
@@ -57,21 +57,21 @@
 
       <a-row align="center">
         <a-col class="label">
-          {{ $t('welcome.gitRemoteOrigin') }}（{{ $t('welcome.optional') }}）
+          {{ t('welcome.gitRemoteOrigin') }}（{{ t('welcome.optional') }}）
         </a-col>
         <a-col class="item">
           <a-input
             v-model="form.gitRemoteOrigin"
-            :placeholder="$t('welcome.inputGitRemoteOrigin')"
+            :placeholder="t('welcome.inputGitRemoteOrigin')"
           ></a-input>
         </a-col>
       </a-row>
     </template>
 
     <footer class="footer">
-      <a-button :disabled="projectCreating" @click="cancel">{{ $t('operate.cancel') }}</a-button>
+      <a-button :disabled="projectCreating" @click="cancel">{{ t('operate.cancel') }}</a-button>
       <a-button type="primary" :disabled="disable" :loading="projectCreating" @click="confirm">
-        {{ $t('operate.confirm') }}
+        {{ t('operate.confirm') }}
       </a-button>
     </footer>
   </div>

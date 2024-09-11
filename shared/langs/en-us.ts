@@ -114,5 +114,13 @@ export default {
     articleList: 'Article List',
     projectConfig: "Project's Config",
     themeConfig: "Theme's Config"
+  },
+  editorToolbar: {
+    rawCode: 'Raw',
+    richText: 'RichText',
+    onlyRawCode: 'The current article can only be edited through raw code',
+    preview: 'Preview',
+    localPreview: 'Local Preview',
+    browserPreview: 'Preview in browser '
   }
 };

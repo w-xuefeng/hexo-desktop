@@ -113,5 +113,13 @@ export default {
     articleList: '文章列表',
     projectConfig: '项目配置',
     themeConfig: '主题配置'
+  },
+  editorToolbar: {
+    rawCode: '源代码',
+    richText: '富文本',
+    onlyRawCode: '当前文章只能通过源码编辑',
+    preview: '预览',
+    localPreview: '本地预览',
+    browserPreview: '在浏览器中预览'
   }
 };

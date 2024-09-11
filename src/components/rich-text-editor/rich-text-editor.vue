@@ -1,60 +1,79 @@
 <template>
   <div class="right-text-editor-container">
-    <editor-content :editor="editor" />
+    <div style="border-bottom: 1px solid #e8e8e8">
+      <div id="editor-toolbar"></div>
+    </div>
+    <div id="content">
+      <div id="editor-container">
+        <div id="title-container">
+          <input v-model="title" placeholder="Article title..." />
+        </div>
+        <div id="editor-text-area" @click="handleClick"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, shallowRef, watch } from 'vue';
-import { Editor, EditorContent } from '@tiptap/vue-3';
-import StarterKit from '@tiptap/starter-kit';
-import Strike from '@tiptap/extension-strike';
-import Iframe from './nodes/iframe';
-import Img from './nodes/img';
-import Style from './nodes/img';
-import Script from './nodes/script';
+import { onMounted, onBeforeUnmount, shallowRef } from 'vue';
+import { createEditor, createToolbar } from '@wangeditor/editor';
+import '@wangeditor/editor/dist/css/style.css';
 
-const editor = shallowRef<Editor>();
+type TRichTextEditor = any;
+type TRichTextEditorToolbar = any;
 
-const props = withDefaults(
-  defineProps<{
-    defaultValue?: string;
-  }>(),
-  {
-    defaultValue: ''
-  }
-);
 const emits = defineEmits<{
-  'editor-initialed': [richTextEditor: Editor];
+  'editor-initialed': [
+    richTextEditor: TRichTextEditor,
+    richTextEditorToolbar: TRichTextEditorToolbar
+  ];
 }>();
 
-const initEditor = () => {
-  const richTextEditor = new Editor({
-    content: props.defaultValue,
-    extensions: [StarterKit, Strike, Iframe, Img, Style, Script]
-  });
-  emits('editor-initialed', richTextEditor);
-  editor.value = richTextEditor;
+const editor = shallowRef<TRichTextEditor>();
+const toolbar = shallowRef<TRichTextEditor>();
+const modelValue = defineModel<string>();
+const title = defineModel<string>('title');
+
+const editorConfig = {
+  placeholder: 'Type here...',
+  scroll: false,
+  onChange(editor: TRichTextEditor) {
+    modelValue.value = editor.getHtml();
+  }
 };
 
-watch(
-  () => props.defaultValue,
-  (data) => {
-    if (editor.value) {
-      editor.value.commands.setContent(data);
+const handleClick = () => {
+  editor.value?.blur();
+  editor.value?.focus(true);
+};
+
+const initEditor = (data: string) => {
+  editor.value = createEditor({
+    selector: '#editor-text-area',
+    content: [],
+    html: data,
+    config: editorConfig
+  });
+
+  toolbar.value = createToolbar({
+    editor: editor.value,
+    selector: '#editor-toolbar',
+    config: {
+      excludeKeys: ['fullScreen']
     }
-  },
-  {
-    immediate: true
-  }
-);
+  });
+  emits('editor-initialed', editor.value, toolbar.value);
+};
 
 onMounted(() => {
-  initEditor();
+  initEditor(modelValue.value || '');
 });
 
-onUnmounted(() => {
-  editor.value?.destroy();
+onBeforeUnmount(() => {
+  if (!editor.value) {
+    return;
+  }
+  editor.value.destroy();
 });
 </script>
 
@@ -63,10 +82,6 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  box-sizing: border-box;
-  padding: 10px 15%;
-  overflow-x: hidden;
-  overflow-y: auto;
   outline: none;
 
   :deep(*) {
@@ -75,6 +90,46 @@ onUnmounted(() => {
 
   :deep(img) {
     max-width: 100%;
+  }
+
+  #editor-toolbar {
+    width: 100%;
+    background-color: #fcfcfc;
+    margin: 0 auto;
+  }
+
+  #content {
+    height: calc(100% - 40px);
+    background-color: rgb(245, 245, 245);
+    overflow-y: auto;
+    position: relative;
+  }
+
+  #editor-container {
+    width: 850px;
+    margin: 30px auto 150px auto;
+    background-color: #fff;
+    padding: 20px 50px 50px 50px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 12%);
+  }
+
+  #title-container {
+    padding: 20px 0;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  #title-container input {
+    font-size: 30px;
+    border: 0;
+    outline: none;
+    width: 100%;
+    line-height: 1;
+  }
+
+  #editor-text-area {
+    min-height: 900px;
+    margin-top: 20px;
   }
 }
 </style>
