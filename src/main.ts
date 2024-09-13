@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { IPC_CHANNEL } from '@root/shared/dicts/enums';
 import App from './App.vue';
 import router from './routers';
-import ArcoVue from '@arco-design/web-vue';
+import ArcoVue, { Modal } from '@arco-design/web-vue';
 import sharedI18n from './locales';
 import { createPinia } from 'pinia';
 import { setCurrentWinId } from '@root/shared/render-utils/win-id';
@@ -14,15 +14,11 @@ import './style.less';
 
 function render() {
   forbiddenRefresh();
-  createApp(App)
-    .use(router)
-    .use(sharedI18n)
-    .use(ArcoVue)
-    .use(createPinia())
-    .mount('#app')
-    .$nextTick(() => {
-      postMessage({ payload: 'removeLoading' }, '*');
-    });
+  const app = createApp(App).use(router).use(sharedI18n).use(ArcoVue).use(createPinia());
+  Modal._context = app._context;
+  app.mount('#app').$nextTick(() => {
+    postMessage({ payload: 'removeLoading' }, '*');
+  });
 }
 
 window.ipcRenderer.on(IPC_CHANNEL.MAIN_PROCESS_START, (_event, winId, time, platformInfo) => {

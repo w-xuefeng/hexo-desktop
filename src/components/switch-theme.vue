@@ -19,7 +19,6 @@ import { useSharedLocales } from '@/locales';
 const { t } = useSharedLocales();
 
 withDefaults(defineProps<{ mini?: boolean }>(), {
-  hidden: false,
   mini: false
 });
 

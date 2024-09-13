@@ -7,20 +7,20 @@
     <img src="@/assets/imgs/logo.svg" alt="logo" width="100" />
     <a-typography>
       <a-typography-title>
-        {{ $t('welcome.title') }}
+        {{ t('welcome.title') }}
       </a-typography-title>
     </a-typography>
     <a-typography>
       <a-typography-title :heading="6" @click="createProject">
         <a-space class="target">
           <icon-plus />
-          <span>{{ $t('welcome.create') }}</span>
+          <span>{{ t('welcome.create') }}</span>
         </a-space>
       </a-typography-title>
       <a-typography-title :heading="6" @click="importProject">
         <a-space class="target">
           <icon-import />
-          <span>{{ $t('welcome.import') }}</span>
+          <span>{{ t('welcome.import') }}</span>
         </a-space>
       </a-typography-title>
     </a-typography>

@@ -29,7 +29,8 @@ export default {
   waringTips: {
     inputProjectName: '请填写项目名称',
     inputProjectPath: '请填写项目路径',
-    selectOrCreateArticle: '请选择或者创建一篇文章'
+    selectOrCreateArticle: '请选择或者创建一篇文章',
+    areYouSureDeleteArticle: '你确定要删除吗？'
   },
   operate: {
     submit: '提交',
@@ -121,5 +122,18 @@ export default {
     preview: '预览',
     localPreview: '本地预览',
     browserPreview: '在浏览器中预览'
+  },
+  formValidatorMessages: {
+    articleTitleRequired: '文章标题必须填写',
+    articleSlugRequired: '文件名称必须填写'
+  },
+  placeholders: {
+    inputArticleTitle: '请输入文章标题',
+    inputArticleSlug: '请输入文件名称'
+  },
+  editor: {
+    newArticle: '新建文章',
+    articleTitle: '文章名称',
+    articleSlug: '文件名称'
   }
 };

@@ -13,6 +13,7 @@
     </MenuItem>
 
     <div class="menu-end">
+      <switch-lang mini :size="30" />
       <switch-theme mini />
     </div>
   </a-layout-sider>
@@ -20,6 +21,7 @@
 
 <script setup lang="ts">
 import MenuItem from './menu-item.vue';
+import SwitchLang from '@/components/switch-lang.vue';
 import SwitchTheme from '@/components/switch-theme.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { menus } from '@/routers/menus';
@@ -56,6 +58,7 @@ const changeMenu = (menu: { path: string }) => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 18px;
   }
 }
 </style>

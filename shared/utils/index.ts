@@ -49,3 +49,7 @@ export function deepGet<T, K extends DeepKeyOf<T> | undefined, V>(
   }
   return res;
 }
+
+export function sleep(timeout: number = 2000) {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+}

@@ -2,11 +2,13 @@ import { IPC_CHANNEL, STORAGE_KEY } from '@root/shared/dicts/enums';
 import type {
   IHexoPostData,
   IHexoPostsDetailItem,
+  IHexoPostsListItem,
   IHexoProjectBaseInfo
 } from '@root/shared/utils/types';
 import { defineStore } from 'pinia';
 import { getCurrentWinId } from '@root/shared/render-utils/win-id';
 import { PlatformInfo, SharedStorage } from '@root/shared/render-utils/storage';
+import { sleep } from '@root/shared/utils';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 export type TEditorType = 'richText' | 'rawCode';
@@ -55,6 +57,15 @@ export const useArticleStore = defineStore('article-store', () => {
     SharedStorage.setSession(STORAGE_KEY.CWD, value);
   };
 
+  const handleState = (rs?: Record<string, any>) => {
+    if (!rs) {
+      return;
+    }
+    Object.keys(rs).forEach((k) => {
+      state[k as keyof IHexoProjectBaseInfo] = rs[k];
+    });
+  };
+
   const init = async () => {
     if (!path.value) {
       return;
@@ -62,9 +73,7 @@ export const useArticleStore = defineStore('article-store', () => {
     loading.value = true;
     try {
       const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.INIT_HEXO_PROJECT, winId, path.value);
-      Object.keys(rs).forEach((k) => {
-        state[k as keyof IHexoProjectBaseInfo] = rs[k];
-      });
+      handleState(rs);
     } finally {
       loading.value = false;
       modifyTitle();
@@ -82,11 +91,39 @@ export const useArticleStore = defineStore('article-store', () => {
     }
   };
 
+  const refreshListForInternal = async (delay: number = 0) => {
+    await sleep(delay);
+    const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.REFRESH_HEXO_BASE_INFO, winId);
+    handleState(rs);
+  };
+
+  const refreshList = async () => {
+    loading.value = true;
+    try {
+      await refreshListForInternal();
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const createArticle = async (options: IHexoPostData) => {
     loading.value = true;
     try {
-      const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_HEXO_DOCUMENT, winId, options);
-      console.log('data', rs);
+      await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_HEXO_DOCUMENT, winId, options);
+      await refreshListForInternal(1000);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const deleteArticle = async (article: IHexoPostsListItem) => {
+    loading.value = true;
+    try {
+      await window.shell.trashItem(article.full_source);
+      if (currentArticle.value?.id === article.id) {
+        currentArticle.value = void 0;
+      }
+      await refreshListForInternal(1000);
     } finally {
       loading.value = false;
     }
@@ -102,6 +139,8 @@ export const useArticleStore = defineStore('article-store', () => {
     getContent,
     createArticle,
     modifyTitle,
+    refreshList,
+    deleteArticle,
     richTextEditor,
     monacoEditor,
     editorType

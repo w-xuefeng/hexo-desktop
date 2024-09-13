@@ -10,18 +10,30 @@
       </a-radio-group>
     </div>
     <div class="end">
-      <a-dropdown trigger="hover">
-        <a-button>{{ t('editorToolbar.preview') }}</a-button>
+      <a-dropdown trigger="hover" @select="onPreview">
+        <a-button>
+          {{ t('editorToolbar.preview') }}
+          <template #icon>
+            <icon-eye />
+          </template>
+        </a-button>
         <template #content>
-          <a-doption>{{ t('editorToolbar.localPreview') }}</a-doption>
-          <a-doption>{{ t('editorToolbar.browserPreview') }}</a-doption>
+          <a-doption value="local">{{ t('editorToolbar.localPreview') }}</a-doption>
+          <a-doption value="browser">{{ t('editorToolbar.browserPreview') }}</a-doption>
         </template>
       </a-dropdown>
+      <a-button @click="save">
+        {{ t('operate.save') }}
+        <template #icon>
+          <icon-save />
+        </template>
+      </a-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { IconSave, IconEye } from '@arco-design/web-vue/es/icon';
 import { useSharedLocales } from '@/locales';
 import { useArticleStore } from '@/store/editor';
 const { t } = useSharedLocales();
@@ -35,6 +47,21 @@ withDefaults(
   }
 );
 const store = useArticleStore();
+
+const save = () => {};
+
+const onPreview = (command: string | number | Record<string, any> | undefined) => {
+  switch (command as 'local' | 'browser') {
+    case 'local':
+      break;
+
+    case 'browser':
+      break;
+
+    default:
+      break;
+  }
+};
 </script>
 
 <style scoped lang="less">
@@ -53,6 +80,7 @@ const store = useArticleStore();
     margin-inline-start: auto;
     display: flex;
     align-items: center;
+    gap: 10px;
   }
 }
 </style>

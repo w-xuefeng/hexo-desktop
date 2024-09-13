@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
-import { initHexoEditor } from '../services/project/project-editor/init';
+import { initHexoEditor, refreshBaseInfo } from '../services/project/project-editor/init';
 import { createDocument, getDocument } from '../services/project/project-editor/document';
 import type { IHexoPostData } from '../../shared/utils/types';
 
@@ -11,6 +11,9 @@ export default function initIPCEditorEvent() {
       return initHexoEditor(winId, cwd, options);
     }
   );
+  ipcMain.handle(IPC_CHANNEL.REFRESH_HEXO_BASE_INFO, (_, winId: string) => {
+    return refreshBaseInfo(winId);
+  });
   ipcMain.handle(IPC_CHANNEL.GET_HEXO_DOCUMENT, (_, winId: string, id: string) => {
     return getDocument(winId, id);
   });

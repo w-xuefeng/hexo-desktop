@@ -1,4 +1,10 @@
-import { ipcRenderer, contextBridge } from 'electron';
+import {
+  ipcRenderer,
+  contextBridge,
+  shell,
+  type OpenExternalOptions,
+  type ShortcutDetails
+} from 'electron';
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -25,6 +31,34 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   // You can expose other APTs you need here.
   // ...
+});
+
+contextBridge.exposeInMainWorld('shell', {
+  openExternal(url: string, options?: OpenExternalOptions) {
+    return shell.openExternal(url, options);
+  },
+  openPath(path: string) {
+    return shell.openPath(path);
+  },
+  trashItem(path: string) {
+    return shell.trashItem(path);
+  },
+  showItemInFolder(path: string) {
+    return shell.showItemInFolder(path);
+  },
+  beep() {
+    return shell.beep();
+  },
+  readShortcutLink(shortcutPath: string) {
+    return shell.readShortcutLink(shortcutPath);
+  },
+  writeShortcutLink(
+    shortcutPath: string,
+    operation: 'create' | 'update' | 'replace',
+    options: ShortcutDetails
+  ) {
+    return shell.writeShortcutLink(shortcutPath, operation, options);
+  }
 });
 
 // --------- Preload scripts loading ---------

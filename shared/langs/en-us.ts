@@ -30,7 +30,8 @@ export default {
   waringTips: {
     inputProjectName: 'Please fill in the project name',
     inputProjectPath: 'Please fill in the project path',
-    selectOrCreateArticle: 'Please select or create an article'
+    selectOrCreateArticle: 'Please select or create an article',
+    areYouSureDeleteArticle: 'Are you sure you want to delete it?'
   },
   operate: {
     submit: 'Submit',
@@ -122,5 +123,18 @@ export default {
     preview: 'Preview',
     localPreview: 'Local Preview',
     browserPreview: 'Preview in browser '
+  },
+  formValidatorMessages: {
+    articleTitleRequired: 'The article title must be filled in',
+    articleSlugRequired: 'The file name must be filled in'
+  },
+  placeholders: {
+    inputArticleTitle: 'Please input the article title',
+    inputArticleSlug: 'Please input the file name'
+  },
+  editor: {
+    newArticle: 'New Article',
+    articleTitle: 'Article Title',
+    articleSlug: 'File Name'
   }
 };

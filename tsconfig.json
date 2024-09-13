@@ -32,7 +32,8 @@
       ]
     },
     "types": [
-      "node"
+      "node",
+      "@vue/runtime-core"
     ]
   },
   "include": [

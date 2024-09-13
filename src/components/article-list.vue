@@ -1,15 +1,20 @@
 <template>
-  <a-list class="list" :bordered="false" max-height="100vh">
+  <a-list class="list" :bordered="false" max-height="100vh" :loading="loading">
     <a-list-item
       v-for="post in posts"
       :key="post.id"
       class="item"
-      :class="{ current: post.id === store?.currentArticle?.id }"
-      @click="$emit('details', post.id)"
+      :class="{ current: post.id === currentArticle?.id }"
+      @click="select(post, $event)"
     >
       <a-list-item-meta :title="post.title" :description="post.date"> </a-list-item-meta>
       <template #actions>
-        <icon-delete />
+        <a-popconfirm
+          :content="t('waringTips.areYouSureDeleteArticle')"
+          @ok="$emit('deleteArticle', post)"
+        >
+          <icon-delete />
+        </a-popconfirm>
       </template>
     </a-list-item>
 
@@ -26,26 +31,39 @@
 <script setup lang="ts">
 import IconEmpty from '@/assets/imgs/empty.svg';
 import { IconDelete } from '@arco-design/web-vue/es/icon';
-import { useArticleStore } from '@/store/editor';
 import { useSharedLocales } from '@/locales';
 import type { IHexoPostsListItem } from '@root/shared/utils/types';
 
 const { t } = useSharedLocales();
 
-defineProps<{
-  posts: IHexoPostsListItem[];
-}>();
+withDefaults(
+  defineProps<{
+    posts: IHexoPostsListItem[];
+    currentArticle?: IHexoPostsListItem;
+    loading?: boolean;
+  }>(),
+  {
+    currentArticle: void 0,
+    loading: false
+  }
+);
 
-defineEmits<{
+const emits = defineEmits<{
   details: [id: string];
+  deleteArticle: [post: IHexoPostsListItem];
 }>();
 
-const store = useArticleStore();
+const select = (post: IHexoPostsListItem, e: MouseEvent) => {
+  if (['path', 'svg'].includes((e.target as HTMLElement)?.nodeName.toLocaleLowerCase())) {
+    return;
+  }
+  emits('details', post.id);
+};
 </script>
 
 <style scoped lang="less">
 .list {
-  height: 100%;
+  height: calc(100% - var(--layout-list-sider-bar-height));
   .item {
     cursor: pointer;
   }

@@ -1,12 +1,12 @@
 <template>
   <a-dropdown trigger="click" @select="i18nCommand">
-    <span class="lang-select-dropdown">
+    <span class="lang-select-dropdown" :class="{ 'lang-select-dropdown-mini': mini }">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
         focusable="false"
         viewBox="0 0 24 24"
-        style="width: 20px; height: 20px"
+        :style="`width: ${size}px; height: ${size}px`"
       >
         <path d="M0 0h24v24H0z" fill="none"></path>
         <path
@@ -14,8 +14,10 @@
           fill="currentColor"
         ></path>
       </svg>
-      {{ currentSupportLanguages[currentLocale] }}
-      <IconDown class="arrow-down" />
+      <template v-if="!mini">
+        {{ currentSupportLanguages[currentLocale] }}
+        <IconDown class="arrow-down" />
+      </template>
     </span>
 
     <template #content>
@@ -36,6 +38,11 @@ import {
 } from '@/locales';
 import { IconDown } from '@arco-design/web-vue/es/icon';
 
+withDefaults(defineProps<{ mini?: boolean; size?: number }>(), {
+  mini: false,
+  size: 20
+});
+
 type TCommandType = string | number | Record<string, any> | undefined;
 
 const i18nCommand = async (lang: TCommandType) => {
@@ -51,5 +58,9 @@ const i18nCommand = async (lang: TCommandType) => {
   cursor: pointer;
   width: fit-content;
   white-space: nowrap;
+
+  &-mini {
+    flex-direction: column;
+  }
 }
 </style>

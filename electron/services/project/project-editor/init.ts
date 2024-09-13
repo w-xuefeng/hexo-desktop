@@ -73,11 +73,19 @@ export async function initHexoEditor(
 ) {
   const hexo = new Hexo(cwd, options);
   await hexo.init();
-  await hexo.load();
+  await hexo.watch();
   const win = GLWins.getMainWin(winId);
   if (win?.hexo) {
     win.hexo.path = cwd;
     win.hexo.value = hexo;
   }
   return getHexoProjectBaseInfo(hexo.locals.toObject() as IHexoObject);
+}
+
+export async function refreshBaseInfo(winId: string) {
+  const win = GLWins.getMainWin(winId);
+  if (!win?.hexo.value) {
+    return;
+  }
+  return getHexoProjectBaseInfo(win.hexo.value.locals.toObject() as IHexoObject);
 }
