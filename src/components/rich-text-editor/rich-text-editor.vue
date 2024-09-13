@@ -27,6 +27,7 @@ const emits = defineEmits<{
     richTextEditor: TRichTextEditor,
     richTextEditorToolbar: TRichTextEditorToolbar
   ];
+  'editor-initial-error': [error: Error];
 }>();
 
 const editor = shallowRef<TRichTextEditor>();
@@ -45,28 +46,33 @@ const editorConfig = {
 };
 
 const initEditor = (data: string) => {
-  if (!editorTextArea.value) {
-    return;
-  }
-  editor.value = createEditor({
-    selector: editorTextArea.value,
-    content: [],
-    html: data,
-    config: editorConfig
-  });
-
-  if (!editorToolbar.value) {
-    return;
-  }
-
-  toolbar.value = createToolbar({
-    editor: editor.value,
-    selector: editorToolbar.value,
-    config: {
-      excludeKeys: ['fullScreen']
+  try {
+    if (!editorTextArea.value) {
+      return;
     }
-  });
-  emits('editor-initialed', editor.value, toolbar.value);
+    editor.value = createEditor({
+      selector: editorTextArea.value,
+      content: [],
+      html: data,
+      config: editorConfig
+    });
+
+    if (!editorToolbar.value) {
+      return;
+    }
+
+    toolbar.value = createToolbar({
+      editor: editor.value,
+      selector: editorToolbar.value,
+      config: {
+        excludeKeys: ['fullScreen']
+      }
+    });
+    emits('editor-initialed', editor.value, toolbar.value);
+  } catch (error) {
+    console.log('initEditor Error', error);
+    emits('editor-initial-error', error as Error);
+  }
 };
 
 onMounted(() => {

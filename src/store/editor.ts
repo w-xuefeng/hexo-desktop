@@ -20,6 +20,7 @@ export const useArticleStore = defineStore('article-store', () => {
   const currentArticle = ref<IHexoPostsDetailItem>();
   const monacoEditor = shallowRef<monaco.editor.IStandaloneCodeEditor>();
   const richTextEditor = shallowRef<any>();
+  const richTextEditorInitialError = ref(false);
   const editorType = ref<TEditorType>('richText');
   const state = reactive<IHexoProjectBaseInfo>({
     posts: {
@@ -82,6 +83,7 @@ export const useArticleStore = defineStore('article-store', () => {
 
   const getContent = async (id: string) => {
     loading.value = true;
+    richTextEditorInitialError.value = false;
     try {
       const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.GET_HEXO_DOCUMENT, winId, id);
       modifyTitle(rs.title);
@@ -143,6 +145,7 @@ export const useArticleStore = defineStore('article-store', () => {
     deleteArticle,
     richTextEditor,
     monacoEditor,
-    editorType
+    editorType,
+    richTextEditorInitialError
   };
 });

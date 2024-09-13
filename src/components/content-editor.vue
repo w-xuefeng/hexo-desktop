@@ -8,6 +8,7 @@
         v-model:model-value="richTextContent"
         v-model:title="richTextTitle"
         @editor-initialed="richTextEditorInitialed"
+        @editor-initial-error="handleRichTextEditorInitialError"
       />
       <MonacoEditor
         v-if="store.editorType === 'rawCode' || unsupportRichTextEditor"
@@ -38,7 +39,10 @@ const store = useArticleStore();
 const { t, locale } = useSharedLocales();
 
 const unsupportRichTextEditor = computed(() => {
-  return ['<style', '<script'].some((e) => store.currentArticle?.raw.includes(e));
+  return (
+    ['<style', '<script'].some((e) => store.currentArticle?.raw.includes(e)) ||
+    store.richTextEditorInitialError
+  );
 });
 
 const richTextContent = computed({
@@ -67,6 +71,9 @@ const rawContent = computed({
 });
 const richTextEditorInitialed = (editor: any) => {
   store.richTextEditor = editor;
+};
+const handleRichTextEditorInitialError = () => {
+  store.richTextEditorInitialError = true;
 };
 const monacoEditorInitialed = (editor: monaco.editor.IStandaloneCodeEditor) => {
   store.monacoEditor = editor;
