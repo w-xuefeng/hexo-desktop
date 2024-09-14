@@ -25,6 +25,7 @@ export const useArticleStore = defineStore('article-store', () => {
   const richTextEditorInitialError = ref(false);
   const editorType = ref<TEditorType>('richText');
   const hexoServerURL = ref<URL | null>(null);
+  const contentModified = ref(false);
   const state = reactive<IHexoProjectBaseInfo>({
     posts: {
       length: 0,
@@ -144,6 +145,7 @@ export const useArticleStore = defineStore('article-store', () => {
 
   const exitHexoServer = async () => {
     await window.ipcRenderer.invoke(IPC_CHANNEL.EXIT_SERVER_HEXO, winId);
+    hexoServerURL.value = null;
   };
 
   const openURLToPreview = (url: string, type: 'local' | 'browser') => {
@@ -155,7 +157,10 @@ export const useArticleStore = defineStore('article-store', () => {
     }
   };
 
-  const preview = (type: 'local' | 'browser') => {
+  const preview = async (type: 'local' | 'browser') => {
+    if (contentModified.value) {
+      await exitHexoServer();
+    }
     if (hexoServerURL.value) {
       const url = hexoServerURL.value.toString();
       openURLToPreview(url, type);
