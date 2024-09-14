@@ -7,6 +7,8 @@ export type ExecuteParams = {
   command: [string, string[]];
   options?: SpawnOptionsWithoutStdio;
   onData?(data: string): void;
+  onError?(error: string): void;
+  onStdError?(error: string): void;
 };
 
 export type ExecuteResult = {
@@ -43,12 +45,18 @@ export function execute(options: ExecuteParams) {
       } else {
         result.stderr = data.toString();
       }
+      if (typeof options.onStdError === 'function') {
+        options.onStdError(data.toString());
+      }
     });
     child.on('error', (err) => {
       if (result.error) {
         result.error += err.toString();
       } else {
         result.error = err.toString();
+      }
+      if (typeof options.onError === 'function') {
+        options.onError(err.toString());
       }
     });
     child.on('close', (code) => {
@@ -82,6 +90,25 @@ export function run(trigger: string, callback: () => void) {
   process.parentPort.on('message', (e: { data: string }) => {
     if (e.data === trigger) {
       typeof callback === 'function' && callback();
+    }
+  });
+}
+
+export function runWaitExit(
+  trigger: string,
+  callback: () => void,
+  exitTrigger: string,
+  exitCallback?: () => void
+) {
+  process.parentPort.on('message', (e: { data: string }) => {
+    if (e.data === trigger) {
+      logScript(trigger, `[child process trigger]: ${trigger}`);
+      typeof callback === 'function' && callback();
+    }
+    if (e.data === exitTrigger) {
+      logScript(exitTrigger, `[child process exit trigger]: ${exitTrigger} for ${trigger}`);
+      typeof exitCallback === 'function' && exitCallback();
+      process.exit(0);
     }
   });
 }

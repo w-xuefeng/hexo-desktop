@@ -51,16 +51,7 @@ const store = useArticleStore();
 const save = () => {};
 
 const onPreview = (command: string | number | Record<string, any> | undefined) => {
-  switch (command as 'local' | 'browser') {
-    case 'local':
-      break;
-
-    case 'browser':
-      break;
-
-    default:
-      break;
-  }
+  store.preview(command as 'local' | 'browser');
 };
 </script>
 

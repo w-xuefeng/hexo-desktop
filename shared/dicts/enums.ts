@@ -24,7 +24,9 @@ export enum IPC_CHANNEL {
   REFRESH_HEXO_BASE_INFO = 'refresh-hexo-base-info',
   GET_HEXO_DOCUMENT = 'get-hexo-document',
   CREATE_HEXO_DOCUMENT = 'create-hexo-document',
-  GL_LOADING = 'global-loading'
+  GL_LOADING = 'global-loading',
+  SERVER_HEXO = 'server-hexo',
+  EXIT_SERVER_HEXO = 'exit-server-hexo'
 }
 
 export enum STORE_KEY {

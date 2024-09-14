@@ -2,6 +2,7 @@ import { ipcMain } from 'electron';
 import { IPC_CHANNEL } from '../../shared/dicts/enums';
 import { initHexoEditor, refreshBaseInfo } from '../services/project/project-editor/init';
 import { createDocument, getDocument } from '../services/project/project-editor/document';
+import { exitHexoServer, serverHexo } from '../services/project/project-editor/server';
 import type { IHexoPostData } from '../../shared/utils/types';
 
 export default function initIPCEditorEvent() {
@@ -23,4 +24,12 @@ export default function initIPCEditorEvent() {
       return createDocument(winId, data, replace);
     }
   );
+
+  ipcMain.handle(IPC_CHANNEL.SERVER_HEXO, (_, winId: string) => {
+    return serverHexo(winId);
+  });
+
+  ipcMain.handle(IPC_CHANNEL.EXIT_SERVER_HEXO, (_, winId: string) => {
+    return exitHexoServer(winId);
+  });
 }

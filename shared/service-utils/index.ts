@@ -1,4 +1,5 @@
 import path from 'node:path';
+import net from 'node:net';
 import logger from './logger';
 import { app, shell } from 'electron';
 import { runScriptBySubProcess } from './utility-process';
@@ -254,4 +255,21 @@ export async function tryInstallProjectDependencies(
 export function useI18n<EM>(extraMsg?: ExtraMessage<EM>) {
   const lang = GLStore.get(STORE_KEY.LANG) as Langs;
   return i18n(lang, extraMsg);
+}
+
+export function getAvailablePort(startPort = 4000) {
+  return new Promise<number>((resolve, reject) => {
+    const server = net.createServer();
+    server.listen(startPort, () => {
+      server.once('close', () => {
+        resolve(startPort);
+      });
+      server.close();
+    });
+    server.on('error', () => {
+      getAvailablePort(startPort + 1)
+        .then(resolve)
+        .catch(reject);
+    });
+  });
 }

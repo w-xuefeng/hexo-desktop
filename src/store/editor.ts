@@ -9,11 +9,13 @@ import { defineStore } from 'pinia';
 import { getCurrentWinId } from '@root/shared/render-utils/win-id';
 import { PlatformInfo, SharedStorage } from '@root/shared/render-utils/storage';
 import { sleep } from '@root/shared/utils';
+import { useGLStore } from '@/store/global';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 export type TEditorType = 'richText' | 'rawCode';
 
 export const useArticleStore = defineStore('article-store', () => {
+  const GLSore = useGLStore();
   const winId = getCurrentWinId();
   const path = ref<string>(SharedStorage.getSession<string>(STORAGE_KEY.CWD) || '');
   const loading = ref(false);
@@ -22,6 +24,7 @@ export const useArticleStore = defineStore('article-store', () => {
   const richTextEditor = shallowRef<any>();
   const richTextEditorInitialError = ref(false);
   const editorType = ref<TEditorType>('richText');
+  const hexoServerURL = ref<URL | null>(null);
   const state = reactive<IHexoProjectBaseInfo>({
     posts: {
       length: 0,
@@ -131,6 +134,47 @@ export const useArticleStore = defineStore('article-store', () => {
     }
   };
 
+  const serverHexo = async () => {
+    if (hexoServerURL.value) {
+      return;
+    }
+    const port = await window.ipcRenderer.invoke(IPC_CHANNEL.SERVER_HEXO, winId);
+    hexoServerURL.value = new URL(`http://localhost:${port}`);
+  };
+
+  const exitHexoServer = async () => {
+    await window.ipcRenderer.invoke(IPC_CHANNEL.EXIT_SERVER_HEXO, winId);
+  };
+
+  const openURLToPreview = (url: string, type: 'local' | 'browser') => {
+    const fullPath = `${url}${currentArticle.value?.path}`;
+    if (type === 'local') {
+      window.open(fullPath);
+    } else if (type === 'browser') {
+      window.shell.openExternal(fullPath);
+    }
+  };
+
+  const preview = (type: 'local' | 'browser') => {
+    if (hexoServerURL.value) {
+      const url = hexoServerURL.value.toString();
+      openURLToPreview(url, type);
+      return;
+    }
+    GLSore.loading = true;
+    serverHexo()
+      .then(() => {
+        if (hexoServerURL.value) {
+          const url = hexoServerURL.value.toString();
+          openURLToPreview(url, type);
+          return;
+        }
+      })
+      .finally(() => {
+        GLSore.loading = false;
+      });
+  };
+
   return {
     path,
     loading,
@@ -143,6 +187,9 @@ export const useArticleStore = defineStore('article-store', () => {
     modifyTitle,
     refreshList,
     deleteArticle,
+    serverHexo,
+    exitHexoServer,
+    preview,
     richTextEditor,
     monacoEditor,
     editorType,
