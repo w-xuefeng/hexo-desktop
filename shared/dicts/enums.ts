@@ -23,7 +23,8 @@ export enum IPC_CHANNEL {
   INIT_HEXO_PROJECT = 'init-hexo-project',
   REFRESH_HEXO_BASE_INFO = 'refresh-hexo-base-info',
   GET_HEXO_DOCUMENT = 'get-hexo-document',
-  CREATE_HEXO_DOCUMENT = 'create-hexo-document'
+  CREATE_HEXO_DOCUMENT = 'create-hexo-document',
+  GL_LOADING = 'global-loading'
 }
 
 export enum STORE_KEY {

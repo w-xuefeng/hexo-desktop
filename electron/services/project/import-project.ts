@@ -2,8 +2,16 @@ import R from '../common/r';
 import { app, dialog, type OpenDialogOptions } from 'electron';
 import { GLWins } from '../../../shared/global-manager/wins';
 import { IPC_CHANNEL } from '../../../shared/dicts/enums';
-import { checkPath, directoryIsHexoProject } from '../../../shared/service-utils';
+import {
+  useI18n,
+  checkPath,
+  directoryIsHexoProject,
+  tryInstallProjectDependencies
+} from '../../../shared/service-utils';
+import { startGlobalLoading, closeGlobalLoading } from '../common/n';
 import logger from '../../../shared/service-utils/logger';
+
+const { t } = useI18n();
 
 export async function importProjectByDrop(winId: string, projectPath?: string) {
   try {
@@ -18,6 +26,16 @@ export async function importProjectByDrop(winId: string, projectPath?: string) {
     if (!directoryIsHexoProject(projectPath)) {
       return R.fail('exception.directoryIsNotHexoProject');
     }
+
+    await tryInstallProjectDependencies(
+      projectPath,
+      () => {
+        startGlobalLoading(winId, t('system.installDeps'));
+      },
+      () => {
+        closeGlobalLoading(winId);
+      }
+    );
 
     const mainWin = GLWins.getMainWin(winId);
 
@@ -57,6 +75,16 @@ export async function importProject(winId: string, options: Partial<OpenDialogOp
     if (!directoryIsHexoProject(projectPath)) {
       return R.fail('exception.directoryIsNotHexoProject');
     }
+
+    await tryInstallProjectDependencies(
+      projectPath,
+      () => {
+        startGlobalLoading(winId, t('system.installDeps'));
+      },
+      () => {
+        closeGlobalLoading(winId);
+      }
+    );
 
     const mainWin = GLWins.getMainWin(winId);
 

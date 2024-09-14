@@ -11,7 +11,8 @@ export default {
     notice: '注意',
     areYouSure: '你确定要这样操作吗？',
     submitSuccess: '提交成功',
-    successFeed: '操作成功'
+    successFeed: '操作成功',
+    installDeps: '正在安装项目依赖...'
   },
   exception: {
     notFound: '页面不存在',

@@ -1,4 +1,5 @@
 import path from 'node:path';
+import logger from './logger';
 import { app, shell } from 'electron';
 import { runScriptBySubProcess } from './utility-process';
 import fs, {
@@ -212,6 +213,42 @@ export function directoryIsHexoProject(checkPath: string) {
   return ['package.json', '_config.yml', 'source', 'scaffolds'].every((item) =>
     content.some((e) => e.endsWith(item))
   );
+}
+
+export function hasInstalledDependencies(cwd: string) {
+  const lockFile = [
+    'package-lock.json',
+    'yarn.lock',
+    'pnpm-lock.yaml',
+    'pnpm-lock.yml',
+    'bun.lockb'
+  ];
+  const nodeModules = path.join(cwd, 'node_modules');
+  const depsDirectoryInfo = checkPath(nodeModules);
+  if (
+    depsDirectoryInfo.exist &&
+    depsDirectoryInfo.isDirectory &&
+    lockFile.some((e) => existsSync(path.join(cwd, e)))
+  ) {
+    logger(`[check dependencies]: the dependencies of ${cwd} has been installed`);
+    return true;
+  }
+
+  return false;
+}
+
+export async function tryInstallProjectDependencies(
+  cwd: string,
+  onStart?: () => void,
+  onEnd?: (result?: string) => void
+) {
+  if (hasInstalledDependencies(cwd)) {
+    return;
+  }
+  typeof onStart === 'function' && onStart();
+  const rs = execSync('npm install', { cwd, env: process.env })?.toString();
+  logger(`[tryInstallProjectDependencies]: ${rs}`);
+  typeof onEnd === 'function' && onEnd(rs);
 }
 
 export function useI18n<EM>(extraMsg?: ExtraMessage<EM>) {

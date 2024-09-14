@@ -12,7 +12,8 @@ export default {
     notice: 'Notice',
     areYouSure: 'Are you sure you want to do this?',
     submitSuccess: 'Submitted successfully！',
-    successFeed: 'The action is successful!'
+    successFeed: 'The action is successful!',
+    installDeps: 'Installing project dependencies...'
   },
   exception: {
     notFound: 'Not Found',
