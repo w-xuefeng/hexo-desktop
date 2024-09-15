@@ -14,7 +14,6 @@ export function loadIndependentWin(
   if (process.env['VITE_DEV_SERVER_URL']) {
     const url = new URL(process.env['VITE_DEV_SERVER_URL']);
     url.hash = `${routePath}${combineSymbol}${search}`;
-    console.log(`[URL] ${url.toString()}`, url);
     win.loadURL(url.toString());
   } else {
     win.loadFile(path.join(process.env.RENDERER_DIST, 'index.html'), {
@@ -68,6 +67,7 @@ export function createIndependentWindow(
   });
 
   GLWins.independentWin.webContents.on('destroyed', () => {
+    GLWins.independentWin?.setClosable(true);
     GLWins.independentWin?.close();
   });
 

@@ -102,7 +102,8 @@ export default {
     gitRemoteOrigin: 'Git Remote Origin',
     creating: 'Creating',
     projectPath: 'Project Path',
-    keepWinOpen: 'Please do not close the current window'
+    keepWinOpen: 'Please do not close the current window',
+    useNpmmirror: 'Use Ali npmmirror'
   },
   envSetting: {
     envPath: 'PATH',

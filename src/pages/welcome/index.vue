@@ -111,6 +111,7 @@ const createProject = () => {
     height: 600,
     darkTheme: document.body.getAttribute('arco-theme') === 'dark',
     resizable: false,
+    closable: false,
     query: {
       from: winId
     }

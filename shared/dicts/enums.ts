@@ -42,3 +42,8 @@ export enum STORAGE_KEY {
   CWD = 'cwd',
   ARTICLE_LIST_WIDTH = 'article-list-width'
 }
+
+export enum LOADING_CATEGORY {
+  NORMAL_LOADING = 'normal-loading',
+  INSTALLING = 'installing'
+}

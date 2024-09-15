@@ -101,7 +101,8 @@ export default {
     gitRemoteOrigin: '项目远程仓库地址',
     creating: '正在创建',
     projectPath: '项目路径',
-    keepWinOpen: '请不要关闭当前窗口'
+    keepWinOpen: '请不要关闭当前窗口',
+    useNpmmirror: '使用阿里 npm 镜像'
   },
   envSetting: {
     envPath: 'PATH',

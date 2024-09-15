@@ -38,6 +38,12 @@
       </a-row>
 
       <a-row align="center">
+        <a-checkbox v-model="form.npmmirror">
+          <span class="label">{{ t('welcome.useNpmmirror') }}（{{ t('welcome.optional') }}）</span>
+        </a-checkbox>
+      </a-row>
+
+      <a-row align="center">
         <a-col class="label">
           {{ t('welcome.projectTheme') }}（{{ t('welcome.optional') }}）
         </a-col>
@@ -101,7 +107,8 @@ const form = reactive<ICreateProjectOptions>({
   name: '',
   path: '',
   themeNpmPkg: 'default',
-  gitRemoteOrigin: ''
+  gitRemoteOrigin: '',
+  npmmirror: false
 });
 
 const searchingTheme = ref(false);

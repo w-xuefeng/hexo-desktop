@@ -1,7 +1,7 @@
 import R from '../common/r';
 import { app, dialog, type OpenDialogOptions } from 'electron';
 import { GLWins } from '../../../shared/global-manager/wins';
-import { IPC_CHANNEL } from '../../../shared/dicts/enums';
+import { IPC_CHANNEL, LOADING_CATEGORY } from '../../../shared/dicts/enums';
 import {
   useI18n,
   checkPath,
@@ -30,7 +30,7 @@ export async function importProjectByDrop(winId: string, projectPath?: string) {
     await tryInstallProjectDependencies(
       projectPath,
       () => {
-        startGlobalLoading(winId, t('system.installDeps'));
+        startGlobalLoading(winId, t('system.installDeps'), LOADING_CATEGORY.INSTALLING);
       },
       () => {
         closeGlobalLoading(winId);

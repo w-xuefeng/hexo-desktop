@@ -4,6 +4,7 @@ import logger from './logger';
 import { app, shell } from 'electron';
 import { runScriptBySubProcess } from './utility-process';
 import fs, {
+  appendFileSync,
   chmodSync,
   copyFileSync,
   existsSync,
@@ -17,7 +18,7 @@ import { globSync } from 'glob';
 import { GLStore } from '../global-manager/stores';
 import { STORE_KEY } from '../dicts/enums';
 import { PKG_CONFIG } from '../configs/app';
-import { execSync } from 'node:child_process';
+import { execSync, exec } from 'node:child_process';
 import { envExecutePath } from '../configs/main';
 import { getPathShell } from './shell';
 import { i18n, type Langs, type ExtraMessage } from '../utils/i18n';
@@ -238,7 +239,7 @@ export function hasInstalledDependencies(cwd: string) {
   return false;
 }
 
-export async function tryInstallProjectDependencies(
+export function tryInstallProjectDependencies(
   cwd: string,
   onStart?: () => void,
   onEnd?: (result?: string) => void
@@ -247,9 +248,23 @@ export async function tryInstallProjectDependencies(
     return;
   }
   typeof onStart === 'function' && onStart();
-  const rs = execSync('npm install', { cwd, env: process.env })?.toString();
-  logger(`[tryInstallProjectDependencies]: ${rs}`);
-  typeof onEnd === 'function' && onEnd(rs);
+  return new Promise<string>((resolve, reject) => {
+    let rs = '';
+    const child = exec('npm install', { cwd, env: process.env });
+    child.stdout?.on('data', (data) => {
+      rs += data?.toString() || '';
+    });
+    child.on('close', (code) => {
+      logger(`[tryInstallProjectDependencies close]: ${code}`);
+      typeof onEnd === 'function' && onEnd(rs);
+      resolve(rs);
+    });
+    child.on('error', (err) => {
+      typeof onEnd === 'function' && onEnd(rs);
+      logger(`[tryInstallProjectDependencies error]: ${err}`);
+      reject(err);
+    });
+  });
 }
 
 export function useI18n<EM>(extraMsg?: ExtraMessage<EM>) {
@@ -272,4 +287,17 @@ export function getAvailablePort(startPort = 4000) {
         .catch(reject);
     });
   });
+}
+
+export function writeForProject(cwd: string, filename: string, content: string, replace = false) {
+  const target = path.join(cwd, filename);
+  if (existsSync(target) && !replace) {
+    appendFileSync(target, content, { encoding: 'utf-8' });
+  } else {
+    writeFileSync(target, content, { encoding: 'utf-8' });
+  }
+}
+
+export function setNpmmirror(cwd: string, replace = false) {
+  writeForProject(cwd, '.npmrc', 'registry=https://registry.npmmirror.com/', replace);
 }

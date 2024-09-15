@@ -51,6 +51,7 @@ export interface ICreateProjectOptions {
   path: string;
   themeNpmPkg?: string;
   gitRemoteOrigin?: string;
+  npmmirror?: boolean;
 }
 
 export interface IExecutedMessage<T, D> {
