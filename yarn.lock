@@ -3105,7 +3105,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-builder@npm:^25.0.5":
+"electron-builder@npm:^25.1.2":
   version: 25.1.2
   resolution: "electron-builder@npm:25.1.2"
   dependencies:
@@ -4219,7 +4219,7 @@ __metadata:
     "@wangeditor/editor": "npm:^5.1.23"
     "@wangeditor/editor-for-vue": "npm:^5.1.12"
     electron: "npm:^32.1.0"
-    electron-builder: "npm:^25.0.5"
+    electron-builder: "npm:^25.1.2"
     electron-log: "npm:^5.1.7"
     electron-store: "npm:^10.0.0"
     eslint: "npm:^9.10.0"
