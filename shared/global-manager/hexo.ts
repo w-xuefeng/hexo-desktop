@@ -17,11 +17,12 @@ export class GlobalHexo {
     this.value = null;
   }
 
-  async exit() {
+  async exit(cause?: string) {
     logger(
       `[hexo exit]: ${JSON.stringify({
         path: this.path,
-        serverPid: this.serverProcessPid
+        serverPid: this.serverProcessPid,
+        cause
       })}`
     );
     this.serverProcess?.kill();

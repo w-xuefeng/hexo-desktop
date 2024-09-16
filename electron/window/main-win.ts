@@ -29,7 +29,10 @@ export function createMainWindow(projectPath?: string) {
   };
 
   current.win?.on('close', () => {
-    current.hexo?.exit();
+    current.hexo?.exit('the window was closed');
+  });
+
+  current.win?.on('closed', () => {
     GLWins.removeMainWin(current.id);
     if (BrowserWindow.getAllWindows().length === 0) {
       app.quit();
@@ -60,7 +63,8 @@ export function createMainWindow(projectPath?: string) {
   });
 
   current.win?.webContents.on('destroyed', () => {
-    current.win?.close();
+    current.win?.destroy();
+    current.hexo?.exit('the webContents was destroyed');
   });
 
   if (process.env['VITE_DEV_SERVER_URL']) {

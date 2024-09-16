@@ -62,13 +62,12 @@ export function createIndependentWindow(
     );
   });
 
-  GLWins.independentWin.on('close', () => {
+  GLWins.independentWin.on('closed', () => {
     GLWins.independentWin = null;
   });
 
   GLWins.independentWin.webContents.on('destroyed', () => {
-    GLWins.independentWin?.setClosable(true);
-    GLWins.independentWin?.close();
+    GLWins.independentWin?.destroy();
   });
 
   loadIndependentWin(GLWins.independentWin, routePath, combineSymbol, search);
