@@ -123,6 +123,7 @@ export default {
     onlyRawCode: '当前文章只能通过源码编辑',
     preview: '预览',
     localPreview: '本地预览',
+    panelPreview: '在右侧窗口预览',
     browserPreview: '在浏览器中预览'
   },
   formValidatorMessages: {

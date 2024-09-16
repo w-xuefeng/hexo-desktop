@@ -26,6 +26,10 @@ export const useArticleStore = defineStore('article-store', () => {
   const editorType = ref<TEditorType>('richText');
   const hexoServerURL = ref<URL | null>(null);
   const contentModified = ref(false);
+  const previewInPanel = ref(false);
+  const previewInPanelFullPath = computed(
+    () => `${hexoServerURL.value}${currentArticle.value?.path}`
+  );
   const state = reactive<IHexoProjectBaseInfo>({
     posts: {
       length: 0,
@@ -148,16 +152,18 @@ export const useArticleStore = defineStore('article-store', () => {
     hexoServerURL.value = null;
   };
 
-  const openURLToPreview = (url: string, type: 'local' | 'browser') => {
+  const openURLToPreview = (url: string, type: 'local' | 'browser' | 'panel') => {
     const fullPath = `${url}${currentArticle.value?.path}`;
     if (type === 'local') {
       window.open(fullPath);
     } else if (type === 'browser') {
       window.shell.openExternal(fullPath);
+    } else if (type === 'panel') {
+      previewInPanel.value = true;
     }
   };
 
-  const preview = async (type: 'local' | 'browser') => {
+  const preview = async (type: 'local' | 'browser' | 'panel') => {
     if (contentModified.value) {
       await exitHexoServer();
     }
@@ -180,6 +186,15 @@ export const useArticleStore = defineStore('article-store', () => {
       });
   };
 
+  const hidePreviewPanel = () => {
+    previewInPanel.value = false;
+  };
+
+  const exportPreviewPanel = () => {
+    previewInPanel.value = false;
+    hexoServerURL.value && openURLToPreview(hexoServerURL.value.toString(), 'local');
+  };
+
   return {
     path,
     loading,
@@ -195,9 +210,14 @@ export const useArticleStore = defineStore('article-store', () => {
     serverHexo,
     exitHexoServer,
     preview,
+    hidePreviewPanel,
+    exportPreviewPanel,
     richTextEditor,
     monacoEditor,
     editorType,
-    richTextEditorInitialError
+    richTextEditorInitialError,
+    hexoServerURL,
+    previewInPanel,
+    previewInPanelFullPath
   };
 });

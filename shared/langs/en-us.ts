@@ -124,6 +124,7 @@ export default {
     onlyRawCode: 'The current article can only be edited through raw code',
     preview: 'Preview',
     localPreview: 'Local Preview',
+    panelPreview: 'Preview in the right panel',
     browserPreview: 'Preview in browser '
   },
   formValidatorMessages: {

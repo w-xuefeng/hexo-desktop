@@ -20,6 +20,7 @@
         <template #content>
           <a-doption value="local">{{ t('editorToolbar.localPreview') }}</a-doption>
           <a-doption value="browser">{{ t('editorToolbar.browserPreview') }}</a-doption>
+          <a-doption value="panel">{{ t('editorToolbar.panelPreview') }}</a-doption>
         </template>
       </a-dropdown>
       <a-button @click="save">
@@ -51,7 +52,7 @@ const store = useArticleStore();
 const save = () => {};
 
 const onPreview = (command: string | number | Record<string, any> | undefined) => {
-  store.preview(command as 'local' | 'browser');
+  store.preview(command as 'local' | 'browser' | 'panel');
 };
 </script>
 
