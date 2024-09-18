@@ -10,7 +10,7 @@ import { getCurrentWinId } from '@root/shared/render-utils/win-id';
 import { PlatformInfo, SharedStorage } from '@root/shared/render-utils/storage';
 import { sleep } from '@root/shared/utils';
 import { useGLStore } from '@/store/global';
-import { Notification } from '@arco-design/web-vue';
+import { Message } from '@arco-design/web-vue';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 export type TEditorType = 'richText' | 'rawCode';
@@ -109,11 +109,15 @@ export const useArticleStore = defineStore('article-store', () => {
     }
   };
 
+  const getContentForInternal = (id: string) => {
+    return window.ipcRenderer.invoke(IPC_CHANNEL.GET_HEXO_DOCUMENT, winId, id);
+  };
+
   const getContent = async (id: string) => {
     contentLoading.value = true;
     richTextEditorInitialError.value = false;
     try {
-      const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.GET_HEXO_DOCUMENT, winId, id);
+      const rs = await getContentForInternal(id);
       modifyTitle(rs.title);
       currentArticle.value = rs;
     } finally {
@@ -235,9 +239,11 @@ export const useArticleStore = defineStore('article-store', () => {
       );
       if (!err) {
         await refreshListForInternal(1000);
+        const rs = await getContentForInternal(currentArticle.value.id);
+        currentArticle.value = rs;
         refreshBaseKey.value++;
       }
-      Notification.success(err ? GLSore.t('editor.saveFail') : GLSore.t('editor.saveDone'));
+      Message.success(err ? GLSore.t('editor.saveFail') : GLSore.t('editor.saveDone'));
     } finally {
       GLSore.closeLoading();
     }

@@ -37,6 +37,8 @@
 import { IconSave, IconEye } from '@arco-design/web-vue/es/icon';
 import { useSharedLocales } from '@/locales';
 import { useArticleStore } from '@/store/editor';
+import bindkey from '@w-xuefeng/bindkey';
+
 const { t } = useSharedLocales();
 
 withDefaults(defineProps<{}>(), {});
@@ -56,6 +58,9 @@ const save = () => {
 const onPreview = (command: string | number | Record<string, any> | undefined) => {
   store.preview(command as 'local' | 'browser' | 'panel');
 };
+
+bindkey.add('ctrl+s', save);
+bindkey.add('meta+s', save);
 </script>
 
 <style scoped lang="less">

@@ -12,7 +12,7 @@
       <div class="editor-inner-container">
         <RichTextEditor
           v-if="store.editorType === 'richText' && !store.unsupportRichTextEditor"
-          :key="`rich-text-content-${locale}-${store.currentArticle.id}`"
+          :key="`rich-text-content-${locale}-${store.currentArticle.id}-${store.refreshBaseKey}`"
           v-model:title="store.richTextTitle"
           :model-value="store.currentArticle?.content"
           @editor-initialed="richTextEditorInitialed"
@@ -20,7 +20,7 @@
         />
         <MonacoEditor
           v-if="store.editorType === 'rawCode' || store.unsupportRichTextEditor"
-          :key="`raw-${store.currentArticle.id}`"
+          :key="`raw-${store.currentArticle.id}-${store.refreshBaseKey}`"
           :default-value="store.currentArticle?.raw"
           @editor-initialed="monacoEditorInitialed"
         />
