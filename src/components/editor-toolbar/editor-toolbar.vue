@@ -2,8 +2,8 @@
   <div class="toolbar">
     <div class="start">
       <a-radio-group v-model="store.editorType" type="button" size="large">
-        <a-radio value="richText" :disabled="unsupportRichTextEditor">
-          <span v-if="unsupportRichTextEditor">{{ t('editorToolbar.onlyRawCode') }}</span>
+        <a-radio value="richText" :disabled="store.unsupportRichTextEditor">
+          <span v-if="store.unsupportRichTextEditor">{{ t('editorToolbar.onlyRawCode') }}</span>
           <span v-else>{{ t('editorToolbar.richText') }}</span>
         </a-radio>
         <a-radio value="rawCode">{{ t('editorToolbar.rawCode') }}</a-radio>
@@ -39,17 +39,19 @@ import { useSharedLocales } from '@/locales';
 import { useArticleStore } from '@/store/editor';
 const { t } = useSharedLocales();
 
-withDefaults(
-  defineProps<{
-    unsupportRichTextEditor?: boolean;
-  }>(),
-  {
-    unsupportRichTextEditor: false
-  }
-);
+withDefaults(defineProps<{}>(), {});
 const store = useArticleStore();
 
-const save = () => {};
+const save = () => {
+  if (store.editorType === 'rawCode' || store.unsupportRichTextEditor) {
+    store.saveRawContent();
+    return;
+  }
+
+  if (store.editorType === 'richText') {
+    store.saveRichTextContent();
+  }
+};
 
 const onPreview = (command: string | number | Record<string, any> | undefined) => {
   store.preview(command as 'local' | 'browser' | 'panel');

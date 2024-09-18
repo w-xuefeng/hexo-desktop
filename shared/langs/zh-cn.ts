@@ -137,6 +137,9 @@ export default {
   editor: {
     newArticle: '新建文章',
     articleTitle: '文章名称',
-    articleSlug: '文件名称'
+    articleSlug: '文件名称',
+    saveDone: '已保存',
+    saveFail: '保存失败',
+    saving: '正在保存中...'
   }
 };

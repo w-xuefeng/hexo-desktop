@@ -1,6 +1,6 @@
 <template>
   <div v-if="store.currentArticle" class="content">
-    <EditorToolbar :unsupport-rich-text-editor="unsupportRichTextEditor" />
+    <EditorToolbar />
     <div
       :class="[
         'editor-container',
@@ -11,22 +11,23 @@
     >
       <div class="editor-inner-container">
         <RichTextEditor
-          v-if="store.editorType === 'richText' && !unsupportRichTextEditor"
+          v-if="store.editorType === 'richText' && !store.unsupportRichTextEditor"
           :key="`rich-text-content-${locale}-${store.currentArticle.id}`"
-          v-model:model-value="richTextContent"
-          v-model:title="richTextTitle"
+          v-model:title="store.richTextTitle"
+          :model-value="store.currentArticle?.content"
           @editor-initialed="richTextEditorInitialed"
           @editor-initial-error="handleRichTextEditorInitialError"
         />
         <MonacoEditor
-          v-if="store.editorType === 'rawCode' || unsupportRichTextEditor"
+          v-if="store.editorType === 'rawCode' || store.unsupportRichTextEditor"
           :key="`raw-${store.currentArticle.id}`"
-          :default-value="rawContent"
+          :default-value="store.currentArticle?.raw"
           @editor-initialed="monacoEditorInitialed"
         />
       </div>
       <PreviewPanel
         v-if="previewInPanel"
+        :key="`preview-panel-${store.refreshBaseKey}`"
         :src="store.previewInPanelFullPath"
         @close="store.hidePreviewPanel"
         @export="store.exportPreviewPanel"
@@ -54,39 +55,8 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 const store = useArticleStore();
 const { t, locale } = useSharedLocales();
 
-const unsupportRichTextEditor = computed(() => {
-  return (
-    ['<style', '<script'].some((e) => store.currentArticle?.raw.includes(e)) ||
-    store.richTextEditorInitialError
-  );
-});
-
 const previewInPanel = computed(() => !!(store.previewInPanel && store.previewInPanelFullPath));
 
-const richTextContent = computed({
-  get: () => store.currentArticle?.content,
-  set: (value: string) => {
-    if (store.currentArticle) {
-      store.currentArticle.content = value;
-    }
-  }
-});
-const richTextTitle = computed({
-  get: () => store.currentArticle?.title,
-  set: (value: string) => {
-    if (store.currentArticle) {
-      store.currentArticle.title = value;
-    }
-  }
-});
-const rawContent = computed({
-  get: () => store.currentArticle?.raw,
-  set: (value: string) => {
-    if (store.currentArticle) {
-      store.currentArticle.raw = value;
-    }
-  }
-});
 const richTextEditorInitialed = (editor: any) => {
   store.richTextEditor = editor;
 };

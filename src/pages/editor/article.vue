@@ -14,7 +14,7 @@
           <ArticleList
             :key="`article-list-${store.state.posts.length}`"
             :current-article="store.currentArticle"
-            :loading="store.loading"
+            :loading="store.listLoading"
             :posts="store.state.posts.data"
             @details="store.getContent"
             @delete-article="deleteArticle"

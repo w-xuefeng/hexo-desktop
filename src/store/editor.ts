@@ -10,6 +10,7 @@ import { getCurrentWinId } from '@root/shared/render-utils/win-id';
 import { PlatformInfo, SharedStorage } from '@root/shared/render-utils/storage';
 import { sleep } from '@root/shared/utils';
 import { useGLStore } from '@/store/global';
+import { Notification } from '@arco-design/web-vue';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 export type TEditorType = 'richText' | 'rawCode';
@@ -18,7 +19,8 @@ export const useArticleStore = defineStore('article-store', () => {
   const GLSore = useGLStore();
   const winId = getCurrentWinId();
   const path = ref<string>(SharedStorage.getSession<string>(STORAGE_KEY.CWD) || '');
-  const loading = ref(false);
+  const listLoading = ref(false);
+  const contentLoading = ref(false);
   const currentArticle = ref<IHexoPostsDetailItem>();
   const monacoEditor = shallowRef<monaco.editor.IStandaloneCodeEditor>();
   const richTextEditor = shallowRef<any>();
@@ -27,9 +29,27 @@ export const useArticleStore = defineStore('article-store', () => {
   const hexoServerURL = ref<URL | null>(null);
   const contentModified = ref(false);
   const previewInPanel = ref(false);
+  const refreshBaseKey = ref(0);
   const previewInPanelFullPath = computed(
     () => `${hexoServerURL.value}${currentArticle.value?.path}`
   );
+
+  const richTextTitle = computed({
+    get: () => currentArticle.value?.title,
+    set: (value: string) => {
+      if (currentArticle.value) {
+        currentArticle.value.title = value;
+      }
+    }
+  });
+
+  const unsupportRichTextEditor = computed(() => {
+    return (
+      ['<style', '<script'].some((e) => currentArticle.value?.raw.includes(e)) ||
+      richTextEditorInitialError.value
+    );
+  });
+
   const state = reactive<IHexoProjectBaseInfo>({
     posts: {
       length: 0,
@@ -79,25 +99,25 @@ export const useArticleStore = defineStore('article-store', () => {
     if (!path.value) {
       return;
     }
-    loading.value = true;
+    listLoading.value = true;
     try {
       const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.INIT_HEXO_PROJECT, winId, path.value);
       handleState(rs);
     } finally {
-      loading.value = false;
+      listLoading.value = false;
       modifyTitle();
     }
   };
 
   const getContent = async (id: string) => {
-    loading.value = true;
+    contentLoading.value = true;
     richTextEditorInitialError.value = false;
     try {
       const rs = await window.ipcRenderer.invoke(IPC_CHANNEL.GET_HEXO_DOCUMENT, winId, id);
       modifyTitle(rs.title);
       currentArticle.value = rs;
     } finally {
-      loading.value = false;
+      contentLoading.value = false;
     }
   };
 
@@ -108,26 +128,26 @@ export const useArticleStore = defineStore('article-store', () => {
   };
 
   const refreshList = async () => {
-    loading.value = true;
+    listLoading.value = true;
     try {
       await refreshListForInternal();
     } finally {
-      loading.value = false;
+      listLoading.value = false;
     }
   };
 
   const createArticle = async (options: IHexoPostData) => {
-    loading.value = true;
+    listLoading.value = true;
     try {
       await window.ipcRenderer.invoke(IPC_CHANNEL.CREATE_HEXO_DOCUMENT, winId, options);
       await refreshListForInternal(1000);
     } finally {
-      loading.value = false;
+      listLoading.value = false;
     }
   };
 
   const deleteArticle = async (article: IHexoPostsListItem) => {
-    loading.value = true;
+    listLoading.value = true;
     try {
       await window.shell.trashItem(article.full_source);
       if (currentArticle.value?.id === article.id) {
@@ -135,7 +155,7 @@ export const useArticleStore = defineStore('article-store', () => {
       }
       await refreshListForInternal(1000);
     } finally {
-      loading.value = false;
+      listLoading.value = false;
     }
   };
 
@@ -195,9 +215,55 @@ export const useArticleStore = defineStore('article-store', () => {
     hexoServerURL.value && openURLToPreview(hexoServerURL.value.toString(), 'local');
   };
 
+  const saveRawContent = async () => {
+    if (!currentArticle.value) {
+      return;
+    }
+    if (!monacoEditor.value) {
+      return;
+    }
+    const value = monacoEditor.value.getValue();
+    if (value === currentArticle.value.raw) {
+      return;
+    }
+    GLSore.startLoading(GLSore.t('editor.saving'));
+    try {
+      const err = await window.ipcRenderer.invoke(
+        IPC_CHANNEL.SAVE_CONTENT_TO_FILE,
+        currentArticle.value.full_source,
+        value
+      );
+      if (!err) {
+        await refreshListForInternal(1000);
+        refreshBaseKey.value++;
+      }
+      Notification.success(err ? GLSore.t('editor.saveFail') : GLSore.t('editor.saveDone'));
+    } finally {
+      GLSore.closeLoading();
+    }
+  };
+
+  const saveRichTextContent = () => {
+    if (!currentArticle.value) {
+      return;
+    }
+    if (!richTextEditor.value) {
+      return;
+    }
+    const html = richTextEditor.value.getHtml();
+    if (html === currentArticle.value.content) {
+      return;
+    }
+    const fullPath = currentArticle.value.full_source;
+    console.log('article full path', fullPath);
+    console.log('richText HTML value', html);
+    // TODO handle richtext and save to file
+  };
+
   return {
     path,
-    loading,
+    listLoading,
+    contentLoading,
     state,
     currentArticle,
     init,
@@ -212,12 +278,17 @@ export const useArticleStore = defineStore('article-store', () => {
     preview,
     hidePreviewPanel,
     exportPreviewPanel,
+    saveRawContent,
+    saveRichTextContent,
+    richTextTitle,
     richTextEditor,
     monacoEditor,
     editorType,
     richTextEditorInitialError,
     hexoServerURL,
     previewInPanel,
-    previewInPanelFullPath
+    previewInPanelFullPath,
+    unsupportRichTextEditor,
+    refreshBaseKey
   };
 });

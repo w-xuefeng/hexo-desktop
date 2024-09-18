@@ -138,6 +138,9 @@ export default {
   editor: {
     newArticle: 'New Article',
     articleTitle: 'Article Title',
-    articleSlug: 'File Name'
+    articleSlug: 'File Name',
+    saveDone: 'Saved',
+    saveFail: 'Save failed',
+    saving: 'Saving in progress...'
   }
 };

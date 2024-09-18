@@ -3,6 +3,7 @@ import { IPC_CHANNEL } from '../../shared/dicts/enums';
 import { initHexoEditor, refreshBaseInfo } from '../services/project/project-editor/init';
 import { createDocument, getDocument } from '../services/project/project-editor/document';
 import { exitHexoServer, serverHexo } from '../services/project/project-editor/server';
+import { saveContentToFile } from '../../shared/service-utils';
 import type { IHexoPostData } from '../../shared/utils/types';
 
 export default function initIPCEditorEvent() {
@@ -31,5 +32,9 @@ export default function initIPCEditorEvent() {
 
   ipcMain.handle(IPC_CHANNEL.EXIT_SERVER_HEXO, (_, winId: string) => {
     return exitHexoServer(winId);
+  });
+
+  ipcMain.handle(IPC_CHANNEL.SAVE_CONTENT_TO_FILE, (_, filePath: string, content: string) => {
+    return saveContentToFile(filePath, content);
   });
 }

@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { arcoLangs, currentLocale, useSharedLocales } from '@/locales';
+import { arcoLangs, currentLocale } from '@/locales';
 import { IPC_CHANNEL, LOADING_CATEGORY } from '@root/shared/dicts/enums';
 import { useGLStore } from '@/store/global';
 import { IconLoading } from '@arco-design/web-vue/es/icon';
 import IconLoadingImage from '@/assets/imgs/loading.png';
 
-const { t } = useSharedLocales();
 const GLStore = useGLStore();
 const route = useRoute();
 const arcoLocale = computed(() => arcoLangs[currentLocale.value]);
@@ -17,12 +16,10 @@ window.ipcRenderer.on(
   (_, options: { type: 'open' | 'close'; text?: string; category?: LOADING_CATEGORY }) => {
     const { type, text, category } = options || {};
     if (type === 'open') {
-      GLStore.loading = true;
-      GLStore.loadingText = text || t('system.loading');
-      GLStore.loadingCategory = category || LOADING_CATEGORY.NORMAL_LOADING;
+      GLStore.startLoading(text, category);
     }
     if (type === 'close') {
-      GLStore.reset();
+      GLStore.closeLoading();
     }
   }
 );

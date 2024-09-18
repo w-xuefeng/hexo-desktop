@@ -301,3 +301,12 @@ export function writeForProject(cwd: string, filename: string, content: string, 
 export function setNpmmirror(cwd: string, replace = false) {
   writeForProject(cwd, '.npmrc', 'registry=https://registry.npmmirror.com/', replace);
 }
+
+export function saveContentToFile(filePath: string, content: string) {
+  try {
+    writeFileSync(filePath, content, { encoding: 'utf-8' });
+  } catch (error) {
+    logger(`[saveContentToFile error]: ${error}`);
+    return error instanceof Error ? error.toString() : void 0;
+  }
+}
