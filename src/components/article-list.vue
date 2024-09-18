@@ -1,7 +1,7 @@
 <template>
   <a-list class="list" :bordered="false" max-height="100vh" :loading="loading">
     <a-list-item
-      v-for="post in posts"
+      v-for="post in sortedPosts"
       :key="post.id"
       class="item"
       :class="{ current: post.id === currentArticle?.id }"
@@ -29,14 +29,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import IconEmpty from '@/assets/imgs/empty.svg';
 import { IconDelete } from '@arco-design/web-vue/es/icon';
 import { useSharedLocales } from '@/locales';
+import dayjs from 'dayjs';
 import type { IHexoPostsListItem } from '@root/shared/utils/types';
 
 const { t } = useSharedLocales();
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     posts: IHexoPostsListItem[];
     currentArticle?: IHexoPostsListItem;
@@ -52,6 +54,10 @@ const emits = defineEmits<{
   details: [id: string];
   deleteArticle: [post: IHexoPostsListItem];
 }>();
+
+const sortedPosts = computed(() => {
+  return props.posts.toSorted((a, b) => (dayjs(a.date).isAfter(dayjs(b.date)) ? -1 : 1));
+});
 
 const select = (post: IHexoPostsListItem, e: MouseEvent) => {
   if (['path', 'svg'].includes((e.target as HTMLElement)?.nodeName.toLocaleLowerCase())) {
