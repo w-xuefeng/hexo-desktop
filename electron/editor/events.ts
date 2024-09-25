@@ -4,6 +4,7 @@ import { initHexoEditor, refreshBaseInfo } from '../services/project/project-edi
 import { createDocument, getDocument } from '../services/project/project-editor/document';
 import { exitHexoServer, serverHexo } from '../services/project/project-editor/server';
 import { saveContentToFile } from '../../shared/service-utils';
+import { getHexoConfig } from '../services/project/project-editor/config';
 import type { IHexoPostData } from '../../shared/utils/types';
 
 export default function initIPCEditorEvent() {
@@ -36,5 +37,9 @@ export default function initIPCEditorEvent() {
 
   ipcMain.handle(IPC_CHANNEL.SAVE_CONTENT_TO_FILE, (_, filePath: string, content: string) => {
     return saveContentToFile(filePath, content);
+  });
+
+  ipcMain.handle(IPC_CHANNEL.GET_HEXO_CONFIG, (_, winId: string, type?: 'hexo' | 'theme') => {
+    return getHexoConfig(winId, type);
   });
 }

@@ -6,6 +6,7 @@
 import { onMounted, onBeforeUnmount, useTemplateRef, shallowRef, watch, computed } from 'vue';
 import { useTheme } from '@/store/theme';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import './use-worker';
 import 'monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution';
 
 const editorRef = useTemplateRef('editorRef');
@@ -36,9 +37,11 @@ const editorTheme = computed(() => {
 const props = withDefaults(
   defineProps<{
     defaultValue?: string;
+    language?: string;
   }>(),
   {
-    defaultValue: ''
+    defaultValue: '',
+    language: 'markdown'
   }
 );
 const emits = defineEmits<{
@@ -51,7 +54,7 @@ const initEditor = () => {
   }
   const monacoEditor = monaco.editor.create(editorRef.value, {
     value: props.defaultValue,
-    language: 'markdown',
+    language: props.language,
     automaticLayout: true,
     theme: editorTheme.value
   });

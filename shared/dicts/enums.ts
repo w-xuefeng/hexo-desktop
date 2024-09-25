@@ -27,7 +27,8 @@ export enum IPC_CHANNEL {
   GL_LOADING = 'global-loading',
   SERVER_HEXO = 'server-hexo',
   EXIT_SERVER_HEXO = 'exit-server-hexo',
-  SAVE_CONTENT_TO_FILE = 'save-content-to-file'
+  SAVE_CONTENT_TO_FILE = 'save-content-to-file',
+  GET_HEXO_CONFIG = 'get-hexo-config'
 }
 
 export enum STORE_KEY {
