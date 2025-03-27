@@ -122,6 +122,7 @@ export const useArticleStore = defineStore('article-store', () => {
       currentArticle.value = rs;
     } finally {
       contentLoading.value = false;
+      serverHexo();
     }
   };
 

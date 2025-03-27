@@ -86,6 +86,8 @@ const drop = async (e: DragEvent) => {
   e.preventDefault();
   e.stopPropagation();
   const [directory] = Array.from(e.dataTransfer?.files || []);
+  directory.path = window.webUtils.getPathForFile(directory);
+
   if (!directory?.path) {
     return;
   }

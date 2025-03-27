@@ -8,14 +8,17 @@
         <div id="title-container">
           <input v-model="title" placeholder="Article title..." />
         </div>
-        <div ref="editorTextArea"></div>
+        <hexo-desktop-rich-editor>
+          <base :href="baseHref" />
+          <div ref="editorTextArea"></div>
+        </hexo-desktop-rich-editor>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, shallowRef, useTemplateRef } from 'vue';
+import { computed, onMounted, onBeforeUnmount, shallowRef, useTemplateRef } from 'vue';
 import { createEditor, createToolbar } from '@wangeditor/editor';
 import '@wangeditor/editor/dist/css/style.css';
 
@@ -36,6 +39,8 @@ const modelValue = defineModel<string>();
 const title = defineModel<string>('title');
 const editorTextArea = useTemplateRef('editorTextArea');
 const editorToolbar = useTemplateRef('editorToolbar');
+const hexoDesktopRichEditorTagName = 'hexo-desktop-rich-editor';
+const props = defineProps<{ baseUrl?: string | URL | null }>();
 
 const editorConfig = {
   placeholder: 'Type here...',
@@ -43,6 +48,23 @@ const editorConfig = {
   onChange(editor: TRichTextEditor) {
     modelValue.value = editor.getHtml();
   }
+};
+
+const defineCustomElements = () => {
+  if (customElements.get(hexoDesktopRichEditorTagName)) {
+    return;
+  }
+  customElements.define(
+    hexoDesktopRichEditorTagName,
+    class HexoDesktopRichEditor extends HTMLDivElement {
+      constructor() {
+        super();
+      }
+    },
+    {
+      extends: 'div'
+    }
+  );
 };
 
 const initEditor = (data: string) => {
@@ -74,6 +96,12 @@ const initEditor = (data: string) => {
     emits('editor-initial-error', error as Error);
   }
 };
+
+const baseHref = computed(() => {
+  return props.baseUrl?.toString() || '/';
+});
+
+defineCustomElements();
 
 onMounted(() => {
   initEditor(modelValue.value || '');

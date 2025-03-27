@@ -2,6 +2,7 @@ import {
   ipcRenderer,
   contextBridge,
   shell,
+  webUtils,
   type OpenExternalOptions,
   type ShortcutDetails
 } from 'electron';
@@ -32,6 +33,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
 });
+
+contextBridge.exposeInMainWorld('webUtils', webUtils);
 
 contextBridge.exposeInMainWorld('shell', {
   openExternal(url: string, options?: OpenExternalOptions) {

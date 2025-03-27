@@ -37,4 +37,5 @@ declare namespace NodeJS {
 interface Window {
   ipcRenderer: import('electron').IpcRenderer;
   shell: import('electron').Shell;
+  webUtils: import('electron').WebUtils;
 }

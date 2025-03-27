@@ -15,6 +15,7 @@
           :key="`rich-text-content-${locale}-${store.currentArticle.id}-${store.refreshBaseKey}`"
           v-model:title="store.richTextTitle"
           :model-value="store.currentArticle?.content"
+          :base-url="store.hexoServerURL"
           @editor-initialed="richTextEditorInitialed"
           @editor-initial-error="handleRichTextEditorInitialError"
         />
